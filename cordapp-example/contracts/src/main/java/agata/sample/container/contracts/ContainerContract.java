@@ -14,5 +14,6 @@ public class ContainerContract implements Contract {
 
     public interface Commands extends CommandData{
         class Create implements Commands {}
+        class Transfer implements Commands {}
     }
 }

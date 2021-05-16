@@ -5,9 +5,7 @@ import agata.sample.container.dataholder.ReservedSlot;
 import agata.sample.container.schema.ContainerSchemaV1;
 import agata.sample.container.schema.ReservedSlotSchema;
 import javafx.util.Pair;
-import net.corda.core.contracts.BelongsToContract;
-import net.corda.core.contracts.LinearState;
-import net.corda.core.contracts.UniqueIdentifier;
+import net.corda.core.contracts.*;
 import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.Party;
 import net.corda.core.schemas.MappedSchema;
@@ -22,14 +20,14 @@ import java.util.stream.Collectors;
 @BelongsToContract(ContainerContract.class)
 public class ContainerState implements LinearState, QueryableState {
     private final String containerId;
-    private final Party owner;
+    private final AbstractParty owner;
     private final Integer freeSlots;
     private final Double pricePerSlot;
     private final LocalDateTime endAuctionDate;
     private final LocalDateTime shippingDate;
     private final UniqueIdentifier linearId;
 
-    public ContainerState(String containerId, Party owner, Integer freeSlots, Double pricePerSlot, LocalDateTime endAuchtionDate, LocalDateTime shippingDate, UniqueIdentifier linearId) {
+    public ContainerState(String containerId, AbstractParty owner, Integer freeSlots, Double pricePerSlot, LocalDateTime endAuchtionDate, LocalDateTime shippingDate, UniqueIdentifier linearId) {
         this.containerId = containerId;
         this.owner = owner;
         this.freeSlots = freeSlots;
@@ -43,7 +41,7 @@ public class ContainerState implements LinearState, QueryableState {
         return containerId;
     }
 
-    public Party getOwner() {
+    public AbstractParty getOwner() {
         return owner;
     }
 
@@ -75,7 +73,7 @@ public class ContainerState implements LinearState, QueryableState {
     public PersistentState generateMappedObject(@NotNull MappedSchema schema) {
         if (schema instanceof ContainerSchemaV1) {
             return new ContainerSchemaV1.PersistentContainer(this.containerId,
-                    this.owner.getName().toString(), this.freeSlots, this.pricePerSlot,
+                    this.owner.nameOrNull().getX500Principal().getName().toString(), this.freeSlots, this.pricePerSlot,
                     this.endAuctionDate, this.shippingDate, this.linearId.getId());
         }else{
             throw new IllegalArgumentException("Unrecognised schema $schema");

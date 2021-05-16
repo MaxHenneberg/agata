@@ -29,12 +29,12 @@ public class CreateContainerFlow {
         private final LocalDateTime endAuctionDate;
         private final LocalDateTime shippingDate;
 
-        public CreateContainerInitiator(String containerId, int freeSlots, double pricePerSlot, LocalDateTime endAuctionDate, LocalDateTime shippingDate) {
+        public CreateContainerInitiator(String containerId, int freeSlots, double pricePerSlot) {
             this.containerId = containerId;
             this.freeSlots = freeSlots;
             this.pricePerSlot = pricePerSlot;
-            this.endAuctionDate = endAuctionDate;
-            this.shippingDate = shippingDate;
+            this.endAuctionDate = LocalDateTime.now();
+            this.shippingDate = LocalDateTime.now();
         }
 
         @Suspendable
