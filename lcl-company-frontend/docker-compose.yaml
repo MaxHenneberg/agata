@@ -1,0 +1,8 @@
+version: '3.0'  
+
+services:
+  lcl-company-frontend: 
+    image: docker.io/library/lcl-company-frontend-image
+    container_name: lcl-company-frontend-container
+    ports:
+      - "8080:80"
