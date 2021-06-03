@@ -1,4 +1,4 @@
-package agata.lcl.contracts.goodspickup;
+package agata.lcl.contracts.pickup;
 
 import agata.lcl.contracts.GenericProposalContract;
 import net.corda.core.contracts.CommandData;
@@ -23,7 +23,6 @@ public class PickupContract implements Contract {
         } else if (command.getValue() instanceof GenericProposalContract.Commands.Accept) {
             //States which can get Accepted by a Proposal need to implement the GenericProposalContract.Commands.Accept command
         } else {
-
             throw new IllegalArgumentException("Command of incorrect type");
         }
     }

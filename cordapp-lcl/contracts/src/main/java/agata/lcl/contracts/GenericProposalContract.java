@@ -1,6 +1,5 @@
 package agata.lcl.contracts;
 
-import agata.lcl.contracts.goodspickup.PickupContract;
 import agata.lcl.states.GenericProposalState;
 import net.corda.core.contracts.*;
 import net.corda.core.transactions.LedgerTransaction;
@@ -23,7 +22,7 @@ public class GenericProposalContract implements Contract {
                 require.using("There is no timestamp", tx.getTimeWindow() == null);
                 GenericProposalState output = tx.outputsOfType(GenericProposalState.class).get(0);
                 require.using("The proposer is a required signer", command.getSigners().contains(output.getProposer().getOwningKey()));
-                require.using("The proposee is a required signer", command.getSigners().contains(output.getPropose().getOwningKey()));
+                require.using("The proposee is a required signer", command.getSigners().contains(output.getProposee().getOwningKey()));
                 return null;
             });
         } else if (command.getValue() instanceof GenericProposalContract.Commands.Modify) {
@@ -38,29 +37,30 @@ public class GenericProposalContract implements Contract {
                 GenericProposalState input = tx.inputsOfType(GenericProposalState.class).get(0);
                 GenericProposalState output = tx.outputsOfType(GenericProposalState.class).get(0);
 
+                require.using("New Proposal needs to be the same type as old Proposal", input.getProposal().getClass().equals(output.getProposal().getClass()));
                 require.using("New Proposal need to differ from old Proposal", !input.getProposal().equals(output.getProposal()));
 
                 require.using("The proposer is a required signer", command.getSigners().contains(input.getProposer().getOwningKey()));
-                require.using("The proposee is a required signer", command.getSigners().contains(input.getPropose().getOwningKey()));
+                require.using("The proposee is a required signer", command.getSigners().contains(input.getProposee().getOwningKey()));
                 return null;
             });
         } else if (command.getValue() instanceof GenericProposalContract.Commands.Accept) {
             requireThat(require -> {
                 require.using("There is exactly one input", tx.getInputStates().size() == 1);
                 require.using("The single input is of type ProposalState", tx.inputsOfType(GenericProposalState.class).size() == 1);
+                GenericProposalState input = tx.inputsOfType(GenericProposalState.class).get(0);
                 require.using("There is exactly one output", tx.getOutputs().size() == 1);
-                require.using("The single output is of type TradeState", tx.outputsOfType(GenericProposalState.class).size() == 0);
+                require.using("The single output is of type TradeState", tx.outputsOfType(input.getProposal().getClass()).size() == 1);
                 require.using("There is exactly one command", tx.getCommands().size() == 1);
                 require.using("There is no timestamp", tx.getTimeWindow() == null);
 
-                GenericProposalState input = tx.inputsOfType(GenericProposalState.class).get(0);
                 ContractState output = tx.getOutput(0);
 
                 require.using("Output needs to be of Class " + input.getProposal().getClass(), output.getClass().equals(input.getProposal().getClass()));
                 require.using("Proposal needs to be equal to Output", input.getProposal().equals(output));
 
                 require.using("The proposer is a required signer", command.getSigners().contains(input.getProposer().getOwningKey()));
-                require.using("The proposee is a required signer", command.getSigners().contains(input.getPropose().getOwningKey()));
+                require.using("The proposee is a required signer", command.getSigners().contains(input.getProposee().getOwningKey()));
                 return null;
             });
         } else {

@@ -17,13 +17,13 @@ public class GenericProposalState<T extends ContractState> implements LinearStat
     private final UniqueIdentifier linearId;
 
     private final Party proposer;
-    private final Party propose;
+    private final Party proposee;
 
     private final T proposal;
 
-    public GenericProposalState(Party proposer, Party propose, T proposal) {
+    public GenericProposalState(Party proposer, Party proposee, T proposal) {
         this.proposer = proposer;
-        this.propose = propose;
+        this.proposee = proposee;
         this.linearId = new UniqueIdentifier();
         this.proposal = proposal;
     }
@@ -37,15 +37,15 @@ public class GenericProposalState<T extends ContractState> implements LinearStat
     @NotNull
     @Override
     public List<AbstractParty> getParticipants() {
-        return Arrays.asList(proposer, propose);
+        return Arrays.asList(proposer, proposee);
     }
 
     public Party getProposer() {
         return proposer;
     }
 
-    public Party getPropose() {
-        return propose;
+    public Party getProposee() {
+        return proposee;
     }
 
     public T getProposal() {

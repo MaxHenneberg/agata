@@ -1,6 +1,6 @@
-package agata.lcl.states.goodspickup;
+package agata.lcl.states.pickup;
 
-import agata.lcl.contracts.goodspickup.PickupContract;
+import agata.lcl.contracts.pickup.PickupContract;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.UniqueIdentifier;

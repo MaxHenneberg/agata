@@ -1,8 +1,8 @@
 package agata.lcl.contracts;
 
-import agata.lcl.contracts.goodspickup.PickupContract;
+import agata.lcl.contracts.pickup.PickupContract;
 import agata.lcl.states.GenericProposalState;
-import agata.lcl.states.goodspickup.PickupState;
+import agata.lcl.states.pickup.PickupState;
 import com.google.common.collect.ImmutableList;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.testing.core.TestIdentity;
