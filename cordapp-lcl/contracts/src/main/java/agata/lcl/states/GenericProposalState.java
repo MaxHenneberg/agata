@@ -1,10 +1,7 @@
 package agata.lcl.states;
 
 import agata.lcl.contracts.GenericProposalContract;
-import net.corda.core.contracts.BelongsToContract;
-import net.corda.core.contracts.ContractState;
-import net.corda.core.contracts.LinearState;
-import net.corda.core.contracts.UniqueIdentifier;
+import net.corda.core.contracts.*;
 import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.Party;
 import org.jetbrains.annotations.NotNull;
@@ -20,12 +17,14 @@ public class GenericProposalState<T extends ContractState> implements LinearStat
     private final Party proposee;
 
     private final T proposal;
+    private final CommandData proposalCommand;
 
-    public GenericProposalState(Party proposer, Party proposee, T proposal) {
+    public GenericProposalState(Party proposer, Party proposee, T proposal, CommandData proposalCommand) {
         this.proposer = proposer;
         this.proposee = proposee;
         this.linearId = new UniqueIdentifier();
         this.proposal = proposal;
+        this.proposalCommand = proposalCommand;
     }
 
     @NotNull
@@ -50,5 +49,9 @@ public class GenericProposalState<T extends ContractState> implements LinearStat
 
     public T getProposal() {
         return proposal;
+    }
+
+    public CommandData getProposalCommand() {
+        return proposalCommand;
     }
 }

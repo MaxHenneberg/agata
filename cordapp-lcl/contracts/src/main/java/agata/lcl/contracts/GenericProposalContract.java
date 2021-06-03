@@ -12,8 +12,9 @@ public class GenericProposalContract implements Contract {
 
     @Override
     public void verify(@NotNull LedgerTransaction tx) throws IllegalArgumentException {
-        final CommandWithParties command = tx.getCommands().get(0);
-        if (command.getValue() instanceof GenericProposalContract.Commands.Propose) {
+        final Command command = tx.getCommand(0);
+
+        if (command.getValue() instanceof GenericProposalCommands.Propose) {
             requireThat(require -> {
                 require.using("There are no inputs", tx.getInputs().isEmpty());
                 require.using("Only one output state should be created.", tx.getOutputs().size() == 1);
@@ -25,7 +26,7 @@ public class GenericProposalContract implements Contract {
                 require.using("The proposee is a required signer", command.getSigners().contains(output.getProposee().getOwningKey()));
                 return null;
             });
-        } else if (command.getValue() instanceof GenericProposalContract.Commands.Modify) {
+        } else if (command.getValue() instanceof GenericProposalCommands.Modify) {
             requireThat(require -> {
                 require.using("There is exactly one input", tx.getInputStates().size() == 1);
                 require.using("The single input is of type GenericProposalState", tx.inputsOfType(GenericProposalState.class).size() == 1);
@@ -44,7 +45,7 @@ public class GenericProposalContract implements Contract {
                 require.using("The proposee is a required signer", command.getSigners().contains(input.getProposee().getOwningKey()));
                 return null;
             });
-        } else if (command.getValue() instanceof GenericProposalContract.Commands.Accept) {
+        } else if (command.getValue() instanceof GenericProposalCommands.Accept) {
             requireThat(require -> {
                 require.using("There is exactly one input", tx.getInputStates().size() == 1);
                 require.using("The single input is of type ProposalState", tx.inputsOfType(GenericProposalState.class).size() == 1);
@@ -56,7 +57,7 @@ public class GenericProposalContract implements Contract {
 
                 ContractState output = tx.getOutput(0);
 
-                require.using("Output needs to be of Class " + input.getProposal().getClass(), output.getClass().equals(input.getProposal().getClass()));
+                require.using("Output needs to be of same Class as Proposal ", output.getClass().equals(input.getProposal().getClass()));
                 require.using("Proposal needs to be equal to Output", input.getProposal().equals(output));
 
                 require.using("The proposer is a required signer", command.getSigners().contains(input.getProposer().getOwningKey()));
@@ -66,17 +67,16 @@ public class GenericProposalContract implements Contract {
         } else {
             throw new IllegalArgumentException("Command of incorrect type");
         }
-
     }
 
-    public interface Commands extends CommandData {
-        class Propose implements Commands {
+    public interface GenericProposalCommands extends CommandData {
+        class Propose implements GenericProposalCommands {
         }
 
-        class Accept implements Commands {
+        class Accept implements GenericProposalCommands {
         }
 
-        class Modify implements Commands {
+        class Modify implements GenericProposalCommands {
         }
     }
 }

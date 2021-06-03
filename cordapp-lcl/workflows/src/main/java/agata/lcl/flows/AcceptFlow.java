@@ -3,7 +3,6 @@ package agata.lcl.flows;
 import agata.lcl.contracts.GenericProposalContract;
 import agata.lcl.states.GenericProposalState;
 import co.paralleluniverse.fibers.Suspendable;
-import com.google.common.collect.ImmutableList;
 import net.corda.core.contracts.Command;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.contracts.StateAndRef;
@@ -20,6 +19,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.security.PublicKey;
 import java.security.SignatureException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class AcceptFlow {
@@ -36,7 +37,7 @@ public class AcceptFlow {
         @Suspendable
         @Override
         public SignedTransaction call() throws FlowException {
-            QueryCriteria.LinearStateQueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria(null, ImmutableList.of(proposalId), Vault.StateStatus.UNCONSUMED, null);
+            QueryCriteria.LinearStateQueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Arrays.asList(proposalId), Vault.StateStatus.UNCONSUMED, null);
 
             StateAndRef inputStateAndRef = getServiceHub().getVaultService().queryBy(GenericProposalState.class, inputCriteria).getStates().get(0);
 
@@ -44,11 +45,19 @@ public class AcceptFlow {
             ContractState output = input.getProposal();
 
             //Creating the command
-            List<PublicKey> requiredSigners = ImmutableList.of(input.getProposee().getOwningKey(), input.getProposer().getOwningKey());
-            Command command = new Command(new GenericProposalContract.Commands.Accept(), requiredSigners);
+            List<PublicKey> requiredSigners = Arrays.asList(input.getProposee().getOwningKey(), input.getProposer().getOwningKey());
+            Command command = new Command(new GenericProposalContract.GenericProposalCommands.Accept(), requiredSigners);
 
             //Building the transaction
             Party notary = inputStateAndRef.getState().getNotary();
+
+            TransactionBuilder proposalTxBuilder = new TransactionBuilder(notary)
+                    .addOutputState(input.getProposal())
+                    .addCommand(input.getProposalCommand(), Collections.singletonList(input.getProposer().getOwningKey()));
+
+            // Verify the transaction
+            proposalTxBuilder.verify(getServiceHub());
+
             TransactionBuilder txBuilder = new TransactionBuilder(notary)
                     .addInputState(inputStateAndRef)
                     .addOutputState(output, GenericProposalContract.ID)
@@ -60,8 +69,8 @@ public class AcceptFlow {
             //Gathering the counterparty's signature
             Party counterparty = (getOurIdentity().equals(input.getProposer())) ? input.getProposee() : input.getProposer();
             FlowSession counterpartySession = initiateFlow(counterparty);
-            SignedTransaction fullyStx = subFlow(new CollectSignaturesFlow(partStx, ImmutableList.of(counterpartySession)));
-            return subFlow(new FinalityFlow(fullyStx, ImmutableList.of(counterpartySession)));
+            SignedTransaction fullyStx = subFlow(new CollectSignaturesFlow(partStx, Arrays.asList(counterpartySession)));
+            return subFlow(new FinalityFlow(fullyStx, Arrays.asList(counterpartySession)));
         }
     }
 
