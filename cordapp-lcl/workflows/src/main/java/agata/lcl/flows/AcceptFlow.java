@@ -1,7 +1,7 @@
 package agata.lcl.flows;
 
 import agata.lcl.contracts.GenericProposalContract;
-import agata.lcl.states.GenericProposalState;
+import agata.lcl.states.Proposal;
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.Command;
 import net.corda.core.contracts.ContractState;
@@ -37,30 +37,33 @@ public class AcceptFlow {
         @Suspendable
         @Override
         public SignedTransaction call() throws FlowException {
-            QueryCriteria.LinearStateQueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Arrays.asList(proposalId), Vault.StateStatus.UNCONSUMED, null);
+            QueryCriteria.LinearStateQueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(proposalId), Vault.StateStatus.UNCONSUMED, null);
 
-            StateAndRef inputStateAndRef = getServiceHub().getVaultService().queryBy(GenericProposalState.class, inputCriteria).getStates().get(0);
+            StateAndRef inputStateAndRef = getServiceHub().getVaultService().queryBy(Proposal.class, inputCriteria).getStates().get(0);
 
-            GenericProposalState input = (GenericProposalState) inputStateAndRef.getState().getData();
-            ContractState output = input.getProposal();
+            Proposal input = (Proposal) inputStateAndRef.getState().getData();
+            ContractState output = input.getProposedState();
 
             //Creating the command
             List<PublicKey> requiredSigners = Arrays.asList(input.getProposee().getOwningKey(), input.getProposer().getOwningKey());
-            Command command = new Command(new GenericProposalContract.GenericProposalCommands.Accept(), requiredSigners);
+            Command command = new Command(new GenericProposalContract.Commands.Accept(), requiredSigners);
 
             //Building the transaction
             Party notary = inputStateAndRef.getState().getNotary();
 
-            TransactionBuilder proposalTxBuilder = new TransactionBuilder(notary)
-                    .addOutputState(input.getProposal())
-                    .addCommand(input.getProposalCommand(), Collections.singletonList(input.getProposer().getOwningKey()));
+            if (input.getProposalCommand() != null) {
+                TransactionBuilder proposalTxBuilder = new TransactionBuilder(notary)
+                        .addOutputState(input.getProposedState())
+                        .addCommand(input.getProposalCommand(), Collections.singletonList(input.getProposer().getOwningKey()));
 
-            // Verify the transaction
-            proposalTxBuilder.verify(getServiceHub());
+                // Verify the transaction
+                proposalTxBuilder.verify(getServiceHub());
+            }
+
 
             TransactionBuilder txBuilder = new TransactionBuilder(notary)
                     .addInputState(inputStateAndRef)
-                    .addOutputState(output, GenericProposalContract.ID)
+                    .addOutputState(output)
                     .addCommand(command);
 
             //Signing the transaction ourselves
@@ -91,7 +94,7 @@ public class AcceptFlow {
                 protected void checkTransaction(@NotNull SignedTransaction stx) throws FlowException {
                     try {
                         LedgerTransaction ledgerTx = stx.toLedgerTransaction(getServiceHub(), false);
-                        Party proposee = ledgerTx.inputsOfType(GenericProposalState.class).get(0).getProposee();
+                        Party proposee = ledgerTx.inputsOfType(Proposal.class).get(0).getProposee();
                         if (!proposee.equals(counterpartySession.getCounterparty())) {
                             throw new FlowException("Only the proposee can accept a proposal.");
                         }

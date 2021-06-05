@@ -6,6 +6,7 @@ import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.Party;
+import net.corda.core.serialization.ConstructorForDeserialization;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -14,15 +15,25 @@ import java.util.List;
 @BelongsToContract(PickupContract.class)
 public class PickupState implements LinearState {
 
-    private final UniqueIdentifier linearId;
+    protected final UniqueIdentifier linearId;
 
-    private final Party exporter;
-    private final Party supplier;
-    private final Party lclCompany;
+    protected final Party exporter;
+    protected final Party supplier;
+    protected final Party lclCompany;
 
-    private final List<String> pickedUpGoods;
+    protected final List<String> pickedUpGoods;
 
-    private final UniqueIdentifier referenceToState1;
+    protected final UniqueIdentifier referenceToState1;
+
+    @ConstructorForDeserialization
+    public PickupState(Party exporter, Party supplier, Party lclCompany, List<String> pickedUpGoods, UniqueIdentifier referenceToState1, UniqueIdentifier linearId) {
+        this.linearId = linearId;
+        this.exporter = exporter;
+        this.supplier = supplier;
+        this.lclCompany = lclCompany;
+        this.pickedUpGoods = pickedUpGoods;
+        this.referenceToState1 = referenceToState1;
+    }
 
     public PickupState(Party exporter, Party supplier, Party lclCompany, List<String> pickedUpGoods, UniqueIdentifier referenceToState1) {
         this.linearId = new UniqueIdentifier();
