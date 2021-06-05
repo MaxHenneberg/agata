@@ -57,19 +57,11 @@ public class ModifyFlow {
             //Building the transaction
             Party notary = inputStateAndRef.getState().getNotary();
 
-            if (this.counterProposal.getCommand() != null) {
-                TransactionBuilder counterProposalTxBuilder = new TransactionBuilder(notary)
-                        .addOutputState(this.counterProposal.getProposedState())
-                        .addCommand(this.counterProposal.getCommand(), Collections.singletonList(this.counterProposal.getProposer().getOwningKey()));
-                counterProposalTxBuilder.verify(getServiceHub());
-
-                counterProposalTxBuilder.verify(getServiceHub());
-            }
-
             TransactionBuilder txBuilder = new TransactionBuilder(notary)
                     .addInputState(inputStateAndRef)
                     .addOutputState(counterProposal)
                     .addCommand(command);
+            txBuilder.verify(getServiceHub());
 
             //Signing the transaction ourselves
             SignedTransaction partStx = getServiceHub().signInitialTransaction(txBuilder);

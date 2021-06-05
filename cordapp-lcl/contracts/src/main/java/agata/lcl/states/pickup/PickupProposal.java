@@ -11,13 +11,13 @@ import net.corda.core.serialization.ConstructorForDeserialization;
 @BelongsToContract(PickupContract.class)
 public class PickupProposal extends Proposal<PickupState> {
 
-    public PickupProposal(Party proposer, Party proposee, CommandData command, PickupState proposedState) {
-        super(proposer, proposee, command, proposedState);
+    public PickupProposal(Party proposer, Party proposee, PickupState proposedState) {
+        super(proposer, proposee, proposedState);
     }
 
     @ConstructorForDeserialization
-    public PickupProposal(Party proposer, Party proposee, CommandData command, PickupState proposedState, UniqueIdentifier linearId) {
-        super(proposer, proposee, command, proposedState, linearId);
+    public PickupProposal(Party proposer, Party proposee, PickupState proposedState, UniqueIdentifier linearId) {
+        super(proposer, proposee, proposedState, linearId);
     }
 
 }

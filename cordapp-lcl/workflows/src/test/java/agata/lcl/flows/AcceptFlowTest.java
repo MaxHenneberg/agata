@@ -18,7 +18,7 @@ public class AcceptFlowTest extends ProposalFlowTestBase {
     @Test
     public void acceptTest() throws ExecutionException, InterruptedException {
         final PickupState pickupState = new PickupState(getParty(other), getParty(proposee), getParty(proposer), Collections.emptyList(), new UniqueIdentifier());
-        UniqueIdentifier proposalId = createProposal(proposer, proposee, pickupState, null);
+        UniqueIdentifier proposalId = createProposal(proposer, proposee, pickupState);
 
         AcceptFlow.AcceptFlowInitiator flow = new AcceptFlow.AcceptFlowInitiator(proposalId);
         Future future = proposee.startFlow(flow);
@@ -41,7 +41,7 @@ public class AcceptFlowTest extends ProposalFlowTestBase {
     @Test(expected = ExecutionException.class)
     public void acceptAsProposerTest() throws ExecutionException, InterruptedException {
         final PickupState pickupState = new PickupState(getParty(other), getParty(proposee), getParty(proposer), Collections.emptyList(), new UniqueIdentifier());
-        UniqueIdentifier proposalId = createProposal(proposer, proposee, pickupState, null);
+        UniqueIdentifier proposalId = createProposal(proposer, proposee, pickupState);
 
         AcceptFlow.AcceptFlowInitiator flow = new AcceptFlow.AcceptFlowInitiator(proposalId);
         Future future = proposer.startFlow(flow);

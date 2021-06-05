@@ -34,7 +34,7 @@ public class PickupProposalFlow {
         public UniqueIdentifier call() throws FlowException {
             Party lclCompany = getOurIdentity();
             PickupState pickupProposal = new PickupState(this.exporter, this.supplier, lclCompany, Collections.emptyList(), this.referenceToState1);
-            PickupProposal proposalState = new PickupProposal(lclCompany, supplier, null, pickupProposal);
+            PickupProposal proposalState = new PickupProposal(lclCompany, supplier, pickupProposal);
 
             return subFlow(new ProposalFlow.ProposalFlowInitiator(proposalState));
         }

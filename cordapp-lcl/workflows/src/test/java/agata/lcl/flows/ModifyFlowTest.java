@@ -20,12 +20,12 @@ public class ModifyFlowTest extends ProposalFlowTestBase {
     @Test
     public void modifyProposalAsProposee() throws ExecutionException, InterruptedException {
         final PickupState pickupProposal = new PickupState(getParty(other), getParty(proposee), getParty(proposer), Collections.emptyList(), new UniqueIdentifier());
-        UniqueIdentifier proposalId = createProposal(proposer, proposee, pickupProposal, null);
+        UniqueIdentifier proposalId = createProposal(proposer, proposee, pickupProposal);
 
         Assert.assertNotNull(proposalId);
 
         final PickupState modifiedPickupProposal = new PickupState(getParty(other), getParty(proposee), getParty(proposer), Collections.singletonList("Item"), new UniqueIdentifier(), pickupProposal.getLinearId());
-        final Proposal<PickupState> counterProposal = new PickupProposal(getParty(proposee), getParty(proposer), new PickupContract.PickupCommands.AddGoods(), modifiedPickupProposal, proposalId);
+        final Proposal<PickupState> counterProposal = new PickupProposal(getParty(proposee), getParty(proposer), modifiedPickupProposal, proposalId);
 
         ModifyFlow.ModifyFlowInitiator flow = new ModifyFlow.ModifyFlowInitiator(proposalId, counterProposal);
         Future future = proposee.startFlow(flow);
@@ -48,12 +48,12 @@ public class ModifyFlowTest extends ProposalFlowTestBase {
     @Test(expected = ExecutionException.class)
     public void modifyProposalAsProposer() throws ExecutionException, InterruptedException {
         final PickupState pickupState = new PickupState(getParty(other), getParty(proposee), getParty(proposer), Collections.emptyList(), new UniqueIdentifier());
-        UniqueIdentifier proposalId = createProposal(proposer, proposee, pickupState, null);
+        UniqueIdentifier proposalId = createProposal(proposer, proposee, pickupState);
 
         Assert.assertNotNull(proposalId);
 
         final PickupState modifiedPickupState = new PickupState(getParty(other), getParty(proposee), getParty(proposer), Collections.singletonList("Item"), new UniqueIdentifier());
-        final Proposal counterProposal = new PickupProposal(getParty(proposee), getParty(proposer), new PickupContract.PickupCommands.AddGoods(), modifiedPickupState);
+        final Proposal counterProposal = new PickupProposal(getParty(proposee), getParty(proposer), modifiedPickupState);
 
         ModifyFlow.ModifyFlowInitiator flow = new ModifyFlow.ModifyFlowInitiator(proposalId, counterProposal);
         Future future = proposer.startFlow(flow);

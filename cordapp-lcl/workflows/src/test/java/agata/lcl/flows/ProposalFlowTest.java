@@ -17,7 +17,7 @@ public class ProposalFlowTest extends ProposalFlowTestBase {
     @Test
     public void proposalTest() throws ExecutionException, InterruptedException {
         final PickupState pickupState = new PickupState(getParty(other), getParty(proposee), getParty(proposer), Collections.emptyList(), new UniqueIdentifier());
-        UniqueIdentifier proposalId = createProposal(proposer, proposee, pickupState, null);
+        UniqueIdentifier proposalId = createProposal(proposer, proposee, pickupState);
 
         //successful query means the state is stored at node b's vault. Flow went through.
         Arrays.asList(proposer, proposee).forEach(node -> node.transaction(() -> {

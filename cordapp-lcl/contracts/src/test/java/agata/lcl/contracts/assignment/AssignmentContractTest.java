@@ -31,10 +31,9 @@ public class AssignmentContractTest {
                 Party buyer = charlie.getParty();
                 Party supplier = bob.getParty();
                 AssignmentState state = new AssignmentState(lclCompany, buyer, supplier, supplier, address1, address2, Arrays.asList("foo", "bar", "baz"), AssignmentState.Status.SlotBooked);
-                CommandData command = new AssignmentContract.Commands.Propose();
-                AssignmentProposal proposal = new AssignmentProposal(lclCompany, buyer, command, state);
+                AssignmentProposal proposal = new AssignmentProposal(lclCompany, buyer, state);
                 tx.output(AssignmentContract.ID, proposal);
-                tx.command(Arrays.asList(lclCompany.getOwningKey(), buyer.getOwningKey()), command);
+                tx.command(Arrays.asList(lclCompany.getOwningKey(), buyer.getOwningKey()), new AssignmentContract.Commands.Propose());
                 return tx.verifies();
             });
             return null;
@@ -50,10 +49,9 @@ public class AssignmentContractTest {
                 Party buyer = charlie.getParty();
                 Party supplier = bob.getParty();
                 AssignmentState state = new AssignmentState(lclCompany, null, supplier, supplier, address1, address2, Arrays.asList("foo", "bar", "baz"), AssignmentState.Status.SlotBooked);
-                CommandData command = new AssignmentContract.Commands.Propose();
-                AssignmentProposal proposal = new AssignmentProposal(lclCompany, buyer, command, state);
+                AssignmentProposal proposal = new AssignmentProposal(lclCompany, buyer, state);
                 tx.output(AssignmentContract.ID, proposal);
-                tx.command(Arrays.asList(lclCompany.getOwningKey(), buyer.getOwningKey()), command);
+                tx.command(Arrays.asList(lclCompany.getOwningKey(), buyer.getOwningKey()), new AssignmentContract.Commands.Propose());
                 return tx.failsWith("The buyer is set");
             });
             return null;

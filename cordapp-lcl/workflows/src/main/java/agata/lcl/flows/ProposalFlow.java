@@ -38,18 +38,10 @@ public class ProposalFlow {
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
-            if (proposalState.getCommand() != null) {
-                TransactionBuilder proposalTxBuilder = new TransactionBuilder(notary)
-                        .addOutputState(proposalState.getProposedState())
-                        .addCommand(proposalState.getCommand(), Collections.singletonList(proposalState.getProposer().getOwningKey()));
-
-                // Verify the transaction
-                proposalTxBuilder.verify(getServiceHub());
-            }
-
             TransactionBuilder txBuilder = new TransactionBuilder(notary)
                     .addOutputState(proposalState)
                     .addCommand(command);
+            txBuilder.verify(getServiceHub());
 
             //Signing the transaction ourselves
             SignedTransaction partStx = getServiceHub().signInitialTransaction(txBuilder);

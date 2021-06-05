@@ -42,7 +42,7 @@ public class ProposeFlow {
         public UniqueIdentifier call() throws FlowException {
             Party lclCompany = getOurIdentity();
             AssignmentState state = new AssignmentState(lclCompany, buyer, supplier, arrivalParty, departureAddress, arrivalAddress, expectedGoods, status);
-            AssignmentProposal proposal = new AssignmentProposal(lclCompany, buyer, new AssignmentContract.Commands.Propose(), state);
+            AssignmentProposal proposal = new AssignmentProposal(lclCompany, buyer, state);
             return subFlow(new ProposalFlow.ProposalFlowInitiator(proposal));
         }
     }

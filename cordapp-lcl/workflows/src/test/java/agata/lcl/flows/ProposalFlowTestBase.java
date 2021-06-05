@@ -39,8 +39,8 @@ abstract class ProposalFlowTestBase {
         network.stopNodes();
     }
 
-    protected UniqueIdentifier createProposal(StartedMockNode proposer, StartedMockNode proposee, PickupState proposal, CommandData proposalCommand) throws ExecutionException, InterruptedException {
-        final Proposal<PickupState> proposalState = new PickupProposal(getParty(proposer), getParty(proposee),proposalCommand, proposal);
+    protected UniqueIdentifier createProposal(StartedMockNode proposer, StartedMockNode proposee, PickupState proposal) throws ExecutionException, InterruptedException {
+        final Proposal<PickupState> proposalState = new PickupProposal(getParty(proposer), getParty(proposee),proposal);
         ProposalFlow.ProposalFlowInitiator flow = new ProposalFlow.ProposalFlowInitiator(proposalState);
         Future<UniqueIdentifier> future = proposer.startFlow(flow);
         network.runNetwork();
