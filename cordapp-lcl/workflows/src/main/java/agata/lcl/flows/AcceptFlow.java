@@ -51,10 +51,10 @@ public class AcceptFlow {
             //Building the transaction
             Party notary = inputStateAndRef.getState().getNotary();
 
-            if (input.getProposalCommand() != null) {
+            if (input.getCommand() != null) {
                 TransactionBuilder proposalTxBuilder = new TransactionBuilder(notary)
                         .addOutputState(input.getProposedState())
-                        .addCommand(input.getProposalCommand(), Collections.singletonList(input.getProposer().getOwningKey()));
+                        .addCommand(input.getCommand(), Collections.singletonList(input.getProposer().getOwningKey()));
 
                 // Verify the transaction
                 proposalTxBuilder.verify(getServiceHub());
