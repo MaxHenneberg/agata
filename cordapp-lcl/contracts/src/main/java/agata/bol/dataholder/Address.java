@@ -1,5 +1,8 @@
 package agata.bol.dataholder;
 
+import net.corda.core.serialization.CordaSerializable;
+
+@CordaSerializable
 public class Address {
     private final String street;
     private final String city;
@@ -13,6 +16,18 @@ public class Address {
         this.state = state;
         this.postalCode = postalCode;
         this.country = country;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return street.equals(address.street) &&
+                city.equals(address.city) &&
+                state.equals(address.state) &&
+                postalCode.equals(address.postalCode) &&
+                country.equals(address.country);
     }
 
     public String getStreet() {
