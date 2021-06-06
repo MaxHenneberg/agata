@@ -15,8 +15,7 @@ public class AssignmentContract extends GenericProposalContract {
     public static final String ID = "agata.lcl.contracts.assignment.AssignmentContract";
 
     @Override
-    protected void verifyPropose(@NotNull LedgerTransaction tx, @NotNull Command command) {
-        super.verifyPropose(tx, command);
+    protected void extendedVerifyPropose(@NotNull LedgerTransaction tx, @NotNull Command command) {
         requireThat(require -> {
             AssignmentProposal output = tx.outputsOfType(AssignmentProposal.class).get(0);
             AssignmentState proposedState = output.getProposedState();
@@ -32,12 +31,7 @@ public class AssignmentContract extends GenericProposalContract {
         });
     }
 
-    @Override
-    public void extendedVerify(@NotNull LedgerTransaction tx) throws IllegalArgumentException {
-        // Currently, there are no additional commands for this specific contract on top of the generic commands
-        throw new IllegalArgumentException("Command of incorrect type");
-    }
-
     public interface Commands extends GenericProposalContract.Commands {
+
     }
 }

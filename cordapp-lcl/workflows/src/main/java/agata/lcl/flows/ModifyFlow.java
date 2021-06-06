@@ -29,10 +29,18 @@ public class ModifyFlow {
     public static class ModifyFlowInitiator extends FlowLogic<SignedTransaction> {
         private final UniqueIdentifier proposalId;
         private final Proposal counterProposal;
+        private final GenericProposalContract.Commands.Modify commandType;
 
         public ModifyFlowInitiator(UniqueIdentifier proposalId, Proposal counterProposal) {
             this.proposalId = proposalId;
             this.counterProposal = counterProposal;
+            this.commandType = new GenericProposalContract.Commands.Modify();
+        }
+
+        public ModifyFlowInitiator(UniqueIdentifier proposalId, Proposal counterProposal, GenericProposalContract.Commands.Modify commandType) {
+            this.proposalId = proposalId;
+            this.counterProposal = counterProposal;
+            this.commandType = commandType;
         }
 
         @Suspendable
@@ -52,7 +60,7 @@ public class ModifyFlow {
 
             //Creating the command
             List<PublicKey> requiredSigners = Arrays.asList(input.getProposee().getOwningKey(), input.getProposer().getOwningKey());
-            Command command = new Command(new GenericProposalContract.Commands.Modify(), requiredSigners);
+            Command command = new Command(this.commandType, requiredSigners);
 
             //Building the transaction
             Party notary = inputStateAndRef.getState().getNotary();
@@ -61,7 +69,6 @@ public class ModifyFlow {
                     .addInputState(inputStateAndRef)
                     .addOutputState(counterProposal)
                     .addCommand(command);
-            txBuilder.verify(getServiceHub());
 
             //Signing the transaction ourselves
             SignedTransaction partStx = getServiceHub().signInitialTransaction(txBuilder);

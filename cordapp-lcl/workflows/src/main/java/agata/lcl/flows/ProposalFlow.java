@@ -1,6 +1,6 @@
 package agata.lcl.flows;
 
-import agata.lcl.contracts.pickup.PickupContract;
+import agata.lcl.contracts.GenericProposalContract;
 import agata.lcl.states.Proposal;
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.Command;
@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.security.PublicKey;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class ProposalFlow {
@@ -23,31 +22,35 @@ public class ProposalFlow {
     @StartableByRPC
     public static class ProposalFlowInitiator extends FlowLogic<UniqueIdentifier> {
         private final Proposal proposalState;
+        private final GenericProposalContract.Commands.Propose commandType;
 
         public ProposalFlowInitiator(Proposal proposalState) {
             this.proposalState = proposalState;
+            this.commandType = new GenericProposalContract.Commands.Propose();
         }
 
+        public ProposalFlowInitiator(Proposal proposalState, GenericProposalContract.Commands.Propose commandType) {
+            this.proposalState = proposalState;
+            this.commandType = commandType;
+        }
 
         @Suspendable
         @Override
         public UniqueIdentifier call() throws FlowException {
-            PickupContract.Commands.Propose commandType = new PickupContract.Commands.Propose();
             List<PublicKey> requiredSigners = Arrays.asList(proposalState.getProposer().getOwningKey(), proposalState.getProposee().getOwningKey());
-            Command command = new Command(commandType, requiredSigners);
+            Command command = new Command(this.commandType, requiredSigners);
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
             TransactionBuilder txBuilder = new TransactionBuilder(notary)
-                    .addOutputState(proposalState)
+                    .addOutputState(this.proposalState)
                     .addCommand(command);
-            txBuilder.verify(getServiceHub());
 
             //Signing the transaction ourselves
             SignedTransaction partStx = getServiceHub().signInitialTransaction(txBuilder);
 
             //Gather counterparty sigs
-            FlowSession counterpartySession = initiateFlow(proposalState.getProposee());
+            FlowSession counterpartySession = initiateFlow(this.proposalState.getProposee());
             SignedTransaction fullyStx = subFlow(new CollectSignaturesFlow(partStx, Arrays.asList(counterpartySession)));
 
             //Finalise the transaction
@@ -77,7 +80,7 @@ public class ProposalFlow {
             };
             SecureHash txId = subFlow(signTransactionFlow).getId();
 
-            return subFlow(new ReceiveFinalityFlow(counterpartySession, txId));
+            return subFlow(new ReceiveFinalityFlow(this.counterpartySession, txId));
         }
     }
 

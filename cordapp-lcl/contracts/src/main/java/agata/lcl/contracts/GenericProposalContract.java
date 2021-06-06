@@ -13,24 +13,37 @@ import static net.corda.core.contracts.ContractsDSL.requireThat;
 public abstract class GenericProposalContract implements Contract {
     public static String ID = "agata.lcl.contracts.GenericProposalContract";
 
-    public abstract void extendedVerify(@NotNull LedgerTransaction tx) throws IllegalArgumentException;
-
     @Override
     public void verify(@NotNull LedgerTransaction tx) throws IllegalArgumentException {
         final Command command = tx.getCommand(0);
 
+        boolean isValidCommand = false;
         if (command.getValue() instanceof Commands.Propose) {
             verifyPropose(tx, command);
-        } else if (command.getValue() instanceof Commands.Modify) {
+            extendedVerifyPropose(tx, command);
+            isValidCommand = true;
+        }
+        if (command.getValue() instanceof Commands.Modify) {
             verifyModify(tx, command);
-        } else if (command.getValue() instanceof Commands.Accept) {
+            extendedVerifyModify(tx, command);
+            isValidCommand = true;
+        }
+        if (command.getValue() instanceof Commands.Accept) {
             verifyAccept(tx, command);
-        } else {
-            extendedVerify(tx);
+            extendedVerifyAccept(tx, command);
+            isValidCommand = true;
+        }
+        boolean additionalCommandIsValid = verifyAdditionalCommands(tx);
+        if (!isValidCommand && !additionalCommandIsValid) {
+            throw new IllegalArgumentException("Command of incorrect type");
         }
     }
 
-    protected void verifyPropose(@NotNull LedgerTransaction tx, @NotNull Command command) {
+    protected boolean verifyAdditionalCommands(@NotNull LedgerTransaction tx) throws IllegalArgumentException {
+        return true;
+    }
+
+    private void verifyPropose(@NotNull LedgerTransaction tx, @NotNull Command command) {
         requireThat(require -> {
             require.using("There are no inputs", tx.getInputs().isEmpty());
             require.using("Only one output state should be created.", tx.getOutputs().size() == 1);
@@ -44,7 +57,11 @@ public abstract class GenericProposalContract implements Contract {
         });
     }
 
-    protected void verifyModify(@NotNull LedgerTransaction tx, @NotNull Command command) {
+    protected void extendedVerifyPropose(@NotNull LedgerTransaction tx, @NotNull Command command) {
+
+    }
+
+    private void verifyModify(@NotNull LedgerTransaction tx, @NotNull Command command) {
         requireThat(require -> {
             require.using("There is exactly one input", tx.getInputStates().size() == 1);
             require.using("The single input is of type GenericProposalState", tx.inputsOfType(Proposal.class).size() == 1);
@@ -65,7 +82,11 @@ public abstract class GenericProposalContract implements Contract {
         });
     }
 
-    protected void verifyAccept(@NotNull LedgerTransaction tx, @NotNull Command command) {
+    protected void extendedVerifyModify(@NotNull LedgerTransaction tx, @NotNull Command command) {
+
+    }
+
+    private void verifyAccept(@NotNull LedgerTransaction tx, @NotNull Command command) {
         requireThat(require -> {
             require.using("There is exactly one input", tx.getInputStates().size() == 1);
             require.using("The single input is of type ProposalState", tx.inputsOfType(Proposal.class).size() == 1);
@@ -84,6 +105,10 @@ public abstract class GenericProposalContract implements Contract {
             require.using("The proposee is a required signer", command.getSigners().contains(input.getProposee().getOwningKey()));
             return null;
         });
+    }
+
+    protected void extendedVerifyAccept(@NotNull LedgerTransaction tx, @NotNull Command command) {
+
     }
 
     public interface Commands extends CommandData {

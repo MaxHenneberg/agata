@@ -29,9 +29,16 @@ public class AcceptFlow {
     @StartableByRPC
     public static class AcceptFlowInitiator extends FlowLogic<SignedTransaction> {
         private final UniqueIdentifier proposalId;
+        private final GenericProposalContract.Commands.Accept commandType;
 
         public AcceptFlowInitiator(UniqueIdentifier proposalId) {
             this.proposalId = proposalId;
+            this.commandType = new GenericProposalContract.Commands.Accept();
+        }
+
+        public AcceptFlowInitiator(UniqueIdentifier proposalId, GenericProposalContract.Commands.Accept commandType) {
+            this.proposalId = proposalId;
+            this.commandType = commandType;
         }
 
         @Suspendable
@@ -46,7 +53,7 @@ public class AcceptFlow {
 
             //Creating the command
             List<PublicKey> requiredSigners = Arrays.asList(input.getProposee().getOwningKey(), input.getProposer().getOwningKey());
-            Command command = new Command(new GenericProposalContract.Commands.Accept(), requiredSigners);
+            Command command = new Command(this.commandType, requiredSigners);
 
             //Building the transaction
             Party notary = inputStateAndRef.getState().getNotary();
@@ -55,7 +62,6 @@ public class AcceptFlow {
                     .addInputState(inputStateAndRef)
                     .addOutputState(output)
                     .addCommand(command);
-            txBuilder.verify(getServiceHub());
 
             //Signing the transaction ourselves
             SignedTransaction partStx = getServiceHub().signInitialTransaction(txBuilder);
