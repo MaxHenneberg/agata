@@ -1,7 +1,6 @@
-package agata.lcl.assignment;
+package agata.lcl.flows.assignment;
 
 import agata.bol.dataholder.Address;
-import agata.lcl.contracts.assignment.AssignmentContract;
 import agata.lcl.flows.ProposalFlow;
 import agata.lcl.states.assignment.AssignmentProposal;
 import agata.lcl.states.assignment.AssignmentState;
@@ -13,7 +12,7 @@ import net.corda.core.transactions.SignedTransaction;
 
 import java.util.List;
 
-public class ProposeFlow {
+public class AssignmentProposalFlow {
 
     @InitiatingFlow
     @StartableByRPC
