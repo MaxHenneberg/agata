@@ -1,6 +1,5 @@
 package agata.lcl.flows.pickup;
 
-import agata.lcl.contracts.pickup.PickupContract;
 import agata.lcl.flows.ModifyFlow;
 import agata.lcl.states.pickup.PickupProposal;
 import agata.lcl.states.pickup.PickupState;
@@ -15,7 +14,6 @@ import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
 import net.corda.core.transactions.SignedTransaction;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,7 +40,7 @@ public class PickupAddGoodsFlow {
             final PickupState proposedPickupState = proposal.getProposedState();
             final PickupState counterProposal = new PickupState(proposedPickupState.getExporter(),
                     proposedPickupState.getSupplier(), proposedPickupState.getLclCompany(),
-                    this.goods, proposedPickupState.getReferenceToState1(), proposedPickupState.getLinearId());
+                    this.goods, proposedPickupState.getReferenceToAssignmentProposal(), proposedPickupState.getLinearId());
 
 
             PickupProposal proposalState = new PickupProposal(getOurIdentity(), counterProposal.getLclCompany(), counterProposal);

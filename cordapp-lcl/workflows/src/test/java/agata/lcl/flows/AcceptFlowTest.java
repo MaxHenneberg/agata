@@ -1,7 +1,7 @@
 package agata.lcl.flows;
 
 import agata.lcl.states.Proposal;
-import agata.lcl.states.pickup.PickupState;
+import agata.lcl.states.test.DummyState;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import org.junit.Assert;
@@ -16,8 +16,12 @@ public class AcceptFlowTest extends ProposalFlowTestBase {
 
     @Test
     public void acceptTest() throws ExecutionException, InterruptedException {
-        final PickupState pickupState = new PickupState(getParty(other), getParty(proposee), getParty(proposer), Collections.emptyList(), new UniqueIdentifier());
-        UniqueIdentifier proposalId = createProposal(proposer, proposee, pickupState);
+        final DummyState dummyState = new DummyState(getParty(proposer), getParty(proposee), "test", "test", 1, 1, "test", 1);
+
+
+        UniqueIdentifier proposalId = createProposal(proposer, proposee, dummyState);
+
+        Assert.assertNotNull(proposalId);
 
         AcceptFlow.AcceptFlowInitiator flow = new AcceptFlow.AcceptFlowInitiator(proposalId);
         Future future = proposee.startFlow(flow);
@@ -28,11 +32,11 @@ public class AcceptFlowTest extends ProposalFlowTestBase {
             List<StateAndRef<Proposal>> proposals = node.getServices().getVaultService().queryBy(Proposal.class).getStates();
             Assert.assertEquals(0, proposals.size());
 
-            List<StateAndRef<PickupState>> pickups = node.getServices().getVaultService().queryBy(PickupState.class).getStates();
-            Assert.assertEquals(1, pickups.size());
-            PickupState proposedPickupState = pickups.get(0).getState().getData();
+            List<StateAndRef<DummyState>> dummies = node.getServices().getVaultService().queryBy(DummyState.class).getStates();
+            Assert.assertEquals(1, dummies.size());
+            DummyState proposedPickupState = dummies.get(0).getState().getData();
 
-            Assert.assertEquals(pickupState, proposedPickupState);
+            Assert.assertEquals(dummyState, proposedPickupState);
             return null;
         }));
     }

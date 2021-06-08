@@ -1,5 +1,7 @@
 package agata.lcl.contracts;
 
+import agata.lcl.contracts.annotations.MandatoryForContract;
+import agata.lcl.contracts.annotations.NotBlankForContract;
 import agata.lcl.states.Proposal;
 import net.corda.core.contracts.Command;
 import net.corda.core.contracts.CommandData;
@@ -7,6 +9,15 @@ import net.corda.core.contracts.Contract;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.transactions.LedgerTransaction;
 import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
@@ -16,6 +27,21 @@ public abstract class GenericProposalContract implements Contract {
     @Override
     public void verify(@NotNull LedgerTransaction tx) throws IllegalArgumentException {
         final Command command = tx.getCommand(0);
+        for (ContractState contractState : tx.getInputStates()) {
+            try {
+                GenericProposalContractUtils.checkMandatoryFields(contractState, command.getValue(), true);
+            } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+
+        for (ContractState contractState : tx.getOutputStates()) {
+            try {
+                GenericProposalContractUtils.checkMandatoryFields(contractState, command.getValue(), false);
+            } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
 
         boolean isValidCommand = false;
         if (command.getValue() instanceof Commands.Propose) {
@@ -111,7 +137,11 @@ public abstract class GenericProposalContract implements Contract {
 
     }
 
+
+
     public interface Commands extends CommandData {
+        class All implements Commands {
+        }
         class Propose implements Commands {
         }
 

@@ -1,7 +1,9 @@
 package agata.lcl.states.pickup;
 
+import agata.lcl.contracts.annotations.MandatoryForContract;
 import agata.lcl.contracts.pickup.PickupContract;
 import net.corda.core.contracts.BelongsToContract;
+import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.AbstractParty;
@@ -17,22 +19,27 @@ public class PickupState implements LinearState {
 
     protected final UniqueIdentifier linearId;
 
+    @MandatoryForContract
     protected final Party exporter;
+    @MandatoryForContract
     protected final Party supplier;
+    @MandatoryForContract
     protected final Party lclCompany;
 
+    @MandatoryForContract
     protected final List<String> pickedUpGoods;
 
-    protected final UniqueIdentifier referenceToState1;
+    @MandatoryForContract
+    protected final LinearPointer<LinearState> referenceToAssignmentProposal;
 
     @ConstructorForDeserialization
-    public PickupState(Party exporter, Party supplier, Party lclCompany, List<String> pickedUpGoods, UniqueIdentifier referenceToState1, UniqueIdentifier linearId) {
+    public PickupState(Party exporter, Party supplier, Party lclCompany, List<String> pickedUpGoods, LinearPointer<LinearState> referenceToState1, UniqueIdentifier linearId) {
         this.linearId = linearId;
         this.exporter = exporter;
         this.supplier = supplier;
         this.lclCompany = lclCompany;
         this.pickedUpGoods = pickedUpGoods;
-        this.referenceToState1 = referenceToState1;
+        this.referenceToAssignmentProposal = referenceToState1;
     }
 
     public PickupState(Party exporter, Party supplier, Party lclCompany, List<String> pickedUpGoods, UniqueIdentifier referenceToState1) {
@@ -41,7 +48,7 @@ public class PickupState implements LinearState {
         this.supplier = supplier;
         this.lclCompany = lclCompany;
         this.pickedUpGoods = pickedUpGoods;
-        this.referenceToState1 = referenceToState1;
+        this.referenceToAssignmentProposal = new LinearPointer<>(new UniqueIdentifier(null, referenceToState1.getId()), LinearState.class);
     }
 
     @Override
@@ -51,7 +58,7 @@ public class PickupState implements LinearState {
                     && this.supplier.equals(((PickupState) obj).supplier)
                     && this.lclCompany.equals(((PickupState) obj).lclCompany)
                     && this.pickedUpGoods.equals(((PickupState) obj).pickedUpGoods)
-                    && this.referenceToState1.equals(((PickupState) obj).referenceToState1);
+                    && this.referenceToAssignmentProposal.equals(((PickupState) obj).referenceToAssignmentProposal);
         }
 
         return false;
@@ -85,7 +92,7 @@ public class PickupState implements LinearState {
         return pickedUpGoods;
     }
 
-    public UniqueIdentifier getReferenceToState1() {
-        return referenceToState1;
+    public LinearPointer<LinearState> getReferenceToAssignmentProposal() {
+        return referenceToAssignmentProposal;
     }
 }

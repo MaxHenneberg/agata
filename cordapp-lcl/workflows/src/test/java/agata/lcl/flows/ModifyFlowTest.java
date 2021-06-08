@@ -17,13 +17,14 @@ public class ModifyFlowTest extends ProposalFlowTestBase {
 
     @Test
     public void modifyProposalAsProposee() throws ExecutionException, InterruptedException {
-        final PickupState pickupProposal = new PickupState(getParty(other), getParty(proposee), getParty(proposer), Collections.emptyList(), new UniqueIdentifier());
-        UniqueIdentifier proposalId = createProposal(proposer, proposee, pickupProposal);
+        final DummyState dummyState = new DummyState(getParty(proposer), getParty(proposee), "test", "test", 1, 1, "test", 1);
+        UniqueIdentifier proposalId = createProposal(proposer, proposee, dummyState);
 
         Assert.assertNotNull(proposalId);
 
-        final PickupState modifiedPickupProposal = new PickupState(getParty(other), getParty(proposee), getParty(proposer), Collections.singletonList("Item"), new UniqueIdentifier(), pickupProposal.getLinearId());
-        final Proposal<PickupState> counterProposal = new PickupProposal(getParty(proposee), getParty(proposer), modifiedPickupProposal, proposalId);
+        final DummyState modifiedDummyProposal = new DummyState(getParty(proposer), getParty(proposee), "test", "test", 1, 1, "test", 1);
+        modifiedDummyProposal.setMandatoryStringField("other");
+        final Proposal<DummyState> counterProposal = new DummyProposal(getParty(proposee), getParty(proposer), modifiedDummyProposal, proposalId);
 
         ModifyFlow.ModifyFlowInitiator flow = new ModifyFlow.ModifyFlowInitiator(proposalId, counterProposal);
         Future future = proposee.startFlow(flow);
@@ -38,20 +39,21 @@ public class ModifyFlowTest extends ProposalFlowTestBase {
 
             Assert.assertEquals(getParty(proposee), proposal.getProposer());
             Assert.assertEquals(getParty(proposer), proposal.getProposee());
-            Assert.assertEquals(modifiedPickupProposal, proposal.getProposedState());
+            Assert.assertEquals(modifiedDummyProposal, proposal.getProposedState());
             return null;
         }));
     }
 
     @Test(expected = ExecutionException.class)
     public void modifyProposalAsProposer() throws ExecutionException, InterruptedException {
-        final PickupState pickupState = new PickupState(getParty(other), getParty(proposee), getParty(proposer), Collections.emptyList(), new UniqueIdentifier());
-        UniqueIdentifier proposalId = createProposal(proposer, proposee, pickupState);
+        final DummyState dummyState = new DummyState(getParty(proposer), getParty(proposee), "test", "test", 1, 1, "test", 1);
+        UniqueIdentifier proposalId = createProposal(proposer, proposee, dummyState);
 
         Assert.assertNotNull(proposalId);
 
-        final PickupState modifiedPickupState = new PickupState(getParty(other), getParty(proposee), getParty(proposer), Collections.singletonList("Item"), new UniqueIdentifier());
-        final Proposal counterProposal = new PickupProposal(getParty(proposee), getParty(proposer), modifiedPickupState);
+        final DummyState modifiedDummyState = new DummyState(getParty(proposer), getParty(proposee), "test", "test", 1, 1, "test", 1);
+        modifiedDummyState.setMandatoryStringField("other");
+        final Proposal<DummyState> counterProposal = new DummyProposal(getParty(proposee), getParty(proposer), modifiedDummyState);
 
         ModifyFlow.ModifyFlowInitiator flow = new ModifyFlow.ModifyFlowInitiator(proposalId, counterProposal);
         Future future = proposer.startFlow(flow);

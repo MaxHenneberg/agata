@@ -3,10 +3,7 @@ package agata.lcl.flows;
 import agata.lcl.contracts.GenericProposalContract;
 import agata.lcl.states.Proposal;
 import co.paralleluniverse.fibers.Suspendable;
-import net.corda.core.contracts.Command;
-import net.corda.core.contracts.ContractState;
-import net.corda.core.contracts.StateAndRef;
-import net.corda.core.contracts.UniqueIdentifier;
+import net.corda.core.contracts.*;
 import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
@@ -49,7 +46,7 @@ public class AcceptFlow {
             StateAndRef inputStateAndRef = getServiceHub().getVaultService().queryBy(Proposal.class, inputCriteria).getStates().get(0);
 
             Proposal input = (Proposal) inputStateAndRef.getState().getData();
-            ContractState output = input.getProposedState();
+            LinearState output = input.getProposedState();
 
             //Creating the command
             List<PublicKey> requiredSigners = Arrays.asList(input.getProposee().getOwningKey(), input.getProposer().getOwningKey());
@@ -69,8 +66,9 @@ public class AcceptFlow {
             //Gathering the counterparty's signature
             Party counterparty = (getOurIdentity().equals(input.getProposer())) ? input.getProposee() : input.getProposer();
             FlowSession counterpartySession = initiateFlow(counterparty);
-            SignedTransaction fullyStx = subFlow(new CollectSignaturesFlow(partStx, Arrays.asList(counterpartySession)));
-            return subFlow(new FinalityFlow(fullyStx, Arrays.asList(counterpartySession)));
+            SignedTransaction fullyStx = subFlow(new CollectSignaturesFlow(partStx, Collections.singletonList(counterpartySession)));
+
+            return subFlow(new FinalityFlow(fullyStx, Collections.singletonList(counterpartySession)));
         }
     }
 

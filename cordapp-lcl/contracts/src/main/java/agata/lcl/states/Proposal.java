@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class Proposal<T extends ContractState> implements LinearState {
+public abstract class Proposal<T extends LinearState> implements LinearState {
 
     protected final Party proposee;
     protected final Party proposer;

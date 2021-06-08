@@ -15,8 +15,8 @@ public class ProposalFlowTest extends ProposalFlowTestBase {
 
     @Test
     public void proposalTest() throws ExecutionException, InterruptedException {
-        final PickupState pickupState = new PickupState(getParty(other), getParty(proposee), getParty(proposer), Collections.emptyList(), new UniqueIdentifier());
-        UniqueIdentifier proposalId = createProposal(proposer, proposee, pickupState);
+        final DummyState dummyState = new DummyState(getParty(proposer), getParty(proposee), "test", "test", 1, 1, "test", 1);
+        UniqueIdentifier proposalId = createProposal(proposer, proposee, dummyState);
 
         //successful query means the state is stored at node b's vault. Flow went through.
         Arrays.asList(proposer, proposee).forEach(node -> node.transaction(() -> {
@@ -30,7 +30,7 @@ public class ProposalFlowTest extends ProposalFlowTestBase {
 
             Assert.assertEquals(proposer.getInfo().getLegalIdentitiesAndCerts().get(0).getParty(), proposal.getProposer());
             Assert.assertEquals(proposee.getInfo().getLegalIdentitiesAndCerts().get(0).getParty(), proposal.getProposee());
-            Assert.assertEquals(pickupState, proposal.getProposedState());
+            Assert.assertEquals(dummyState, proposal.getProposedState());
             return null;
         }));
     }
