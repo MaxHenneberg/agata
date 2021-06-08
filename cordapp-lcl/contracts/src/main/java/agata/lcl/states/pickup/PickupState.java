@@ -33,22 +33,22 @@ public class PickupState implements LinearState {
     protected final LinearPointer<LinearState> referenceToAssignmentProposal;
 
     @ConstructorForDeserialization
-    public PickupState(Party exporter, Party supplier, Party lclCompany, List<String> pickedUpGoods, LinearPointer<LinearState> referenceToState1, UniqueIdentifier linearId) {
+    public PickupState(Party exporter, Party supplier, Party lclCompany, List<String> pickedUpGoods, LinearPointer<LinearState> referenceToAssignmentProposal, UniqueIdentifier linearId) {
         this.linearId = linearId;
         this.exporter = exporter;
         this.supplier = supplier;
         this.lclCompany = lclCompany;
         this.pickedUpGoods = pickedUpGoods;
-        this.referenceToAssignmentProposal = referenceToState1;
+        this.referenceToAssignmentProposal = referenceToAssignmentProposal;
     }
 
-    public PickupState(Party exporter, Party supplier, Party lclCompany, List<String> pickedUpGoods, UniqueIdentifier referenceToState1) {
+    public PickupState(Party exporter, Party supplier, Party lclCompany, List<String> pickedUpGoods, UniqueIdentifier referenceToAssignmentProposal) {
         this.linearId = new UniqueIdentifier();
         this.exporter = exporter;
         this.supplier = supplier;
         this.lclCompany = lclCompany;
         this.pickedUpGoods = pickedUpGoods;
-        this.referenceToAssignmentProposal = new LinearPointer<>(new UniqueIdentifier(null, referenceToState1.getId()), LinearState.class);
+        this.referenceToAssignmentProposal = new LinearPointer<>(new UniqueIdentifier(null, referenceToAssignmentProposal.getId()), LinearState.class);
     }
 
     @Override

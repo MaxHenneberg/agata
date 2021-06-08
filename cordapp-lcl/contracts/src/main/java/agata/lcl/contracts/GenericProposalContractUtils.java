@@ -48,7 +48,8 @@ public class GenericProposalContractUtils {
             }
         }
         requireThat(require -> {
-            require.using(buildErrorMessage(missingMandatoryFields, missingNotBlankFields, toBeChecked.getClass().getName(), isInput), missingMandatoryFields.isEmpty() && missingNotBlankFields.isEmpty());
+            require.using(buildErrorMessage(missingMandatoryFields, missingNotBlankFields, toBeChecked.getClass().getName(), isInput),
+                    missingMandatoryFields.isEmpty() && missingNotBlankFields.isEmpty());
             return null;
         });
 
@@ -59,7 +60,7 @@ public class GenericProposalContractUtils {
         fieldName = fieldName.substring(0, 1).toUpperCase().concat(fieldName.substring(1));
         String getterName = "get" + fieldName;
         return clazz.getDeclaredMethod(getterName);
-    }
+}
 
     private static String buildErrorMessage(List<String> missingMandatoryFields, List<String> missingNotBlankFields, String stateName, boolean isInput) {
         StringBuilder stringBuilder = new StringBuilder();

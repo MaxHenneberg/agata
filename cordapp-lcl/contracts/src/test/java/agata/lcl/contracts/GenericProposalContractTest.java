@@ -21,20 +21,24 @@ public class GenericProposalContractTest {
     public void testMandatoryCheck() {
         DummyState dummyState = new DummyState(alice.getParty(), bob.getParty(), "", "", null, null, "", null);
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> GenericProposalContractUtils.checkMandatoryFields(dummyState, new GenericProposalContract.Commands.Propose(), true));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> GenericProposalContractUtils.checkMandatoryFields(dummyState,
+                new GenericProposalContract.Commands.Propose(), true));
 
         Assert.assertNotNull(exception);
-        Assert.assertEquals("Failed requirement: Following Fields for Input State agata.lcl.states.test.DummyState must not be null: [mandatoryObjectField] and following Fields must not be Blank: [mandatoryStringField]", exception.getMessage());
+        Assert.assertEquals("Failed requirement: Following Fields for Input State agata.lcl.states.test.DummyState must not be null: [mandatoryObjectField] and following Fields must not be Blank: " +
+                "[mandatoryStringField]", exception.getMessage());
     }
 
     @Test
     public void testMandatoryCheckForCommand() {
         DummyState dummyState = new DummyState(alice.getParty(), bob.getParty(), "", "", null, null, "", null);
         DummyProposalContract dummyProposalContract = new DummyProposalContract();
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> GenericProposalContractUtils.checkMandatoryFields(dummyState, new GenericProposalContract.Commands.Modify(), true));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> GenericProposalContractUtils.checkMandatoryFields(dummyState,
+                new GenericProposalContract.Commands.Modify(), true));
 
         Assert.assertNotNull(exception);
-        Assert.assertEquals("Failed requirement: Following Fields for Input State agata.lcl.states.test.DummyState must not be null: [mandatoryObjectField, mandatoryForModify] and following Fields must not be Blank: [mandatoryStringField, mandatoryStringForModify]", exception.getMessage());
+        Assert.assertEquals("Failed requirement: Following Fields for Input State agata.lcl.states.test.DummyState must not be null: [mandatoryObjectField, mandatoryForModify] and following Fields " +
+                "must not be Blank: [mandatoryStringField, mandatoryStringForModify]", exception.getMessage());
     }
 
 }

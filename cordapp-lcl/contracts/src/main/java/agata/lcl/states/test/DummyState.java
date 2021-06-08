@@ -33,13 +33,15 @@ public class DummyState implements LinearState {
 
     @NotBlankForContract(value = GenericProposalContract.Commands.Modify.class)
     protected final String mandatoryStringForModify;
-    @MandatoryForContract(value = GenericProposalContract.Commands.Modify.class)
+    @MandatoryForContract(value = DummyProposalContract.Commands.Modify.class)
     protected final Integer mandatoryForModify;
 
     protected final UniqueIdentifier linearId;
 
     @ConstructorForDeserialization
-    public DummyState(Party a, Party b, String mandatoryStringField, String notMandatoryStringField, Integer mandatoryObjectField, Integer notMandatoryField, String mandatoryStringForModify, Integer mandatoryForModify, UniqueIdentifier linearId) {
+    public DummyState(Party a, Party b, String mandatoryStringField, String notMandatoryStringField, Integer mandatoryObjectField, Integer notMandatoryField, String mandatoryStringForModify,
+                      Integer mandatoryForModify,
+                      UniqueIdentifier linearId) {
         this.a = a;
         this.b = b;
         this.mandatoryStringField = mandatoryStringField;
@@ -51,7 +53,8 @@ public class DummyState implements LinearState {
         this.linearId = linearId;
     }
 
-    public DummyState(Party a, Party b, String mandatoryStringField, String notMandatoryStringField, Integer mandatoryObjectField, Integer notMandatoryField, String mandatoryStringForModify, Integer mandatoryForModify) {
+    public DummyState(Party a, Party b, String mandatoryStringField, String notMandatoryStringField, Integer mandatoryObjectField, Integer notMandatoryField, String mandatoryStringForModify,
+                      Integer mandatoryForModify) {
         this.a = a;
         this.b = b;
         this.mandatoryStringField = mandatoryStringField;

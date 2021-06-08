@@ -138,7 +138,6 @@ public abstract class GenericProposalContract implements Contract {
     }
 
 
-
     public interface Commands extends CommandData {
         class All implements Commands {
         }
