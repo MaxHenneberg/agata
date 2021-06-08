@@ -1,16 +1,14 @@
 package agata.lcl.flows;
 
-import agata.lcl.contracts.pickup.PickupContract;
 import agata.lcl.states.Proposal;
-import agata.lcl.states.pickup.PickupProposal;
-import agata.lcl.states.pickup.PickupState;
+import agata.lcl.states.test.DummyProposal;
+import agata.lcl.states.test.DummyState;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;

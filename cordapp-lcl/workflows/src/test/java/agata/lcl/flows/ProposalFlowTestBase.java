@@ -1,9 +1,8 @@
 package agata.lcl.flows;
 
 import agata.lcl.states.Proposal;
-import agata.lcl.states.pickup.PickupProposal;
-import agata.lcl.states.pickup.PickupState;
-import net.corda.core.contracts.CommandData;
+import agata.lcl.states.test.DummyProposal;
+import agata.lcl.states.test.DummyState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.Party;
 import net.corda.testing.node.MockNetwork;
@@ -39,8 +38,8 @@ abstract class ProposalFlowTestBase {
         network.stopNodes();
     }
 
-    protected UniqueIdentifier createProposal(StartedMockNode proposer, StartedMockNode proposee, PickupState proposal) throws ExecutionException, InterruptedException {
-        final Proposal<PickupState> proposalState = new PickupProposal(getParty(proposer), getParty(proposee),proposal);
+    protected UniqueIdentifier createProposal(StartedMockNode proposer, StartedMockNode proposee, DummyState proposal) throws ExecutionException, InterruptedException {
+        final Proposal<DummyState> proposalState = new DummyProposal(getParty(proposer), getParty(proposee), proposal);
         ProposalFlow.ProposalFlowInitiator flow = new ProposalFlow.ProposalFlowInitiator(proposalState);
         Future<UniqueIdentifier> future = proposer.startFlow(flow);
         network.runNetwork();

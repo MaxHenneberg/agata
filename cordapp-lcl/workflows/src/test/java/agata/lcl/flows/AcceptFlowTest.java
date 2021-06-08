@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -40,7 +39,7 @@ public class AcceptFlowTest extends ProposalFlowTestBase {
 
     @Test(expected = ExecutionException.class)
     public void acceptAsProposerTest() throws ExecutionException, InterruptedException {
-        final PickupState pickupState = new PickupState(getParty(other), getParty(proposee), getParty(proposer), Collections.emptyList(), new UniqueIdentifier());
+        final DummyState pickupState = new DummyState(getParty(proposer), getParty(proposee), "test", "test", 1, 1, "test", 1);
         UniqueIdentifier proposalId = createProposal(proposer, proposee, pickupState);
 
         AcceptFlow.AcceptFlowInitiator flow = new AcceptFlow.AcceptFlowInitiator(proposalId);
