@@ -22,6 +22,7 @@ public class GenericProposalContractUtils {
         List<String> missingMandatoryFields = new LinkedList<>();
         List<Field> fieldsForSecondCheck = new LinkedList<>();
         List<String> missingNotBlankFields = new LinkedList<>();
+        //Maybe consider checking for SuperClass != null
         Field[] fieldList = Stream.concat(Arrays.stream(toBeChecked.getClass().getDeclaredFields()), Arrays.stream(toBeChecked.getClass().getSuperclass().getDeclaredFields())).toArray(Field[]::new);
         for (Field field : fieldList) {
             if (field.isAnnotationPresent(MandatoryForContract.class)) {
