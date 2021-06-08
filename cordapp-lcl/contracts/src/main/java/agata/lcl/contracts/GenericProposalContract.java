@@ -30,6 +30,9 @@ public abstract class GenericProposalContract implements Contract {
         for (ContractState contractState : tx.getInputStates()) {
             try {
                 GenericProposalContractUtils.checkMandatoryFields(contractState, command.getValue(), true);
+                if (contractState instanceof Proposal) {
+                    GenericProposalContractUtils.checkMandatoryFields(((Proposal) contractState).getProposedState(), command.getValue(), true);
+                }
             } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                 e.printStackTrace();
             }
@@ -38,10 +41,14 @@ public abstract class GenericProposalContract implements Contract {
         for (ContractState contractState : tx.getOutputStates()) {
             try {
                 GenericProposalContractUtils.checkMandatoryFields(contractState, command.getValue(), false);
+                if (contractState instanceof Proposal) {
+                    GenericProposalContractUtils.checkMandatoryFields(((Proposal) contractState).getProposedState(), command.getValue(), true);
+                }
             } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         }
+
 
         boolean isValidCommand = false;
         if (command.getValue() instanceof Commands.Propose) {
@@ -141,6 +148,7 @@ public abstract class GenericProposalContract implements Contract {
     public interface Commands extends CommandData {
         class All implements Commands {
         }
+
         class Propose implements Commands {
         }
 

@@ -1,5 +1,6 @@
 package agata.lcl.states;
 
+import agata.lcl.contracts.annotations.MandatoryForContract;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -12,8 +13,11 @@ import java.util.List;
 
 public abstract class Proposal<T extends LinearState> implements LinearState {
 
+    @MandatoryForContract
     protected final Party proposee;
+    @MandatoryForContract
     protected final Party proposer;
+    @MandatoryForContract
     protected final T proposedState;
     protected UniqueIdentifier linearId;
 

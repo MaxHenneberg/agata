@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
@@ -21,7 +22,8 @@ public class GenericProposalContractUtils {
         List<String> missingMandatoryFields = new LinkedList<>();
         List<Field> fieldsForSecondCheck = new LinkedList<>();
         List<String> missingNotBlankFields = new LinkedList<>();
-        for (Field field : toBeChecked.getClass().getDeclaredFields()) {
+        Field[] fieldList = Stream.concat(Arrays.stream(toBeChecked.getClass().getDeclaredFields()), Arrays.stream(toBeChecked.getClass().getSuperclass().getDeclaredFields())).toArray(Field[]::new);
+        for (Field field : fieldList) {
             if (field.isAnnotationPresent(MandatoryForContract.class)) {
                 List<String> forCommands = Arrays.stream(field.getAnnotation(MandatoryForContract.class).value()).map(Class::getName).collect(Collectors.toList());
                 if (forCommands.contains(GenericProposalContract.Commands.All.class.getName()) || forCommands.contains(command.getClass().getName())) {
@@ -60,7 +62,7 @@ public class GenericProposalContractUtils {
         fieldName = fieldName.substring(0, 1).toUpperCase().concat(fieldName.substring(1));
         String getterName = "get" + fieldName;
         return clazz.getDeclaredMethod(getterName);
-}
+    }
 
     private static String buildErrorMessage(List<String> missingMandatoryFields, List<String> missingNotBlankFields, String stateName, boolean isInput) {
         StringBuilder stringBuilder = new StringBuilder();
