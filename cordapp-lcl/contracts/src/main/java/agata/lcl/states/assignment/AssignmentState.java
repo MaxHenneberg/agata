@@ -1,6 +1,7 @@
 package agata.lcl.states.assignment;
 
 import agata.bol.dataholder.Address;
+import agata.lcl.contracts.annotations.MandatoryForContract;
 import agata.lcl.contracts.assignment.AssignmentContract;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.LinearState;
@@ -19,13 +20,29 @@ import java.util.Objects;
 public class AssignmentState implements LinearState {
 
     protected final UniqueIdentifier linearId;
+
+    @MandatoryForContract
     protected final Party lclCompany;
+
+    @MandatoryForContract
     protected final Party buyer;
+
+    @MandatoryForContract
     protected final Party supplier;
+
+    @MandatoryForContract
     protected final Party arrivalParty; // Can be the buyer (if they want to ship the goods to their own warehouse) or another party (e.g. an associated warehouse)
+
+    @MandatoryForContract
     protected final Address departureAddress;
+
+    @MandatoryForContract
     protected final Address arrivalAddress;
+
+    @MandatoryForContract
     protected final Status status;
+
+    @MandatoryForContract
     protected final List<String> expectedGoods;
 
     @ConstructorForDeserialization

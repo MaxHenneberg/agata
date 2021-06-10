@@ -52,7 +52,7 @@ public class AssignmentContractTest {
                 AssignmentProposal proposal = new AssignmentProposal(lclCompany, buyer, state);
                 tx.output(AssignmentContract.ID, proposal);
                 tx.command(Arrays.asList(lclCompany.getOwningKey(), buyer.getOwningKey()), new AssignmentContract.Commands.Propose());
-                return tx.failsWith("The buyer is set");
+                return tx.failsWith("must not be null: [buyer]");
             });
             return null;
         });
