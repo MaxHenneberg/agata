@@ -5,11 +5,12 @@ import agata.bol.dataholder.ItemRow;
 import agata.lcl.flows.ProposalFlow;
 import agata.lcl.states.assignment.AssignmentProposal;
 import agata.lcl.states.assignment.AssignmentState;
-import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.UniqueIdentifier;
-import net.corda.core.flows.*;
+import net.corda.core.flows.FlowException;
+import net.corda.core.flows.FlowLogic;
+import net.corda.core.flows.InitiatingFlow;
+import net.corda.core.flows.StartableByRPC;
 import net.corda.core.identity.Party;
-import net.corda.core.transactions.SignedTransaction;
 
 import java.util.List;
 
@@ -44,33 +45,6 @@ public class AssignmentProposalFlow {
             AssignmentState state = new AssignmentState(lclCompany, buyer, supplier, arrivalParty, departureAddress, arrivalAddress, expectedGoods, status);
             AssignmentProposal proposal = new AssignmentProposal(lclCompany, buyer, state);
             return subFlow(new ProposalFlow.ProposalFlowInitiator(proposal));
-        }
-    }
-
-    @InitiatedBy(Initiator.class)
-    public static class Responder extends FlowLogic<Void> {
-
-        private final FlowSession counterpartySession;
-
-        public Responder(FlowSession counterpartySession) {
-            this.counterpartySession = counterpartySession;
-        }
-
-        @Suspendable
-        @Override
-        public Void call() throws FlowException {
-            SignedTransaction signedTransaction = subFlow(new SignTransactionFlow(counterpartySession) {
-                @Suspendable
-                @Override
-                protected void checkTransaction(SignedTransaction stx) throws FlowException {
-                    // Since this flow handles just the proposal, there is nothing to check which could reject the proposal.
-                    // If the proposal is not fine with the counterparty, it would simply not initiate the accept flow.
-                }
-            });
-
-            // Receive the final notarized transaction to be stored in the database
-            subFlow(new ReceiveFinalityFlow(counterpartySession, signedTransaction.getId()));
-            return null;
         }
     }
 
