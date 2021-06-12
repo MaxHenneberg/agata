@@ -1,6 +1,7 @@
 package agata.lcl.states.assignment;
 
 import agata.bol.dataholder.Address;
+import agata.bol.dataholder.ItemRow;
 import agata.lcl.contracts.annotations.MandatoryForContract;
 import agata.lcl.contracts.assignment.AssignmentContract;
 import net.corda.core.contracts.BelongsToContract;
@@ -43,10 +44,10 @@ public class AssignmentState implements LinearState {
     protected final Status status;
 
     @MandatoryForContract
-    protected final List<String> expectedGoods;
+    protected final List<ItemRow> expectedGoods;
 
     @ConstructorForDeserialization
-    public AssignmentState(UniqueIdentifier linearId, Party lclCompany, Party buyer, Party supplier, Party arrivalParty, Address departureAddress, Address arrivalAddress, List<String> expectedGoods, Status status) {
+    public AssignmentState(UniqueIdentifier linearId, Party lclCompany, Party buyer, Party supplier, Party arrivalParty, Address departureAddress, Address arrivalAddress, List<ItemRow> expectedGoods, Status status) {
         this.linearId = linearId;
         this.buyer = buyer;
         this.departureAddress = departureAddress;
@@ -58,7 +59,7 @@ public class AssignmentState implements LinearState {
         this.status = status;
     }
 
-    public AssignmentState(Party lclCompany, Party buyer, Party supplier, Party arrivalParty, Address departureAddress, Address arrivalAddress, List<String> expectedGoods, Status status) {
+    public AssignmentState(Party lclCompany, Party buyer, Party supplier, Party arrivalParty, Address departureAddress, Address arrivalAddress, List<ItemRow> expectedGoods, Status status) {
         this.linearId = new UniqueIdentifier();
         this.buyer = buyer;
         this.departureAddress = departureAddress;
@@ -123,7 +124,7 @@ public class AssignmentState implements LinearState {
         return lclCompany;
     }
 
-    public List<String> getExpectedGoods() {
+    public List<ItemRow> getExpectedGoods() {
         return expectedGoods;
     }
 

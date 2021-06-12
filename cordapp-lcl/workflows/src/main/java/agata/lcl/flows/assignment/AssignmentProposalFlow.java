@@ -1,6 +1,7 @@
 package agata.lcl.flows.assignment;
 
 import agata.bol.dataholder.Address;
+import agata.bol.dataholder.ItemRow;
 import agata.lcl.flows.ProposalFlow;
 import agata.lcl.states.assignment.AssignmentProposal;
 import agata.lcl.states.assignment.AssignmentState;
@@ -23,11 +24,11 @@ public class AssignmentProposalFlow {
         private final Party supplier;
         private final Address arrivalAddress;
         private final Party arrivalParty;
-        private final List<String> expectedGoods;
+        private final List<ItemRow> expectedGoods;
         private final AssignmentState.Status status;
 
 
-        public Initiator(Party buyer, Party supplier, Party arrivalParty, Address departureAddress, Address arrivalAddress, List<String> expectedGoods) {
+        public Initiator(Party buyer, Party supplier, Party arrivalParty, Address departureAddress, Address arrivalAddress, List<ItemRow> expectedGoods) {
             this.buyer = buyer;
             this.departureAddress = departureAddress;
             this.supplier = supplier;

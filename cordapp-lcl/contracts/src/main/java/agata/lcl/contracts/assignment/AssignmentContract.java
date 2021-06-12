@@ -20,6 +20,7 @@ public class AssignmentContract extends GenericProposalContract {
             AssignmentProposal proposal = tx.outputsOfType(AssignmentProposal.class).get(0);
             AssignmentState proposedState = proposal.getProposedState();
             require.using("The status is set to SlotBooked", proposedState.getStatus().equals(AssignmentState.Status.SlotBooked));
+            require.using("The list of goods is not empty", !proposedState.getExpectedGoods().isEmpty());
             require.using("Proposer must be the LCL company", proposal.getProposer().equals(proposedState.getLclCompany()));
             require.using("Proposee must be the buyer", proposal.getProposee().equals(proposedState.getBuyer()));
             return null;
