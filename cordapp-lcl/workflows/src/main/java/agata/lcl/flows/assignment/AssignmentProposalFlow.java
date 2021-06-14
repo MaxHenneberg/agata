@@ -44,7 +44,7 @@ public class AssignmentProposalFlow {
             Party lclCompany = getOurIdentity();
             AssignmentState state = new AssignmentState(lclCompany, buyer, supplier, arrivalParty, departureAddress, arrivalAddress, expectedGoods, status);
             AssignmentProposal proposal = new AssignmentProposal(lclCompany, buyer, state);
-            return subFlow(new ProposalFlow.ProposalFlowInitiator(proposal));
+            return subFlow(new ProposalFlow.Initiator(proposal));
         }
     }
 

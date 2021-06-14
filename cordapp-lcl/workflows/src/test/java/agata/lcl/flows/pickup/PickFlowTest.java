@@ -68,13 +68,13 @@ public class PickFlowTest {
         List<ItemRow> goods = Collections.singletonList(new ItemRow("abc", "123", 3, new DescriptionOfGoods("iPhone", "pallet", 100), 12, 12, 456));
         AssignmentState assignmentState = new AssignmentState(lclCompanyParty, buyerParty, supplierParty, buyerParty, address1, address2, goods, AssignmentState.Status.SlotBooked);
         Proposal proposal = new AssignmentProposal(lclCompanyParty, buyerParty, assignmentState);
-        ProposalFlow.ProposalFlowInitiator proposeFlow = new ProposalFlow.ProposalFlowInitiator(proposal);
+        ProposalFlow.Initiator proposeFlow = new ProposalFlow.Initiator(proposal);
         Future<UniqueIdentifier> future1 = this.lclCompany.startFlow(proposeFlow);
         network.runNetwork();
 
         UniqueIdentifier assignmentStateUId = future1.get();
 
-        AcceptFlow.AcceptFlowInitiator acceptFlow = new AcceptFlow.AcceptFlowInitiator(assignmentStateUId);
+        AcceptFlow.Initiator acceptFlow = new AcceptFlow.Initiator(assignmentStateUId);
         Future future = this.buyer.startFlow(acceptFlow);
         network.runNetwork();
         future.get();
@@ -82,7 +82,7 @@ public class PickFlowTest {
         PickupState pickupState = new PickupState(buyerParty, supplierParty, lclCompanyParty, Collections.emptyList(), assignmentState.getLinearId());
         Proposal pickupProposal = new PickupProposal(lclCompanyParty, supplierParty, pickupState);
 
-        proposeFlow = new ProposalFlow.ProposalFlowInitiator(pickupProposal);
+        proposeFlow = new ProposalFlow.Initiator(pickupProposal);
         future1 = this.lclCompany.startFlow(proposeFlow);
         network.runNetwork();
 
@@ -91,7 +91,7 @@ public class PickFlowTest {
         PickupState addGoodsState = new PickupState(buyerParty, supplierParty, lclCompanyParty, Collections.singletonList("test"), assignmentState.getLinearId());
         Proposal addGoodsProposal = new PickupProposal(supplierParty, lclCompanyParty, addGoodsState);
 
-        ModifyFlow.ModifyFlowInitiator modifyFlow = new ModifyFlow.ModifyFlowInitiator(pickupProposalId, addGoodsProposal);
+        ModifyFlow.Initiator modifyFlow = new ModifyFlow.Initiator(pickupProposalId, addGoodsProposal);
         Future future2 = this.supplier.startFlow(modifyFlow);
         network.runNetwork();
         ExecutionException exception = assertThrows(ExecutionException.class, future2::get);

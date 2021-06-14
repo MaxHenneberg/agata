@@ -1,17 +1,14 @@
 package agata.lcl.contracts;
 
 import agata.lcl.contracts.annotations.MandatoryForContract;
-import agata.lcl.contracts.annotations.NotBlankForContract;
+import agata.lcl.contracts.annotations.NotEmptyForContract;
 import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.ContractState;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,13 +35,22 @@ public class GenericProposalContractUtils {
         }
 
         for (Field field : fieldsForSecondCheck) {
-            if (field.isAnnotationPresent(NotBlankForContract.class)) {
+            if (field.isAnnotationPresent(NotEmptyForContract.class)) {
                 if (field.getGenericType().getTypeName().equals(String.class.getTypeName())) {
-                    List<String> forCommands = Arrays.stream(field.getAnnotation(NotBlankForContract.class).value()).map(Class::getName).collect(Collectors.toList());
+                    List<String> forCommands = Arrays.stream(field.getAnnotation(NotEmptyForContract.class).value()).map(Class::getName).collect(Collectors.toList());
                     if (forCommands.contains(GenericProposalContract.Commands.All.class.getName()) || forCommands.contains(command.getClass().getName())) {
-                        final String stringToBeChecked = (String) getGetterMethodName(field, field.getDeclaringClass()).invoke(toBeChecked);
-                        if (stringToBeChecked == null || stringToBeChecked.isEmpty()) {
-                            missingNotBlankFields.add(field.getName());
+                        final Object objectToBeChecked = getGetterMethodName(field, field.getDeclaringClass()).invoke(toBeChecked);
+                        if (objectToBeChecked instanceof String) {
+                            if (((String) objectToBeChecked).isEmpty()) {
+                                missingNotBlankFields.add(field.getName());
+                            }
+                        } else if (objectToBeChecked instanceof Collection) {
+                            if (((Collection) objectToBeChecked).isEmpty()) {
+                                missingNotBlankFields.add(field.getName());
+                            }
+                        } else {
+                            //TODO: Good Exception
+                            throw new RuntimeException("Annotation was used for wrong Type. Expected String or Collection, but got: " + objectToBeChecked.getClass());
                         }
                     }
                 }

@@ -40,7 +40,7 @@ abstract class ProposalFlowTestBase {
 
     protected UniqueIdentifier createProposal(StartedMockNode proposer, StartedMockNode proposee, DummyState proposal) throws ExecutionException, InterruptedException {
         final Proposal<DummyState> proposalState = new DummyProposal(getParty(proposer), getParty(proposee), proposal);
-        ProposalFlow.ProposalFlowInitiator flow = new ProposalFlow.ProposalFlowInitiator(proposalState);
+        ProposalFlow.Initiator flow = new ProposalFlow.Initiator(proposalState);
         Future<UniqueIdentifier> future = proposer.startFlow(flow);
         network.runNetwork();
 

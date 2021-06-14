@@ -20,16 +20,16 @@ public class ProposalFlow {
 
     @InitiatingFlow
     @StartableByRPC
-    public static class ProposalFlowInitiator extends FlowLogic<UniqueIdentifier> {
+    public static class Initiator extends FlowLogic<UniqueIdentifier> {
         private final Proposal proposalState;
         private final GenericProposalContract.Commands.Propose commandType;
 
-        public ProposalFlowInitiator(Proposal proposalState) {
+        public Initiator(Proposal proposalState) {
             this.proposalState = proposalState;
             this.commandType = new GenericProposalContract.Commands.Propose();
         }
 
-        public ProposalFlowInitiator(Proposal proposalState, GenericProposalContract.Commands.Propose commandType) {
+        public Initiator(Proposal proposalState, GenericProposalContract.Commands.Propose commandType) {
             this.proposalState = proposalState;
             this.commandType = commandType;
         }
@@ -59,11 +59,11 @@ public class ProposalFlow {
         }
     }
 
-    @InitiatedBy(ProposalFlowInitiator.class)
-    public static class ProposalFlowResponder extends FlowLogic<SignedTransaction> {
+    @InitiatedBy(Initiator.class)
+    public static class Responder extends FlowLogic<SignedTransaction> {
         private FlowSession counterpartySession;
 
-        public ProposalFlowResponder(FlowSession counterpartySession) {
+        public Responder(FlowSession counterpartySession) {
             this.counterpartySession = counterpartySession;
         }
 
