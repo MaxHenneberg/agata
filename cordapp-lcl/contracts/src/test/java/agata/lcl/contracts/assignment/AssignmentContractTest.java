@@ -1,9 +1,10 @@
 package agata.lcl.contracts.assignment;
 
 import agata.bol.dataholder.Address;
+import agata.bol.dataholder.DescriptionOfGoods;
+import agata.bol.dataholder.ItemRow;
 import agata.lcl.states.assignment.AssignmentProposal;
 import agata.lcl.states.assignment.AssignmentState;
-import net.corda.core.contracts.CommandData;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
 import net.corda.testing.core.TestIdentity;
@@ -11,6 +12,8 @@ import net.corda.testing.node.MockServices;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static net.corda.testing.node.NodeTestUtils.ledger;
 
@@ -30,7 +33,9 @@ public class AssignmentContractTest {
                 Party lclCompany = alice.getParty();
                 Party buyer = charlie.getParty();
                 Party supplier = bob.getParty();
-                AssignmentState state = new AssignmentState(lclCompany, buyer, supplier, supplier, address1, address2, Arrays.asList("foo", "bar", "baz"), AssignmentState.Status.SlotBooked);
+                ItemRow r = new ItemRow("abc", "123", 3, new DescriptionOfGoods("iPhone", "pallet", 100), 12, 12, 456);
+                List<ItemRow> goods = Collections.singletonList(r);
+                AssignmentState state = new AssignmentState(lclCompany, buyer, supplier, supplier, address1, address2, goods, AssignmentState.Status.SlotBooked);
                 AssignmentProposal proposal = new AssignmentProposal(lclCompany, buyer, state);
                 tx.output(AssignmentContract.ID, proposal);
                 tx.command(Arrays.asList(lclCompany.getOwningKey(), buyer.getOwningKey()), new AssignmentContract.Commands.Propose());
@@ -48,11 +53,11 @@ public class AssignmentContractTest {
                 Party lclCompany = alice.getParty();
                 Party buyer = charlie.getParty();
                 Party supplier = bob.getParty();
-                AssignmentState state = new AssignmentState(lclCompany, null, supplier, supplier, address1, address2, Arrays.asList("foo", "bar", "baz"), AssignmentState.Status.SlotBooked);
+                AssignmentState state = new AssignmentState(lclCompany, null, supplier, supplier, address1, address2, Collections.emptyList(), AssignmentState.Status.SlotBooked);
                 AssignmentProposal proposal = new AssignmentProposal(lclCompany, buyer, state);
                 tx.output(AssignmentContract.ID, proposal);
                 tx.command(Arrays.asList(lclCompany.getOwningKey(), buyer.getOwningKey()), new AssignmentContract.Commands.Propose());
-                return tx.failsWith("The buyer is set");
+                return tx.failsWith("must not be null: [buyer]");
             });
             return null;
         });

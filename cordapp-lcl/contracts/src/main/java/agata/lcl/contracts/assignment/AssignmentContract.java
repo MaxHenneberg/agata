@@ -17,16 +17,12 @@ public class AssignmentContract extends GenericProposalContract {
     @Override
     protected void extendedVerifyPropose(@NotNull LedgerTransaction tx, @NotNull Command command) {
         requireThat(require -> {
-            AssignmentProposal output = tx.outputsOfType(AssignmentProposal.class).get(0);
-            AssignmentState proposedState = output.getProposedState();
-            require.using("The arrival address is set", !Objects.isNull(proposedState.getArrivalAddress()));
-            require.using("The arrival party is set", !Objects.isNull(proposedState.getArrivalParty()));
-            require.using("The buyer is set", !Objects.isNull(proposedState.getBuyer()));
-            require.using("The departure address is set", !Objects.isNull(proposedState.getDepartureAddress()));
-            require.using("The expected goods are set", !Objects.isNull(proposedState.getExpectedGoods()));
-            require.using("The LCL company is set", !Objects.isNull(proposedState.getLclCompany()));
-            require.using("The supplier is set", !Objects.isNull(proposedState.getSupplier()));
+            AssignmentProposal proposal = tx.outputsOfType(AssignmentProposal.class).get(0);
+            AssignmentState proposedState = proposal.getProposedState();
             require.using("The status is set to SlotBooked", proposedState.getStatus().equals(AssignmentState.Status.SlotBooked));
+            require.using("The list of goods is not empty", !proposedState.getExpectedGoods().isEmpty());
+            require.using("Proposer must be the LCL company", proposal.getProposer().equals(proposedState.getLclCompany()));
+            require.using("Proposee must be the buyer", proposal.getProposee().equals(proposedState.getBuyer()));
             return null;
         });
     }

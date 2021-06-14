@@ -1,6 +1,8 @@
 package agata.lcl.flows.pickup;
 
 import agata.bol.dataholder.Address;
+import agata.bol.dataholder.DescriptionOfGoods;
+import agata.bol.dataholder.ItemRow;
 import agata.lcl.flows.AcceptFlow;
 import agata.lcl.flows.ModifyFlow;
 import agata.lcl.flows.ProposalFlow;
@@ -25,6 +27,7 @@ import org.junit.Test;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -62,8 +65,9 @@ public class PickFlowTest {
         Party lclCompany = getParty(proposer);
         Party supplier = getParty(proposee);
         Party exporter = getParty(other);
-        AssignmentState assignmentState = new AssignmentState(lclCompany, exporter, supplier, exporter, address1, address2, Arrays.asList("foo", "bar", "baz"), AssignmentState.Status.SlotBooked);
-        Proposal proposal = new AssignmentProposal(exporter, lclCompany, assignmentState);
+        List<ItemRow> goods = Collections.singletonList(new ItemRow("abc", "123", 3, new DescriptionOfGoods("iPhone", "pallet", 100), 12, 12, 456));
+        AssignmentState assignmentState = new AssignmentState(lclCompany, exporter, supplier, exporter, address1, address2, goods, AssignmentState.Status.SlotBooked);
+        Proposal proposal = new AssignmentProposal(lclCompany, exporter, assignmentState);
         ProposalFlow.ProposalFlowInitiator proposeFlow = new ProposalFlow.ProposalFlowInitiator(proposal);
         Future<UniqueIdentifier> future1 = other.startFlow(proposeFlow);
         network.runNetwork();

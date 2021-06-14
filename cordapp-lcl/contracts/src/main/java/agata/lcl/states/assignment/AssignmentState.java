@@ -1,6 +1,8 @@
 package agata.lcl.states.assignment;
 
 import agata.bol.dataholder.Address;
+import agata.bol.dataholder.ItemRow;
+import agata.lcl.contracts.annotations.MandatoryForContract;
 import agata.lcl.contracts.assignment.AssignmentContract;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.LinearState;
@@ -19,17 +21,33 @@ import java.util.Objects;
 public class AssignmentState implements LinearState {
 
     protected final UniqueIdentifier linearId;
+
+    @MandatoryForContract
     protected final Party lclCompany;
+
+    @MandatoryForContract
     protected final Party buyer;
+
+    @MandatoryForContract
     protected final Party supplier;
+
+    @MandatoryForContract
     protected final Party arrivalParty; // Can be the buyer (if they want to ship the goods to their own warehouse) or another party (e.g. an associated warehouse)
+
+    @MandatoryForContract
     protected final Address departureAddress;
+
+    @MandatoryForContract
     protected final Address arrivalAddress;
+
+    @MandatoryForContract
     protected final Status status;
-    protected final List<String> expectedGoods;
+
+    @MandatoryForContract
+    protected final List<ItemRow> expectedGoods;
 
     @ConstructorForDeserialization
-    public AssignmentState(UniqueIdentifier linearId, Party lclCompany, Party buyer, Party supplier, Party arrivalParty, Address departureAddress, Address arrivalAddress, List<String> expectedGoods, Status status) {
+    public AssignmentState(UniqueIdentifier linearId, Party lclCompany, Party buyer, Party supplier, Party arrivalParty, Address departureAddress, Address arrivalAddress, List<ItemRow> expectedGoods, Status status) {
         this.linearId = linearId;
         this.buyer = buyer;
         this.departureAddress = departureAddress;
@@ -41,7 +59,7 @@ public class AssignmentState implements LinearState {
         this.status = status;
     }
 
-    public AssignmentState(Party lclCompany, Party buyer, Party supplier, Party arrivalParty, Address departureAddress, Address arrivalAddress, List<String> expectedGoods, Status status) {
+    public AssignmentState(Party lclCompany, Party buyer, Party supplier, Party arrivalParty, Address departureAddress, Address arrivalAddress, List<ItemRow> expectedGoods, Status status) {
         this.linearId = new UniqueIdentifier();
         this.buyer = buyer;
         this.departureAddress = departureAddress;
@@ -106,7 +124,7 @@ public class AssignmentState implements LinearState {
         return lclCompany;
     }
 
-    public List<String> getExpectedGoods() {
+    public List<ItemRow> getExpectedGoods() {
         return expectedGoods;
     }
 
