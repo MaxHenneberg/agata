@@ -1,11 +1,14 @@
 package agata.bol.dataholder;
 
-public class ContainerInformation {
-    private final String containerNo;
-    private final String sealNo;
-    private final int type;
+import agata.bol.enums.ContainerType;
 
-    public ContainerInformation(String containerNo, String sealNo, int type) {
+public class ContainerInformation {
+
+    private final String containerNo;
+    private final ContainerType type;
+    private String sealNo;
+
+    public ContainerInformation(String containerNo, String sealNo, ContainerType type) {
         this.containerNo = containerNo;
         this.sealNo = sealNo;
         this.type = type;
@@ -19,7 +22,11 @@ public class ContainerInformation {
         return sealNo;
     }
 
-    public int getType() {
+    public void setSealNo(String sealNo) {
+        this.sealNo = sealNo;
+    }
+
+    public ContainerType getType() {
         return type;
     }
 }

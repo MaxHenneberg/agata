@@ -1,5 +1,7 @@
 package agata.lcl.states.container;
 
+import agata.bol.dataholder.ContainerInformation;
+import agata.bol.enums.ContainerType;
 import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.AbstractParty;
@@ -21,11 +23,11 @@ public class ContainerRequestState implements LinearState {
     private final String portOfLoading;
     private final String portOfDischarge;
     private final String forwardingAgentNo;
-    private final ContainerSize size;
+    private final ContainerType requestedType;
     private final String vesselName;
-    private final List<String> containerNumbers;
+    private final ContainerInformation container;
 
-    public ContainerRequestState(Party shippingLine, Party lclCompany, Party lclDestination, String portOfLoading, String portOfDischarge, String forwardingAgentNo, ContainerSize size, String vesselName, List<String> containerNumbers) {
+    public ContainerRequestState(Party shippingLine, Party lclCompany, Party lclDestination, String portOfLoading, String portOfDischarge, String forwardingAgentNo, ContainerType requestedType, String vesselName, ContainerInformation container) {
         this.linearId = new UniqueIdentifier();
         this.shippingLine = shippingLine;
         this.lclCompany = lclCompany;
@@ -33,13 +35,13 @@ public class ContainerRequestState implements LinearState {
         this.portOfLoading = portOfLoading;
         this.portOfDischarge = portOfDischarge;
         this.forwardingAgentNo = forwardingAgentNo;
-        this.size = size;
+        this.requestedType = requestedType;
         this.vesselName = vesselName;
-        this.containerNumbers = containerNumbers;
+        this.container = container;
     }
 
     @ConstructorForDeserialization
-    public ContainerRequestState(UniqueIdentifier linearId, Party shippingLine, Party lclCompany, Party lclDestination, String portOfLoading, String portOfDischarge, String forwardingAgentNo, ContainerSize size, String vesselName, List<String> containerNumbers) {
+    public ContainerRequestState(UniqueIdentifier linearId, Party shippingLine, Party lclCompany, Party lclDestination, String portOfLoading, String portOfDischarge, String forwardingAgentNo, ContainerType requestedType, String vesselName, ContainerInformation container) {
         this.linearId = linearId;
         this.shippingLine = shippingLine;
         this.lclCompany = lclCompany;
@@ -47,9 +49,9 @@ public class ContainerRequestState implements LinearState {
         this.portOfLoading = portOfLoading;
         this.portOfDischarge = portOfDischarge;
         this.forwardingAgentNo = forwardingAgentNo;
-        this.size = size;
+        this.requestedType = requestedType;
         this.vesselName = vesselName;
-        this.containerNumbers = containerNumbers;
+        this.container = container;
     }
 
     @NotNull
@@ -61,7 +63,6 @@ public class ContainerRequestState implements LinearState {
     @NotNull
     @Override
     public List<AbstractParty> getParticipants() {
-        // TODO: Add lclDestination here as well?
         return Arrays.asList(lclCompany, shippingLine);
     }
 
@@ -77,14 +78,14 @@ public class ContainerRequestState implements LinearState {
                 Objects.equals(portOfLoading, that.portOfLoading) &&
                 Objects.equals(portOfDischarge, that.portOfDischarge) &&
                 Objects.equals(forwardingAgentNo, that.forwardingAgentNo) &&
-                size == that.size &&
+                requestedType == that.requestedType &&
                 Objects.equals(vesselName, that.vesselName) &&
-                Objects.equals(containerNumbers, that.containerNumbers);
+                Objects.equals(container, that.container);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(linearId, shippingLine, lclCompany, lclDestination, portOfLoading, portOfDischarge, forwardingAgentNo, size, vesselName, containerNumbers);
+        return Objects.hash(linearId, shippingLine, lclCompany, lclDestination, portOfLoading, portOfDischarge, forwardingAgentNo, requestedType, vesselName, container);
     }
 
     public Party getShippingLine() {
@@ -111,20 +112,15 @@ public class ContainerRequestState implements LinearState {
         return forwardingAgentNo;
     }
 
-    public ContainerSize getSize() {
-        return size;
+    public ContainerType getRequestedType() {
+        return requestedType;
     }
 
     public String getVesselName() {
         return vesselName;
     }
 
-    public List<String> getContainerNumbers() {
-        return containerNumbers;
-    }
-
-    public enum ContainerSize {
-        Small, // 20 foot
-        Large // 40 foot
+    public ContainerInformation getContainer() {
+        return container;
     }
 }
