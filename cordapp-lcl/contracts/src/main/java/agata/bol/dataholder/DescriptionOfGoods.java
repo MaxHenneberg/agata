@@ -1,32 +1,35 @@
 package agata.bol.dataholder;
 
-import java.util.List;
+import net.corda.core.serialization.CordaSerializable;
 
+import java.util.Objects;
+
+@CordaSerializable
 public class DescriptionOfGoods {
 
-    private String freeTextDescription;
     private final String product;
     private final String typeOfPackage;
     private final int quantity;
-    private final List<String> handlingInstructions;
 
-    public DescriptionOfGoods(String product, String typeOfPackage, int quantity, List<String> handlingInstructions) {
+    public DescriptionOfGoods(String product, String typeOfPackage, int quantity) {
         this.product = product;
         this.typeOfPackage = typeOfPackage;
         this.quantity = quantity;
-        this.handlingInstructions = handlingInstructions;
     }
 
-    public DescriptionOfGoods(String freeTextDescription, String product, String typeOfPackage, int quantity, List<String> handlingInstructions) {
-        this.freeTextDescription = freeTextDescription;
-        this.product = product;
-        this.typeOfPackage = typeOfPackage;
-        this.quantity = quantity;
-        this.handlingInstructions = handlingInstructions;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DescriptionOfGoods that = (DescriptionOfGoods) o;
+        return quantity == that.quantity &&
+                Objects.equals(product, that.product) &&
+                Objects.equals(typeOfPackage, that.typeOfPackage);
     }
 
-    public String getFreeTextDescription() {
-        return freeTextDescription;
+    @Override
+    public int hashCode() {
+        return Objects.hash(product, typeOfPackage, quantity);
     }
 
     public String getProduct() {
@@ -39,9 +42,5 @@ public class DescriptionOfGoods {
 
     public int getQuantity() {
         return quantity;
-    }
-
-    public List<String> getHandlingInstructions() {
-        return handlingInstructions;
     }
 }

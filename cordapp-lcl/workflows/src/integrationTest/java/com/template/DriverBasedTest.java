@@ -9,6 +9,7 @@ import net.corda.testing.driver.NodeHandle;
 import net.corda.testing.driver.NodeParameters;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static net.corda.testing.driver.Driver.driver;
@@ -22,7 +23,7 @@ public class DriverBasedTest {
     public void nodeTest() {
         driver(new DriverParameters().withIsDebug(true).withStartNodesInProcess(true), dsl -> {
             // Start a pair of nodes and wait for them both to be ready.
-            List<CordaFuture<NodeHandle>> handleFutures = ImmutableList.of(
+            List<CordaFuture<NodeHandle>> handleFutures = Arrays.asList(
                     dsl.startNode(new NodeParameters().withProvidedName(bankA.getName())),
                     dsl.startNode(new NodeParameters().withProvidedName(bankB.getName()))
             );

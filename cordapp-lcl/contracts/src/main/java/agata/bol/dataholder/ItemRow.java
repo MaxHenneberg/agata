@@ -1,5 +1,10 @@
 package agata.bol.dataholder;
 
+import net.corda.core.serialization.CordaSerializable;
+
+import java.util.Objects;
+
+@CordaSerializable
 public class ItemRow {
     private final String mark;
     private final String identityNumber;
@@ -20,6 +25,25 @@ public class ItemRow {
         this.netWeight = netWeight;
         this.grossWeight = grossWeight;
         this.measurement = measurement;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItemRow itemRow = (ItemRow) o;
+        return noOfPackages == itemRow.noOfPackages &&
+                netWeight == itemRow.netWeight &&
+                grossWeight == itemRow.grossWeight &&
+                measurement == itemRow.measurement &&
+                Objects.equals(mark, itemRow.mark) &&
+                Objects.equals(identityNumber, itemRow.identityNumber) &&
+                Objects.equals(descriptionOfGoods, itemRow.descriptionOfGoods);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mark, identityNumber, noOfPackages, descriptionOfGoods, netWeight, grossWeight, measurement);
     }
 
     public String getMark() {
