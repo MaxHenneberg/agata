@@ -20,7 +20,7 @@ public class PickupState implements LinearState {
     protected final UniqueIdentifier linearId;
 
     @MandatoryForContract
-    protected final Party exporter;
+    protected final Party buyer;
     @MandatoryForContract
     protected final Party supplier;
     @MandatoryForContract
@@ -35,7 +35,7 @@ public class PickupState implements LinearState {
     @ConstructorForDeserialization
     public PickupState(Party exporter, Party supplier, Party lclCompany, List<String> pickedUpGoods, LinearPointer<LinearState> referenceToAssignmentProposal, UniqueIdentifier linearId) {
         this.linearId = linearId;
-        this.exporter = exporter;
+        this.buyer = exporter;
         this.supplier = supplier;
         this.lclCompany = lclCompany;
         this.pickedUpGoods = pickedUpGoods;
@@ -44,7 +44,7 @@ public class PickupState implements LinearState {
 
     public PickupState(Party exporter, Party supplier, Party lclCompany, List<String> pickedUpGoods, UniqueIdentifier referenceToAssignmentProposal) {
         this.linearId = new UniqueIdentifier();
-        this.exporter = exporter;
+        this.buyer = exporter;
         this.supplier = supplier;
         this.lclCompany = lclCompany;
         this.pickedUpGoods = pickedUpGoods;
@@ -54,7 +54,7 @@ public class PickupState implements LinearState {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof PickupState) {
-            return this.exporter.equals(((PickupState) obj).exporter)
+            return this.buyer.equals(((PickupState) obj).buyer)
                     && this.supplier.equals(((PickupState) obj).supplier)
                     && this.lclCompany.equals(((PickupState) obj).lclCompany)
                     && this.pickedUpGoods.equals(((PickupState) obj).pickedUpGoods)
@@ -76,8 +76,8 @@ public class PickupState implements LinearState {
         return Arrays.asList(supplier, lclCompany);
     }
 
-    public Party getExporter() {
-        return exporter;
+    public Party getBuyer() {
+        return buyer;
     }
 
     public Party getSupplier() {

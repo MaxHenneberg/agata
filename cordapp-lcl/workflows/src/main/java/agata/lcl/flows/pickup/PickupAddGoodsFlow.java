@@ -38,7 +38,7 @@ public class PickupAddGoodsFlow {
             PickupProposal proposal = (PickupProposal) inputStateAndRef.getState().getData();
 
             final PickupState proposedPickupState = proposal.getProposedState();
-            final PickupState counterProposal = new PickupState(proposedPickupState.getExporter(),
+            final PickupState counterProposal = new PickupState(proposedPickupState.getBuyer(),
                     proposedPickupState.getSupplier(), proposedPickupState.getLclCompany(),
                     this.goods, proposedPickupState.getReferenceToAssignmentProposal(), proposedPickupState.getLinearId());
 

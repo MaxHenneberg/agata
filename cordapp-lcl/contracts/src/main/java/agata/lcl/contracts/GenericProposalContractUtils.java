@@ -55,7 +55,6 @@ public class GenericProposalContractUtils {
                     missingMandatoryFields.isEmpty() && missingNotBlankFields.isEmpty());
             return null;
         });
-
     }
 
     private static Method getGetterMethodName(Field field, Class clazz) throws NoSuchMethodException {

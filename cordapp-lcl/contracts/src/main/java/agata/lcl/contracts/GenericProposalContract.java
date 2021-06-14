@@ -1,7 +1,5 @@
 package agata.lcl.contracts;
 
-import agata.lcl.contracts.annotations.MandatoryForContract;
-import agata.lcl.contracts.annotations.NotBlankForContract;
 import agata.lcl.states.Proposal;
 import net.corda.core.contracts.Command;
 import net.corda.core.contracts.CommandData;
@@ -10,14 +8,7 @@ import net.corda.core.contracts.ContractState;
 import net.corda.core.transactions.LedgerTransaction;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
@@ -34,7 +25,7 @@ public abstract class GenericProposalContract implements Contract {
                     GenericProposalContractUtils.checkMandatoryFields(((Proposal) contractState).getProposedState(), command.getValue(), true);
                 }
             } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e.getMessage());
             }
         }
 
@@ -45,7 +36,7 @@ public abstract class GenericProposalContract implements Contract {
                     GenericProposalContractUtils.checkMandatoryFields(((Proposal) contractState).getProposedState(), command.getValue(), true);
                 }
             } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e.getMessage());
             }
         }
 
