@@ -79,7 +79,7 @@ public class PickFlowTest {
         network.runNetwork();
         future.get();
 
-        PickupState pickupState = new PickupState(buyerParty, supplierParty, lclCompanyParty, Collections.emptyList(), assignmentState.getLinearId());
+        PickupState pickupState = new PickupState(buyerParty, supplierParty, lclCompanyParty, Collections.emptyList(), assignmentState.getLinearId(), "");
         Proposal pickupProposal = new PickupProposal(lclCompanyParty, supplierParty, pickupState);
 
         proposeFlow = new ProposalFlow.Initiator(pickupProposal);
@@ -88,7 +88,8 @@ public class PickFlowTest {
 
         UniqueIdentifier pickupProposalId = future1.get();
 
-        PickupState addGoodsState = new PickupState(buyerParty, supplierParty, lclCompanyParty, Collections.singletonList("test"), assignmentState.getLinearId());
+        PickupState addGoodsState = new PickupState(buyerParty, supplierParty, lclCompanyParty,
+                Collections.singletonList(new ItemRow("abc", "123", 3, new DescriptionOfGoods("iPhone", "pallet", 100), 12, 12, 456)), assignmentState.getLinearId(), "");
         Proposal addGoodsProposal = new PickupProposal(supplierParty, lclCompanyParty, addGoodsState);
 
         ModifyFlow.Initiator modifyFlow = new ModifyFlow.Initiator(pickupProposalId, addGoodsProposal);

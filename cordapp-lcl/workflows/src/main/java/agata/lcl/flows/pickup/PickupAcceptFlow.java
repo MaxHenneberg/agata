@@ -1,7 +1,6 @@
 package agata.lcl.flows.pickup;
 
 import agata.bol.contracts.BillOfLadingContract;
-import agata.bol.dataholder.ContainerInformation;
 import agata.bol.dataholder.FreightCharges;
 import agata.bol.dataholder.Price;
 import agata.bol.enums.Payable;
@@ -45,12 +44,10 @@ public class PickupAcceptFlow {
         private final List<FreightCharges> freightChargesList;
         private final Price prepaid;
         private final Price collect;
-        private final List<ContainerInformation> containerInformationList;
 
         public Initiator(UniqueIdentifier proposalId, UniqueIdentifier referenceToContainerRequest, String modeOfInitialCarriage, String placeOfInitialReceipt,
                          String placeOfDeliveryByCarrier, String bookingNo, String billOfLadingNo, List<String> exportReference, Payable freightPayableAt,
-                         TypeOfMovement typeOfMovement, List<FreightCharges> freightChargesList, Price prepaid, Price collect,
-                         List<ContainerInformation> containerInformationList) {
+                         TypeOfMovement typeOfMovement, List<FreightCharges> freightChargesList, Price prepaid, Price collect) {
             this.proposalId = proposalId;
             this.referenceToContainerRequest = referenceToContainerRequest;
             this.modeOfInitialCarriage = modeOfInitialCarriage;
@@ -64,7 +61,6 @@ public class PickupAcceptFlow {
             this.freightChargesList = freightChargesList;
             this.prepaid = prepaid;
             this.collect = collect;
-            this.containerInformationList = containerInformationList;
         }
 
         @Suspendable
@@ -97,7 +93,8 @@ public class PickupAcceptFlow {
             BillOfLadingState billOfLadingState = new BillOfLadingState(getOurIdentity(), assignmentState.getSupplier(), assignmentState.getBuyer(), this.modeOfInitialCarriage,
                     this.placeOfInitialReceipt, containerRequestState.getVesselName(), containerRequestState.getPortOfLoading(), containerRequestState.getPortOfDischarge(),
                     this.placeOfDeliveryByCarrier, this.bookingNo, this.billOfLadingNo, this.exportReference, getOurIdentity(), containerRequestState.getForwardingAgentNo(), null, null, null,
-                    this.freightPayableAt, this.typeOfMovement, pickupState.getPickedUpGoods(), this.freightChargesList, this.prepaid, this.collect, null, this.containerInformationList);
+                    this.freightPayableAt, this.typeOfMovement, pickupState.getPickedUpGoods(), this.freightChargesList, this.prepaid, this.collect, null,
+                    Collections.singletonList(containerRequestState.getContainer()));
 
             return subFlow(new CreateBoLFlow.Initiator(billOfLadingState, new BillOfLadingContract.BoLCommands.CreateHouseBoL()));
         }

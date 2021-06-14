@@ -2,7 +2,7 @@ package agata.lcl.states.test;
 
 import agata.lcl.contracts.GenericProposalContract;
 import agata.lcl.contracts.annotations.MandatoryForContract;
-import agata.lcl.contracts.annotations.NotBlankForContract;
+import agata.lcl.contracts.annotations.NotEmptyForContract;
 import agata.lcl.contracts.test.DummyProposalContract;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.LinearState;
@@ -21,7 +21,7 @@ public class DummyState implements LinearState {
     protected final Party a;
     protected final Party b;
 
-    @NotBlankForContract
+    @NotEmptyForContract
     protected String mandatoryStringField;
 
     protected final String notMandatoryStringField;
@@ -31,7 +31,7 @@ public class DummyState implements LinearState {
 
     protected final Integer notMandatoryField;
 
-    @NotBlankForContract(value = GenericProposalContract.Commands.Modify.class)
+    @NotEmptyForContract(value = GenericProposalContract.Commands.Modify.class)
     protected final String mandatoryStringForModify;
     @MandatoryForContract(value = DummyProposalContract.Commands.Modify.class)
     protected final Integer mandatoryForModify;

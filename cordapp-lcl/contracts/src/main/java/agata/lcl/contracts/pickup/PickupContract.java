@@ -39,7 +39,7 @@ public class PickupContract extends GenericProposalContract {
     }
 
     private AssignmentState resolveAssignmentState(PickupProposal pickupProposal, LedgerTransaction tx) {
-        return (AssignmentState) pickupProposal.getProposedState().getReferenceToAssignmentProposal().resolve(tx).getState().getData();
+        return pickupProposal.getProposedState().getReferenceToAssignmentState().resolve(tx).getState().getData();
     }
 
     public interface PickupCommands extends GenericProposalContract.Commands {
