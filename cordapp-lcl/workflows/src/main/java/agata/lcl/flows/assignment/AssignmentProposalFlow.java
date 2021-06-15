@@ -5,6 +5,7 @@ import agata.bol.dataholder.ItemRow;
 import agata.lcl.flows.ProposalFlow;
 import agata.lcl.states.assignment.AssignmentProposal;
 import agata.lcl.states.assignment.AssignmentState;
+import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.FlowException;
 import net.corda.core.flows.FlowLogic;
@@ -40,6 +41,7 @@ public class AssignmentProposalFlow {
         }
 
         @Override
+        @Suspendable
         public UniqueIdentifier call() throws FlowException {
             Party lclCompany = getOurIdentity();
             AssignmentState state = new AssignmentState(lclCompany, buyer, supplier, arrivalParty, departureAddress, arrivalAddress, expectedGoods, status);
