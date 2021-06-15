@@ -1,7 +1,9 @@
 package agata.bol.dataholder;
 
 import agata.bol.enums.ContainerType;
+import net.corda.core.serialization.CordaSerializable;
 
+@CordaSerializable
 public class ContainerInformation {
 
     private final String containerNo;

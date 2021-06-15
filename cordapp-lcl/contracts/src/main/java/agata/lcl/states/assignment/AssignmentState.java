@@ -140,5 +140,6 @@ public class AssignmentState implements LinearState {
     public enum Status {
         SlotBooked,
         GoodsPickedUp,
+        ContainerAssigned
     }
 }
