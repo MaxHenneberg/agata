@@ -18,17 +18,6 @@ public abstract class GenericProposalContract implements Contract {
     @Override
     public void verify(@NotNull LedgerTransaction tx) throws IllegalArgumentException {
         final Command command = tx.getCommand(0);
-        for (ContractState contractState : tx.getInputStates()) {
-            try {
-                GenericProposalContractUtils.checkMandatoryFields(contractState, command.getValue(), true);
-                if (contractState instanceof Proposal) {
-                    GenericProposalContractUtils.checkMandatoryFields(((Proposal) contractState).getProposedState(), command.getValue(), true);
-                }
-            } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                throw new RuntimeException(e.getMessage());
-            }
-        }
-
         for (ContractState contractState : tx.getOutputStates()) {
             try {
                 GenericProposalContractUtils.checkMandatoryFields(contractState, command.getValue(), false);
