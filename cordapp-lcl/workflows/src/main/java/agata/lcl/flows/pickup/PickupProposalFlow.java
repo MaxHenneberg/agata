@@ -25,7 +25,7 @@ public class PickupProposalFlow {
     public static class Initiator extends FlowLogic<UniqueIdentifier> {
         private final UniqueIdentifier referenceToAssignmentState;
 
-        public Initiator(Party exporter, Party supplier, UniqueIdentifier referenceToAssignmentState) {
+        public Initiator(UniqueIdentifier referenceToAssignmentState) {
             this.referenceToAssignmentState = referenceToAssignmentState;
         }
 

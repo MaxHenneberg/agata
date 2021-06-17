@@ -10,6 +10,7 @@ import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.Party;
+import net.corda.core.serialization.ConstructorForDeserialization;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -97,6 +98,38 @@ public class BillOfLadingState implements ContractState, LinearState {
         this.containerInformationList = containerInformationList;
     }
 
+    @ConstructorForDeserialization
+    public BillOfLadingState(Party shipper, Party consignee, Party notifyParty, String modeOfInitialCarriage, String placeOfInitialReceipt, String vesselName, String portOfLoading,
+                             String portOfDischarge, String placeOfDeliveryByCarrier, String bookingNo, String billOfLadingNo, List<String> exportReference, Party forwardingAgent, String fmcNo,
+                             Address pointAndCountry, Party cargoReleaser, String domesticRoutingInstructions, Payable freightPayableAt, TypeOfMovement typeOfMovement, List<ItemRow> goodsList,
+                             List<FreightCharges> freightChargesList, Price prepaid, Price collect, List<Incoterm> incotermList, List<ContainerInformation> containerInformationList, UniqueIdentifier linearId) {
+        this.linearId = linearId;
+        this.shipper = shipper;
+        this.consignee = consignee;
+        this.notifyParty = notifyParty;
+        this.modeOfInitialCarriage = modeOfInitialCarriage;
+        this.placeOfInitialReceipt = placeOfInitialReceipt;
+        this.vesselName = vesselName;
+        this.portOfLoading = portOfLoading;
+        this.portOfDischarge = portOfDischarge;
+        this.placeOfDeliveryByCarrier = placeOfDeliveryByCarrier;
+        this.bookingNo = bookingNo;
+        this.billOfLadingNo = billOfLadingNo;
+        this.exportReference = exportReference;
+        this.forwardingAgent = forwardingAgent;
+        this.fmcNo = fmcNo;
+        this.pointAndCountry = pointAndCountry;
+        this.cargoReleaser = cargoReleaser;
+        this.domesticRoutingInstructions = domesticRoutingInstructions;
+        this.freightPayableAt = freightPayableAt;
+        this.typeOfMovement = typeOfMovement;
+        this.goodsList = goodsList;
+        this.freightChargesList = freightChargesList;
+        this.prepaid = prepaid;
+        this.collect = collect;
+        this.incotermList = incotermList;
+        this.containerInformationList = containerInformationList;
+    }
     /**
      * Will be Overridden by LcL subclasses to define participants correctly.
      *
