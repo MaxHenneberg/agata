@@ -4,6 +4,8 @@ import agata.bol.dataholder.Address;
 import agata.bol.dataholder.ItemRow;
 import agata.lcl.contracts.annotations.MandatoryForContract;
 import agata.lcl.contracts.assignment.AssignmentContract;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -15,9 +17,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 @BelongsToContract(AssignmentContract.class)
+@Getter
+@EqualsAndHashCode
 public class AssignmentState implements LinearState {
 
     protected final UniqueIdentifier linearId;
@@ -71,27 +74,6 @@ public class AssignmentState implements LinearState {
         this.status = status;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AssignmentState that = (AssignmentState) o;
-        return Objects.equals(linearId, that.linearId) &&
-                Objects.equals(buyer, that.buyer) &&
-                Objects.equals(lclCompany, that.lclCompany) &&
-                Objects.equals(departureAddress, that.departureAddress) &&
-                Objects.equals(supplier, that.supplier) &&
-                Objects.equals(arrivalAddress, that.arrivalAddress) &&
-                Objects.equals(arrivalParty, that.arrivalParty) &&
-                status == that.status &&
-                Objects.equals(expectedGoods, that.expectedGoods);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(linearId, buyer, lclCompany, departureAddress, supplier, arrivalAddress, arrivalParty, status, expectedGoods);
-    }
-
     @NotNull
     @Override
     public List<AbstractParty> getParticipants() {
@@ -102,38 +84,6 @@ public class AssignmentState implements LinearState {
     @Override
     public UniqueIdentifier getLinearId() {
         return this.linearId;
-    }
-
-    public Party getBuyer() {
-        return buyer;
-    }
-
-    public Address getDepartureAddress() {
-        return departureAddress;
-    }
-
-    public Party getSupplier() {
-        return supplier;
-    }
-
-    public Address getArrivalAddress() {
-        return arrivalAddress;
-    }
-
-    public Party getLclCompany() {
-        return lclCompany;
-    }
-
-    public List<ItemRow> getExpectedGoods() {
-        return expectedGoods;
-    }
-
-    public Party getArrivalParty() {
-        return arrivalParty;
-    }
-
-    public Status getStatus() {
-        return status;
     }
 
     @CordaSerializable

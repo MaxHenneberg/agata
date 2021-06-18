@@ -5,6 +5,9 @@ import agata.bol.enums.ContainerType;
 import agata.lcl.contracts.annotations.MandatoryForContract;
 import agata.lcl.contracts.annotations.NotEmptyForContract;
 import agata.lcl.contracts.container.ContainerRequestContract;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -15,12 +18,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static agata.lcl.contracts.container.ContainerRequestContract.Commands.Accept;
 import static agata.lcl.contracts.container.ContainerRequestContract.Commands.AssignContainer;
 
 @BelongsToContract(ContainerRequestContract.class)
+@Getter
+@EqualsAndHashCode
 public class ContainerRequestState implements LinearState {
 
     private final UniqueIdentifier linearId;
@@ -46,10 +50,12 @@ public class ContainerRequestState implements LinearState {
     @MandatoryForContract
     private final ContainerType requestedType;
 
+    @Setter
     // Can (and will) be empty e.g. when executing the Propose command
     @NotEmptyForContract(value = {AssignContainer.class, Accept.class})
     private String vesselName;
 
+    @Setter
     // Can (and will) be empty e.g. when executing the Propose command
     @NotEmptyForContract(value = {AssignContainer.class, Accept.class})
     private ContainerInformation container;
@@ -98,69 +104,5 @@ public class ContainerRequestState implements LinearState {
         return Arrays.asList(lclCompany, shippingLine);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ContainerRequestState that = (ContainerRequestState) o;
-        return Objects.equals(linearId, that.linearId) &&
-                Objects.equals(shippingLine, that.shippingLine) &&
-                Objects.equals(lclCompany, that.lclCompany) &&
-                Objects.equals(lclDestination, that.lclDestination) &&
-                Objects.equals(portOfLoading, that.portOfLoading) &&
-                Objects.equals(portOfDischarge, that.portOfDischarge) &&
-                Objects.equals(forwardingAgentNo, that.forwardingAgentNo) &&
-                requestedType == that.requestedType &&
-                Objects.equals(vesselName, that.vesselName) &&
-                Objects.equals(container, that.container);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(linearId, shippingLine, lclCompany, lclDestination, portOfLoading, portOfDischarge, forwardingAgentNo, requestedType, vesselName, container);
-    }
-
-    public Party getShippingLine() {
-        return shippingLine;
-    }
-
-    public Party getLclCompany() {
-        return lclCompany;
-    }
-
-    public Party getLclDestination() {
-        return lclDestination;
-    }
-
-    public String getPortOfLoading() {
-        return portOfLoading;
-    }
-
-    public String getPortOfDischarge() {
-        return portOfDischarge;
-    }
-
-    public String getForwardingAgentNo() {
-        return forwardingAgentNo;
-    }
-
-    public ContainerType getRequestedType() {
-        return requestedType;
-    }
-
-    public String getVesselName() {
-        return vesselName;
-    }
-
-    public void setVesselName(String vesselName){
-        this.vesselName = vesselName;
-    }
-
-    public ContainerInformation getContainer() {
-        return container;
-    }
-
-    public void setContainer(ContainerInformation container){
-        this.container = container;
-    }
 }
