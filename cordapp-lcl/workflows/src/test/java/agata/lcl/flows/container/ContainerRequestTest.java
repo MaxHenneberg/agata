@@ -51,9 +51,9 @@ public class ContainerRequestTest {
         network.stopNodes();
     }
 
-    // TODO: These steps of different flows should be separated (since these are unit tests), right?
+    // TODO: Separate these steps of different flows?
     @Test
-    public void testPropose() throws ExecutionException, InterruptedException {
+    public void testEntireContainerRequestFlow() throws ExecutionException, InterruptedException {
         Party lclCompanyParty = getParty(this.lclCompany);
         Party shippingLineParty = getParty(this.shippingLine);
 
