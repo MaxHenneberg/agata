@@ -35,6 +35,11 @@ public class AssignContainerFlow {
             final ContainerRequestProposal proposal = LclFlowUtils.resolveProposalId(ContainerRequestProposal.class, this, this.proposalId);
 
             final ContainerRequestState proposedState = proposal.getProposedState();
+
+            if (!getOurIdentity().equals(proposedState.getShippingLine())) {
+                throw new FlowException("Flow can only be executed by correct shipping line");
+            }
+
             final ContainerRequestState counterProposalState = new ContainerRequestState(proposedState);
             counterProposalState.setVesselName(this.vesselName);
             counterProposalState.setContainer(this.container);
