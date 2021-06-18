@@ -20,9 +20,6 @@ public class ContainerRequestContractTest {
     private final MockServices ledgerServices = new MockServices(Arrays.asList("agata.lcl"));
     TestIdentity alice = new TestIdentity(new CordaX500Name("alice", "New York", "US"));
     TestIdentity bob = new TestIdentity(new CordaX500Name("bob", "London", "GB"));
-    TestIdentity charlie = new TestIdentity(new CordaX500Name("charlie", "London", "GB"));
-    Address address1 = new Address("Sample street 1", "New York", "", "", "US");
-    Address address2 = new Address("Hafenstrasse", "Hamburg", "", "", "DE");
 
 
     @Test

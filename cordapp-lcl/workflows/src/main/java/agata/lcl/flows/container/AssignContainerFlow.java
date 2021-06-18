@@ -1,6 +1,7 @@
 package agata.lcl.flows.container;
 
 import agata.bol.dataholder.ContainerInformation;
+import agata.lcl.contracts.container.ContainerRequestContract;
 import agata.lcl.flows.LclFlowUtils;
 import agata.lcl.flows.ModifyFlow;
 import agata.lcl.states.container.ContainerRequestProposal;
@@ -38,8 +39,10 @@ public class AssignContainerFlow {
             counterProposalState.setVesselName(this.vesselName);
             counterProposalState.setContainer(this.container);
 
-            ContainerRequestProposal counterProposal = new ContainerRequestProposal(getOurIdentity(), counterProposalState.getLclCompany(), counterProposalState);
-            return subFlow(new ModifyFlow.Initiator(proposalId, counterProposal));
+            // Important: Use the constructor with which you can pass the linear id.
+            // Otherwise a new ID would be generated and the counterproposal would no longer have any reference to the original proposal.
+            ContainerRequestProposal counterProposal = new ContainerRequestProposal(getOurIdentity(), counterProposalState.getLclCompany(), counterProposalState, this.proposalId);
+            return subFlow(new ModifyFlow.Initiator(this.proposalId, counterProposal, new ContainerRequestContract.Commands.AssignContainer()));
         }
     }
 }
