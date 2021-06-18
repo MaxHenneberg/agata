@@ -23,7 +23,7 @@ public class AcceptFlowTest extends ProposalFlowTestBase {
 
         Assert.assertNotNull(proposalId);
 
-        AcceptFlow.AcceptFlowInitiator flow = new AcceptFlow.AcceptFlowInitiator(proposalId);
+        AcceptFlow.Initiator flow = new AcceptFlow.Initiator(proposalId);
         Future future = proposee.startFlow(flow);
         network.runNetwork();
         future.get();
@@ -46,7 +46,7 @@ public class AcceptFlowTest extends ProposalFlowTestBase {
         final DummyState pickupState = new DummyState(getParty(proposer), getParty(proposee), "test", "test", 1, 1, "test", 1);
         UniqueIdentifier proposalId = createProposal(proposer, proposee, pickupState);
 
-        AcceptFlow.AcceptFlowInitiator flow = new AcceptFlow.AcceptFlowInitiator(proposalId);
+        AcceptFlow.Initiator flow = new AcceptFlow.Initiator(proposalId);
         Future future = proposer.startFlow(flow);
         network.runNetwork();
         future.get();

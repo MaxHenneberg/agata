@@ -1,5 +1,6 @@
 package agata.lcl.flows.pickup;
 
+import agata.bol.dataholder.ItemRow;
 import agata.lcl.flows.ModifyFlow;
 import agata.lcl.states.pickup.PickupProposal;
 import agata.lcl.states.pickup.PickupState;
@@ -21,13 +22,15 @@ public class PickupAddGoodsFlow {
 
     @InitiatingFlow
     @StartableByRPC
-    public static class PickupAddGoodsFlowInitiator extends FlowLogic<SignedTransaction> {
+    public static class Initiator extends FlowLogic<SignedTransaction> {
         private final UniqueIdentifier proposalId;
-        private final List<String> goods;
+        private final List<ItemRow> goods;
+        private final String invoiceId;
 
-        public PickupAddGoodsFlowInitiator(UniqueIdentifier proposalId, List<String> goods) {
+        public Initiator(UniqueIdentifier proposalId, List<ItemRow> goods, String invoiceId) {
             this.proposalId = proposalId;
             this.goods = goods;
+            this.invoiceId = invoiceId;
         }
 
         @Suspendable
@@ -38,14 +41,14 @@ public class PickupAddGoodsFlow {
             PickupProposal proposal = (PickupProposal) inputStateAndRef.getState().getData();
 
             final PickupState proposedPickupState = proposal.getProposedState();
-            final PickupState counterProposal = new PickupState(proposedPickupState.getExporter(),
+            final PickupState counterProposal = new PickupState(proposedPickupState.getBuyer(),
                     proposedPickupState.getSupplier(), proposedPickupState.getLclCompany(),
-                    this.goods, proposedPickupState.getReferenceToAssignmentProposal(), proposedPickupState.getLinearId());
+                    this.goods, proposedPickupState.getReferenceToAssignmentState(), invoiceId, proposedPickupState.getLinearId());
 
 
             PickupProposal proposalState = new PickupProposal(getOurIdentity(), counterProposal.getLclCompany(), counterProposal);
 
-            return subFlow(new ModifyFlow.ModifyFlowInitiator(proposalId, proposalState));
+            return subFlow(new ModifyFlow.Initiator(proposalId, proposalState));
         }
     }
 }

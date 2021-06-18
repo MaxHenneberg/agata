@@ -26,18 +26,18 @@ public class ModifyFlow {
 
     @InitiatingFlow
     @StartableByRPC
-    public static class ModifyFlowInitiator extends FlowLogic<SignedTransaction> {
+    public static class Initiator extends FlowLogic<SignedTransaction> {
         private final UniqueIdentifier proposalId;
         private final Proposal counterProposal;
         private final GenericProposalContract.Commands.Modify commandType;
 
-        public ModifyFlowInitiator(UniqueIdentifier proposalId, Proposal counterProposal) {
+        public Initiator(UniqueIdentifier proposalId, Proposal counterProposal) {
             this.proposalId = proposalId;
             this.counterProposal = counterProposal;
             this.commandType = new GenericProposalContract.Commands.Modify();
         }
 
-        public ModifyFlowInitiator(UniqueIdentifier proposalId, Proposal counterProposal, GenericProposalContract.Commands.Modify commandType) {
+        public Initiator(UniqueIdentifier proposalId, Proposal counterProposal, GenericProposalContract.Commands.Modify commandType) {
             this.proposalId = proposalId;
             this.counterProposal = counterProposal;
             this.commandType = commandType;
@@ -82,11 +82,11 @@ public class ModifyFlow {
         }
     }
 
-    @InitiatedBy(ModifyFlowInitiator.class)
-    public static class ModifyFlowResponder extends FlowLogic<SignedTransaction> {
+    @InitiatedBy(Initiator.class)
+    public static class Responder extends FlowLogic<SignedTransaction> {
         private FlowSession counterpartySession;
 
-        public ModifyFlowResponder(FlowSession counterpartySession) {
+        public Responder(FlowSession counterpartySession) {
             this.counterpartySession = counterpartySession;
         }
 

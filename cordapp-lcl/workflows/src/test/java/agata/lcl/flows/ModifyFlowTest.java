@@ -26,7 +26,7 @@ public class ModifyFlowTest extends ProposalFlowTestBase {
         modifiedDummyProposal.setMandatoryStringField("other");
         final Proposal<DummyState> counterProposal = new DummyProposal(getParty(proposee), getParty(proposer), modifiedDummyProposal, proposalId);
 
-        ModifyFlow.ModifyFlowInitiator flow = new ModifyFlow.ModifyFlowInitiator(proposalId, counterProposal);
+        ModifyFlow.Initiator flow = new ModifyFlow.Initiator(proposalId, counterProposal);
         Future future = proposee.startFlow(flow);
         network.runNetwork();
         future.get();
@@ -55,7 +55,7 @@ public class ModifyFlowTest extends ProposalFlowTestBase {
         modifiedDummyState.setMandatoryStringField("other");
         final Proposal<DummyState> counterProposal = new DummyProposal(getParty(proposee), getParty(proposer), modifiedDummyState);
 
-        ModifyFlow.ModifyFlowInitiator flow = new ModifyFlow.ModifyFlowInitiator(proposalId, counterProposal);
+        ModifyFlow.Initiator flow = new ModifyFlow.Initiator(proposalId, counterProposal);
         Future future = proposer.startFlow(flow);
         network.runNetwork();
         future.get();

@@ -3,7 +3,10 @@ package agata.lcl.flows;
 import agata.lcl.contracts.GenericProposalContract;
 import agata.lcl.states.Proposal;
 import co.paralleluniverse.fibers.Suspendable;
-import net.corda.core.contracts.*;
+import net.corda.core.contracts.Command;
+import net.corda.core.contracts.LinearState;
+import net.corda.core.contracts.StateAndRef;
+import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
@@ -24,16 +27,16 @@ public class AcceptFlow {
 
     @InitiatingFlow
     @StartableByRPC
-    public static class AcceptFlowInitiator extends FlowLogic<SignedTransaction> {
+    public static class Initiator extends FlowLogic<SignedTransaction> {
         private final UniqueIdentifier proposalId;
         private final GenericProposalContract.Commands.Accept commandType;
 
-        public AcceptFlowInitiator(UniqueIdentifier proposalId) {
+        public Initiator(UniqueIdentifier proposalId) {
             this.proposalId = proposalId;
             this.commandType = new GenericProposalContract.Commands.Accept();
         }
 
-        public AcceptFlowInitiator(UniqueIdentifier proposalId, GenericProposalContract.Commands.Accept commandType) {
+        public Initiator(UniqueIdentifier proposalId, GenericProposalContract.Commands.Accept commandType) {
             this.proposalId = proposalId;
             this.commandType = commandType;
         }
@@ -72,11 +75,11 @@ public class AcceptFlow {
         }
     }
 
-    @InitiatedBy(AcceptFlowInitiator.class)
-    public static class AcceptFlowResponder extends FlowLogic<SignedTransaction> {
+    @InitiatedBy(Initiator.class)
+    public static class Responder extends FlowLogic<SignedTransaction> {
         private FlowSession counterpartySession;
 
-        public AcceptFlowResponder(FlowSession counterpartySession) {
+        public Responder(FlowSession counterpartySession) {
             this.counterpartySession = counterpartySession;
         }
 

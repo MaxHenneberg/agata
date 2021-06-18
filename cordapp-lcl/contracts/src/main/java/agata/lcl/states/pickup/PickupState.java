@@ -1,7 +1,11 @@
 package agata.lcl.states.pickup;
 
+import agata.bol.dataholder.ItemRow;
+import agata.lcl.contracts.GenericProposalContract;
 import agata.lcl.contracts.annotations.MandatoryForContract;
+import agata.lcl.contracts.annotations.NotEmptyForContract;
 import agata.lcl.contracts.pickup.PickupContract;
+import agata.lcl.states.assignment.AssignmentState;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.LinearState;
@@ -20,45 +24,52 @@ public class PickupState implements LinearState {
     protected final UniqueIdentifier linearId;
 
     @MandatoryForContract
-    protected final Party exporter;
+    protected final Party buyer;
     @MandatoryForContract
     protected final Party supplier;
     @MandatoryForContract
     protected final Party lclCompany;
 
-    @MandatoryForContract
-    protected final List<String> pickedUpGoods;
+    @NotEmptyForContract(value = GenericProposalContract.Commands.Modify.class)
+    protected final List<ItemRow> pickedUpGoods;
 
     @MandatoryForContract
-    protected final LinearPointer<LinearState> referenceToAssignmentProposal;
+    protected final LinearPointer<AssignmentState> referenceToAssignmentState;
+
+    @NotEmptyForContract(value = GenericProposalContract.Commands.Modify.class)
+    protected final String invoiceId;
 
     @ConstructorForDeserialization
-    public PickupState(Party exporter, Party supplier, Party lclCompany, List<String> pickedUpGoods, LinearPointer<LinearState> referenceToAssignmentProposal, UniqueIdentifier linearId) {
+    public PickupState(Party buyer, Party supplier, Party lclCompany, List<ItemRow> pickedUpGoods, LinearPointer<AssignmentState> referenceToAssignmentProposal, String invoiceId,
+                       UniqueIdentifier linearId) {
         this.linearId = linearId;
-        this.exporter = exporter;
+        this.buyer = buyer;
         this.supplier = supplier;
         this.lclCompany = lclCompany;
         this.pickedUpGoods = pickedUpGoods;
-        this.referenceToAssignmentProposal = referenceToAssignmentProposal;
+        this.referenceToAssignmentState = referenceToAssignmentProposal;
+        this.invoiceId = invoiceId;
     }
 
-    public PickupState(Party exporter, Party supplier, Party lclCompany, List<String> pickedUpGoods, UniqueIdentifier referenceToAssignmentProposal) {
+    public PickupState(Party buyer, Party supplier, Party lclCompany, List<ItemRow> pickedUpGoods, UniqueIdentifier referenceToAssignmentProposal, String invoiceId) {
         this.linearId = new UniqueIdentifier();
-        this.exporter = exporter;
+        this.buyer = buyer;
         this.supplier = supplier;
         this.lclCompany = lclCompany;
         this.pickedUpGoods = pickedUpGoods;
-        this.referenceToAssignmentProposal = new LinearPointer<>(new UniqueIdentifier(null, referenceToAssignmentProposal.getId()), LinearState.class);
+        this.referenceToAssignmentState = new LinearPointer<>(new UniqueIdentifier(null, referenceToAssignmentProposal.getId()), AssignmentState.class);
+        this.invoiceId = invoiceId;
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof PickupState) {
-            return this.exporter.equals(((PickupState) obj).exporter)
+            return this.buyer.equals(((PickupState) obj).buyer)
                     && this.supplier.equals(((PickupState) obj).supplier)
                     && this.lclCompany.equals(((PickupState) obj).lclCompany)
                     && this.pickedUpGoods.equals(((PickupState) obj).pickedUpGoods)
-                    && this.referenceToAssignmentProposal.equals(((PickupState) obj).referenceToAssignmentProposal);
+                    && this.referenceToAssignmentState.equals(((PickupState) obj).referenceToAssignmentState)
+                    && this.invoiceId.equals(((PickupState) obj).invoiceId);
         }
 
         return false;
@@ -76,8 +87,8 @@ public class PickupState implements LinearState {
         return Arrays.asList(supplier, lclCompany);
     }
 
-    public Party getExporter() {
-        return exporter;
+    public Party getBuyer() {
+        return buyer;
     }
 
     public Party getSupplier() {
@@ -88,11 +99,11 @@ public class PickupState implements LinearState {
         return lclCompany;
     }
 
-    public List<String> getPickedUpGoods() {
+    public List<ItemRow> getPickedUpGoods() {
         return pickedUpGoods;
     }
 
-    public LinearPointer<LinearState> getReferenceToAssignmentProposal() {
-        return referenceToAssignmentProposal;
+    public LinearPointer<AssignmentState> getReferenceToAssignmentState() {
+        return referenceToAssignmentState;
     }
 }
