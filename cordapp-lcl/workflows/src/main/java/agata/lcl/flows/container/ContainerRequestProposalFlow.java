@@ -25,7 +25,8 @@ public class ContainerRequestProposalFlow {
         private final ContainerType requestedType;
         private final Party lclDestination; // Can be the same as shipper (LCL company), but also another LCL company
 
-        public Initiator(Party shippingLine, Party lclDestination, String portOfLoading, String portOfDischarge, String forwardingAgentNo, ContainerType requestedType) {
+        public Initiator(Party shippingLine, Party lclDestination, String portOfLoading, String portOfDischarge, String forwardingAgentNo,
+                         ContainerType requestedType) {
             this.shippingLine = shippingLine;
             this.lclDestination = lclDestination;
             this.portOfLoading = portOfLoading;
@@ -38,8 +39,11 @@ public class ContainerRequestProposalFlow {
         @Suspendable
         public UniqueIdentifier call() throws FlowException {
             Party lclCompany = getOurIdentity();
+
             // Leave fields like vessel name and container unset because this is what the shipping line will modify
-            ContainerRequestState state = new ContainerRequestState(this.shippingLine, lclCompany, this.lclDestination, this.portOfLoading, this.portOfDischarge, this.forwardingAgentNo, this.requestedType, null, null);
+            ContainerRequestState state =
+                    new ContainerRequestState(this.shippingLine, lclCompany, this.lclDestination, this.portOfLoading, this.portOfDischarge,
+                            this.forwardingAgentNo, this.requestedType, null, null);
             ContainerRequestProposal proposal = new ContainerRequestProposal(lclCompany, this.shippingLine, state);
             return subFlow(new ProposalFlow.Initiator(proposal));
         }

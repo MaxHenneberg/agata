@@ -1,5 +1,8 @@
 package agata.bol.dataholder;
 
+import net.corda.core.serialization.CordaSerializable;
+
+@CordaSerializable
 public class FreightCharges {
 
     private final String chargeReason;

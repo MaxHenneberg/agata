@@ -1,8 +1,11 @@
 package agata.bol.dataholder;
 
+import net.corda.core.serialization.CordaSerializable;
+
 import java.math.BigDecimal;
 import java.util.Currency;
 
+@CordaSerializable
 public class Price {
 
     private BigDecimal amount;

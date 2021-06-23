@@ -40,24 +40,24 @@ public class PickupState implements LinearState {
     protected final String invoiceId;
 
     @ConstructorForDeserialization
-    public PickupState(Party buyer, Party supplier, Party lclCompany, List<ItemRow> pickedUpGoods, LinearPointer<AssignmentState> referenceToAssignmentProposal, String invoiceId,
+    public PickupState(Party buyer, Party supplier, Party lclCompany, List<ItemRow> pickedUpGoods, LinearPointer<AssignmentState> referenceToAssignmentState, String invoiceId,
                        UniqueIdentifier linearId) {
         this.linearId = linearId;
         this.buyer = buyer;
         this.supplier = supplier;
         this.lclCompany = lclCompany;
         this.pickedUpGoods = pickedUpGoods;
-        this.referenceToAssignmentState = referenceToAssignmentProposal;
+        this.referenceToAssignmentState = referenceToAssignmentState;
         this.invoiceId = invoiceId;
     }
 
-    public PickupState(Party buyer, Party supplier, Party lclCompany, List<ItemRow> pickedUpGoods, UniqueIdentifier referenceToAssignmentProposal, String invoiceId) {
+    public PickupState(Party buyer, Party supplier, Party lclCompany, List<ItemRow> pickedUpGoods, UniqueIdentifier referenceToAssignmentState, String invoiceId) {
         this.linearId = new UniqueIdentifier();
         this.buyer = buyer;
         this.supplier = supplier;
         this.lclCompany = lclCompany;
         this.pickedUpGoods = pickedUpGoods;
-        this.referenceToAssignmentState = new LinearPointer<>(new UniqueIdentifier(null, referenceToAssignmentProposal.getId()), AssignmentState.class);
+        this.referenceToAssignmentState = new LinearPointer<>(new UniqueIdentifier(null, referenceToAssignmentState.getId()), AssignmentState.class);
         this.invoiceId = invoiceId;
     }
 
@@ -105,5 +105,9 @@ public class PickupState implements LinearState {
 
     public LinearPointer<AssignmentState> getReferenceToAssignmentState() {
         return referenceToAssignmentState;
+    }
+
+    public String getInvoiceId() {
+        return invoiceId;
     }
 }
