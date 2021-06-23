@@ -29,7 +29,9 @@ public abstract class Proposal<T extends LinearState> implements LinearState {
     }
 
     public Proposal(Party proposer, Party proposee, T proposedState, UniqueIdentifier linearId) {
-        this(proposer, proposee, proposedState);
+        this.proposee = proposee;
+        this.proposer = proposer;
+        this.proposedState = proposedState;
         this.linearId = linearId;
     }
 

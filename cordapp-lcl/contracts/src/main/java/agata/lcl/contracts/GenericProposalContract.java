@@ -18,11 +18,12 @@ public abstract class GenericProposalContract implements Contract {
     @Override
     public void verify(@NotNull LedgerTransaction tx) throws IllegalArgumentException {
         final Command command = tx.getCommand(0);
+        final CommandData commandData = command.getValue();
         for (ContractState contractState : tx.getOutputStates()) {
             try {
-                GenericProposalContractUtils.checkMandatoryFields(contractState, command.getValue(), false);
+                GenericProposalContractUtils.checkMandatoryFields(contractState, commandData, false);
                 if (contractState instanceof Proposal) {
-                    GenericProposalContractUtils.checkMandatoryFields(((Proposal) contractState).getProposedState(), command.getValue(), true);
+                    GenericProposalContractUtils.checkMandatoryFields(((Proposal) contractState).getProposedState(), commandData, true);
                 }
             } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                 throw new RuntimeException(e.getMessage());
@@ -31,17 +32,17 @@ public abstract class GenericProposalContract implements Contract {
 
 
         boolean isValidCommand = false;
-        if (command.getValue() instanceof Commands.Propose) {
+        if (commandData instanceof Commands.Propose) {
             verifyPropose(tx, command);
             extendedVerifyPropose(tx, command);
             isValidCommand = true;
         }
-        if (command.getValue() instanceof Commands.Modify) {
+        if (commandData instanceof Commands.Modify) {
             verifyModify(tx, command);
             extendedVerifyModify(tx, command);
             isValidCommand = true;
         }
-        if (command.getValue() instanceof Commands.Accept) {
+        if (commandData instanceof Commands.Accept) {
             verifyAccept(tx, command);
             extendedVerifyAccept(tx, command);
             isValidCommand = true;
@@ -77,9 +78,9 @@ public abstract class GenericProposalContract implements Contract {
     private void verifyModify(@NotNull LedgerTransaction tx, @NotNull Command command) {
         requireThat(require -> {
             require.using("There is exactly one input", tx.getInputStates().size() == 1);
-            require.using("The single input is of type GenericProposalState", tx.inputsOfType(Proposal.class).size() == 1);
+            require.using("The single input is of type Proposal", tx.inputsOfType(Proposal.class).size() == 1);
             require.using("There is exactly one output", tx.getOutputs().size() == 1);
-            require.using("The single output is not of type GenericProposalState", tx.outputsOfType(Proposal.class).size() == 1);
+            require.using("The single output is not of type Proposal", tx.outputsOfType(Proposal.class).size() == 1);
             require.using("There is exactly one command", tx.getCommands().size() == 1);
             require.using("There is no timestamp", tx.getTimeWindow() == null);
 

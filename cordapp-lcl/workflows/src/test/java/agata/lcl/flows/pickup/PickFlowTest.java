@@ -3,6 +3,7 @@ package agata.lcl.flows.pickup;
 import agata.bol.dataholder.Address;
 import agata.bol.dataholder.DescriptionOfGoods;
 import agata.bol.dataholder.ItemRow;
+import agata.lcl.enums.LclAssignmentStatus;
 import agata.lcl.flows.AcceptFlow;
 import agata.lcl.flows.ModifyFlow;
 import agata.lcl.flows.ProposalFlow;
@@ -103,7 +104,7 @@ public class PickFlowTest {
         Party supplierParty = getParty(this.supplier);
         Party buyerParty = getParty(this.buyer);
         List<ItemRow> goods = Collections.singletonList(new ItemRow("abc", "123", 3, new DescriptionOfGoods("iPhone", "pallet", 100), 12, 12, 456));
-        AssignmentState assignmentState = new AssignmentState(lclCompanyParty, buyerParty, supplierParty, buyerParty, address1, address2, goods, AssignmentState.Status.SlotBooked);
+        AssignmentState assignmentState = new AssignmentState(lclCompanyParty, buyerParty, supplierParty, buyerParty, address1, address2, goods, LclAssignmentStatus.SlotBooked);
         Proposal proposal = new AssignmentProposal(lclCompanyParty, buyerParty, assignmentState);
         ProposalFlow.Initiator proposeFlow = new ProposalFlow.Initiator(proposal);
         Future<UniqueIdentifier> future1 = this.lclCompany.startFlow(proposeFlow);
