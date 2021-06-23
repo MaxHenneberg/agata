@@ -86,13 +86,16 @@ public class PickupAcceptFlow {
 
             final ContainerRequestState containerRequestState = containerRequestStateList.get(0).getState().getData();
 
-            if (!assignmentState.getLclCompany().equals(containerRequestState.getLclCompany()) || assignmentState.getLclCompany().equals(getOurIdentity())) {
+            if (!assignmentState.getLclCompany().equals(containerRequestState.getLclCompany()) || !assignmentState.getLclCompany().equals(getOurIdentity())) {
                 throw new FlowException("Flow can only be executed by correct LCL Company");
             }
 
-            BillOfLadingState billOfLadingState = new BillOfLadingState(getOurIdentity(), assignmentState.getSupplier(), assignmentState.getBuyer(), this.modeOfInitialCarriage,
-                    this.placeOfInitialReceipt, containerRequestState.getVesselName(), containerRequestState.getPortOfLoading(), containerRequestState.getPortOfDischarge(),
-                    this.placeOfDeliveryByCarrier, this.bookingNo, this.billOfLadingNo, this.exportReference, getOurIdentity(), containerRequestState.getForwardingAgentNo(), null, null, null,
+            BillOfLadingState billOfLadingState = new BillOfLadingState(getOurIdentity(), assignmentState.getSupplier(), assignmentState.getBuyer(),
+                    this.modeOfInitialCarriage,
+                    this.placeOfInitialReceipt, containerRequestState.getVesselName(), containerRequestState.getPortOfLoading(),
+                    containerRequestState.getPortOfDischarge(),
+                    this.placeOfDeliveryByCarrier, this.bookingNo, this.billOfLadingNo, this.exportReference, getOurIdentity(),
+                    containerRequestState.getForwardingAgentNo(), null, containerRequestState.getLclDestination(), null,
                     this.freightPayableAt, this.typeOfMovement, pickupState.getPickedUpGoods(), this.freightChargesList, this.prepaid, this.collect, null,
                     Collections.singletonList(containerRequestState.getContainer()));
 

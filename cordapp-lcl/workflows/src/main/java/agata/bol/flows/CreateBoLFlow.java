@@ -2,21 +2,21 @@ package agata.bol.flows;
 
 import agata.bol.contracts.BillOfLadingContract;
 import agata.bol.states.BillOfLadingState;
-import agata.lcl.states.Proposal;
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.Command;
-import net.corda.core.contracts.ContractState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
+import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.Party;
-import net.corda.core.transactions.LedgerTransaction;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import java.security.SignatureException;
+import java.security.PublicKey;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CreateBoLFlow {
     @InitiatingFlow
@@ -33,7 +33,8 @@ public class CreateBoLFlow {
         @Suspendable
         @Override
         public UniqueIdentifier call() throws FlowException {
-            Command command = new Command(this.commandData, toBeCreated.getParticipants());
+            List<PublicKey> requiredSigners = toBeCreated.getParticipants().stream().map(AbstractParty::getOwningKey).collect(Collectors.toList());
+            Command command = new Command(this.commandData, requiredSigners);
 
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
 
@@ -50,7 +51,7 @@ public class CreateBoLFlow {
 
             //Finalise the transaction
             SignedTransaction finalisedTx = subFlow(new FinalityFlow(fullyStx, Collections.singletonList(counterpartySession)));
-            return finalisedTx.getTx().outputsOfType(Proposal.class).get(0).getLinearId();
+            return finalisedTx.getTx().outputsOfType(BillOfLadingState.class).get(0).getLinearId();
         }
     }
 

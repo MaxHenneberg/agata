@@ -2,10 +2,12 @@ package agata.bol.dataholder;
 
 import agata.bol.enums.CompanyType;
 import net.corda.core.identity.Party;
+import net.corda.core.serialization.CordaSerializable;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@CordaSerializable
 public class Company {
     private final String companyName;
     private final CompanyType companyType;

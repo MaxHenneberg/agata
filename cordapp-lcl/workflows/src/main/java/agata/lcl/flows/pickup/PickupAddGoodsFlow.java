@@ -46,7 +46,7 @@ public class PickupAddGoodsFlow {
                     this.goods, proposedPickupState.getReferenceToAssignmentState(), invoiceId, proposedPickupState.getLinearId());
 
 
-            PickupProposal proposalState = new PickupProposal(getOurIdentity(), counterProposal.getLclCompany(), counterProposal);
+            PickupProposal proposalState = new PickupProposal(getOurIdentity(), counterProposal.getLclCompany(), counterProposal, proposalId);
 
             return subFlow(new ModifyFlow.Initiator(proposalId, proposalState));
         }
