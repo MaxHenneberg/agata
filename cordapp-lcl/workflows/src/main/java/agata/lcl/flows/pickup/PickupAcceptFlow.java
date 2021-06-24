@@ -7,8 +7,8 @@ import agata.bol.enums.Payable;
 import agata.bol.enums.TypeOfMovement;
 import agata.bol.flows.CreateBoLFlow;
 import agata.bol.states.BillOfLadingState;
-import agata.lcl.contracts.GenericProposalContract;
 import agata.lcl.flows.AcceptFlow;
+import agata.lcl.flows.LclFlowUtils;
 import agata.lcl.states.assignment.AssignmentState;
 import agata.lcl.states.container.ContainerRequestState;
 import agata.lcl.states.pickup.PickupState;
@@ -19,8 +19,6 @@ import net.corda.core.flows.FlowException;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.flows.InitiatingFlow;
 import net.corda.core.flows.StartableByRPC;
-import net.corda.core.node.services.Vault;
-import net.corda.core.node.services.vault.QueryCriteria;
 import net.corda.core.transactions.SignedTransaction;
 
 import java.util.Collections;
@@ -66,25 +64,16 @@ public class PickupAcceptFlow {
         @Suspendable
         @Override
         public UniqueIdentifier call() throws FlowException {
-            final SignedTransaction signedTransaction = subFlow(new AcceptFlow.Initiator(proposalId, new GenericProposalContract.Commands.Accept()));
+            final SignedTransaction signedTransaction = subFlow(new AcceptFlow.Initiator(proposalId));
             final PickupState pickupState = (PickupState) signedTransaction.getCoreTransaction().getOutputStates().get(0);
 
-            QueryCriteria.LinearStateQueryCriteria inputCriteriaAssignment = new QueryCriteria.LinearStateQueryCriteria(null,
-                    Collections.singletonList(pickupState.getReferenceToAssignmentState().getPointer()), Vault.StateStatus.UNCONSUMED, null);
-            List<StateAndRef<AssignmentState>> assignmentStateList = getServiceHub().getVaultService().queryBy(AssignmentState.class, inputCriteriaAssignment).getStates();
-            if (assignmentStateList.size() > 1) {
-                throw new FlowException("Incorrect amount of proposals found. Expected 1 got " + assignmentStateList.size());
-            }
-            final AssignmentState assignmentState = assignmentStateList.get(0).getState().getData();
+            final StateAndRef<AssignmentState> assignmentStateRef =
+                    LclFlowUtils.resolveIdToStateRef(pickupState.getReferenceToAssignmentState().getPointer(), this, AssignmentState.class);
+            final AssignmentState assignmentState = assignmentStateRef.getState().getData();
 
-            QueryCriteria.LinearStateQueryCriteria inputCriteriaContainer = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(referenceToContainerRequest),
-                    Vault.StateStatus.UNCONSUMED, null);
-            List<StateAndRef<ContainerRequestState>> containerRequestStateList = getServiceHub().getVaultService().queryBy(ContainerRequestState.class, inputCriteriaContainer).getStates();
-            if (assignmentStateList.size() > 1) {
-                throw new FlowException("Incorrect amount of proposals found. Expected 1 got " + assignmentStateList.size());
-            }
-
-            final ContainerRequestState containerRequestState = containerRequestStateList.get(0).getState().getData();
+            final StateAndRef<ContainerRequestState> containerRequestStateRef =
+                    LclFlowUtils.resolveIdToStateRef(referenceToContainerRequest, this, ContainerRequestState.class);
+            final ContainerRequestState containerRequestState = containerRequestStateRef.getState().getData();
 
             if (!assignmentState.getLclCompany().equals(containerRequestState.getLclCompany()) || !assignmentState.getLclCompany().equals(getOurIdentity())) {
                 throw new FlowException("Flow can only be executed by correct LCL Company");
@@ -99,7 +88,10 @@ public class PickupAcceptFlow {
                     this.freightPayableAt, this.typeOfMovement, pickupState.getPickedUpGoods(), this.freightChargesList, this.prepaid, this.collect, null,
                     Collections.singletonList(containerRequestState.getContainer()));
 
-            return subFlow(new CreateBoLFlow.Initiator(billOfLadingState, new BillOfLadingContract.BoLCommands.CreateHouseBoL()));
+            final StateAndRef<PickupState> pickupStateStateAndRef = LclFlowUtils.resolveIdToStateRef(pickupState.getLinearId(), this, PickupState.class);
+
+            return subFlow(new CreateBoLFlow.Initiator(billOfLadingState, Collections.singletonList(pickupStateStateAndRef),
+                    new BillOfLadingContract.BoLCommands.CreateHouseBoL()));
         }
     }
 }

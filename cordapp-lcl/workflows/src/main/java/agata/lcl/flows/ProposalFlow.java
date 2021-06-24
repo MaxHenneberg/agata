@@ -4,6 +4,7 @@ import agata.lcl.contracts.GenericProposalContract;
 import agata.lcl.states.Proposal;
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.Command;
+import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.security.PublicKey;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ProposalFlow {
@@ -22,7 +24,7 @@ public class ProposalFlow {
     @StartableByRPC
     public static class Initiator extends FlowLogic<UniqueIdentifier> {
         private final Proposal proposalState;
-        private final GenericProposalContract.Commands.Propose commandType;
+        private final CommandData commandType;
 
         public Initiator(Proposal proposalState) {
             this.proposalState = proposalState;
@@ -51,10 +53,10 @@ public class ProposalFlow {
 
             //Gather counterparty sigs
             FlowSession counterpartySession = initiateFlow(this.proposalState.getProposee());
-            SignedTransaction fullyStx = subFlow(new CollectSignaturesFlow(partStx, Arrays.asList(counterpartySession)));
+            SignedTransaction fullyStx = subFlow(new CollectSignaturesFlow(partStx, Collections.singletonList(counterpartySession)));
 
             //Finalise the transaction
-            SignedTransaction finalisedTx = subFlow(new FinalityFlow(fullyStx, Arrays.asList(counterpartySession)));
+            SignedTransaction finalisedTx = subFlow(new FinalityFlow(fullyStx, Collections.singletonList(counterpartySession)));
             return finalisedTx.getTx().outputsOfType(Proposal.class).get(0).getLinearId();
         }
     }

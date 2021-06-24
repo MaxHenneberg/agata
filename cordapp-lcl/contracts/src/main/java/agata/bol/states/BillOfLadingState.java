@@ -4,6 +4,8 @@ import agata.bol.contracts.BillOfLadingContract;
 import agata.bol.dataholder.*;
 import agata.bol.enums.Payable;
 import agata.bol.enums.TypeOfMovement;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.contracts.LinearState;
@@ -16,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
+@Getter
+@EqualsAndHashCode
 @BelongsToContract(BillOfLadingContract.class)
 public class BillOfLadingState implements ContractState, LinearState {
 
@@ -130,6 +134,7 @@ public class BillOfLadingState implements ContractState, LinearState {
         this.incotermList = incotermList;
         this.containerInformationList = containerInformationList;
     }
+
     /**
      * Will be Overridden by LcL subclasses to define participants correctly.
      *
@@ -151,106 +156,6 @@ public class BillOfLadingState implements ContractState, LinearState {
 
     public int getConsignmentTotalMeasurements() {
         return goodsList.stream().reduce(0, (subtotal, element) -> subtotal + element.getMeasurement(), Integer::sum);
-    }
-
-    public Party getShipper() {
-        return shipper;
-    }
-
-    public Party getConsignee() {
-        return consignee;
-    }
-
-    public Party getNotifyParty() {
-        return notifyParty;
-    }
-
-    public String getModeOfInitialCarriage() {
-        return modeOfInitialCarriage;
-    }
-
-    public String getPlaceOfInitialReceipt() {
-        return placeOfInitialReceipt;
-    }
-
-    public String getVesselName() {
-        return vesselName;
-    }
-
-    public String getPortOfLoading() {
-        return portOfLoading;
-    }
-
-    public String getPortOfDischarge() {
-        return portOfDischarge;
-    }
-
-    public String getPlaceOfDeliveryByCarrier() {
-        return placeOfDeliveryByCarrier;
-    }
-
-    public String getBookingNo() {
-        return bookingNo;
-    }
-
-    public String getBillOfLadingNo() {
-        return billOfLadingNo;
-    }
-
-    public List<String> getExportReference() {
-        return exportReference;
-    }
-
-    public Party getForwardingAgent() {
-        return forwardingAgent;
-    }
-
-    public String getFmcNo() {
-        return fmcNo;
-    }
-
-    public Address getPointAndCountry() {
-        return pointAndCountry;
-    }
-
-    public Party getCargoReleaser() {
-        return cargoReleaser;
-    }
-
-    public String getDomesticRoutingInstructions() {
-        return domesticRoutingInstructions;
-    }
-
-    public Payable getFreightPayableAt() {
-        return freightPayableAt;
-    }
-
-    public TypeOfMovement getTypeOfMovement() {
-        return typeOfMovement;
-    }
-
-    public List<ItemRow> getGoodsList() {
-        return goodsList;
-    }
-
-    public List<FreightCharges> getFreightChargesList() {
-        return freightChargesList;
-    }
-
-    public Price getPrepaid() {
-        return prepaid;
-    }
-
-    public Price getCollect() {
-        return collect;
-    }
-
-    public List<Incoterm> getIncotermList() {
-        return incotermList;
-    }
-
-    public List<ContainerInformation> getContainerInformationList() {
-        return containerInformationList;
     }
 
     @NotNull

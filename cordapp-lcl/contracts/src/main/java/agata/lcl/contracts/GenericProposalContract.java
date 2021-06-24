@@ -102,8 +102,8 @@ public abstract class GenericProposalContract implements Contract {
 
     private void verifyAccept(@NotNull LedgerTransaction tx, @NotNull Command command) {
         requireThat(require -> {
-            require.using("There is exactly one input", tx.getInputStates().size() == 1);
-            require.using("The single input is of type ProposalState", tx.inputsOfType(Proposal.class).size() == 1);
+            require.using("There is at least one input", tx.getInputStates().size() >= 1);
+            require.using("At least one Proposal was given as input", tx.inputsOfType(Proposal.class).size() == 1);
             Proposal input = tx.inputsOfType(Proposal.class).get(0);
             require.using("There is exactly one output", tx.getOutputs().size() == 1);
             require.using("The type of the output is that of the proposed state", tx.outputsOfType(input.getProposedState().getClass()).size() == 1);

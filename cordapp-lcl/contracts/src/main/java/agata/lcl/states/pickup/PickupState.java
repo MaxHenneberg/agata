@@ -6,6 +6,7 @@ import agata.lcl.contracts.annotations.MandatoryForContract;
 import agata.lcl.contracts.annotations.NotEmptyForContract;
 import agata.lcl.contracts.pickup.PickupContract;
 import agata.lcl.states.assignment.AssignmentState;
+import lombok.Getter;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.LinearPointer;
 import net.corda.core.contracts.LinearState;
@@ -18,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
+@Getter
 @BelongsToContract(PickupContract.class)
 public class PickupState implements LinearState {
 
@@ -85,29 +87,5 @@ public class PickupState implements LinearState {
     @Override
     public List<AbstractParty> getParticipants() {
         return Arrays.asList(supplier, lclCompany);
-    }
-
-    public Party getBuyer() {
-        return buyer;
-    }
-
-    public Party getSupplier() {
-        return supplier;
-    }
-
-    public Party getLclCompany() {
-        return lclCompany;
-    }
-
-    public List<ItemRow> getPickedUpGoods() {
-        return pickedUpGoods;
-    }
-
-    public LinearPointer<AssignmentState> getReferenceToAssignmentState() {
-        return referenceToAssignmentState;
-    }
-
-    public String getInvoiceId() {
-        return invoiceId;
     }
 }

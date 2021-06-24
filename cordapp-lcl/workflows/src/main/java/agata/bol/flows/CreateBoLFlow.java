@@ -4,6 +4,7 @@ import agata.bol.contracts.BillOfLadingContract;
 import agata.bol.states.BillOfLadingState;
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.Command;
+import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
@@ -19,15 +20,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CreateBoLFlow {
+
     @InitiatingFlow
-    @StartableByRPC
     public static class Initiator extends FlowLogic<UniqueIdentifier> {
         final BillOfLadingState toBeCreated;
+        final List<StateAndRef> inputStateRefs;
         final BillOfLadingContract.BoLCommands commandData;
 
-        public Initiator(BillOfLadingState toBeCreated, BillOfLadingContract.BoLCommands commandData) {
+        public Initiator(BillOfLadingState toBeCreated, List<StateAndRef> inputStateRefs, BillOfLadingContract.BoLCommands commandData) {
             this.toBeCreated = toBeCreated;
             this.commandData = commandData;
+            this.inputStateRefs = inputStateRefs;
         }
 
         @Suspendable
@@ -41,6 +44,10 @@ public class CreateBoLFlow {
             TransactionBuilder txBuilder = new TransactionBuilder(notary)
                     .addOutputState(this.toBeCreated)
                     .addCommand(command);
+
+            for (StateAndRef input : inputStateRefs) {
+                txBuilder.addInputState(input);
+            }
 
             //Signing the transaction ourselves
             SignedTransaction partStx = getServiceHub().signInitialTransaction(txBuilder);

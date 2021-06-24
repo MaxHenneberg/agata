@@ -11,7 +11,6 @@ import net.corda.core.flows.FlowException;
 import net.corda.core.flows.FlowLogic;
 import net.corda.core.flows.InitiatingFlow;
 import net.corda.core.flows.StartableByRPC;
-import net.corda.core.identity.Party;
 import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
 
@@ -32,9 +31,11 @@ public class PickupProposalFlow {
         @Suspendable
         @Override
         public UniqueIdentifier call() throws FlowException {
-            QueryCriteria.LinearStateQueryCriteria inputCriteria = new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(referenceToAssignmentState), Vault.StateStatus.UNCONSUMED,
-                    null);
-            List<StateAndRef<AssignmentState>> assignmentStateList = getServiceHub().getVaultService().queryBy(AssignmentState.class, inputCriteria).getStates();
+            QueryCriteria.LinearStateQueryCriteria inputCriteria =
+                    new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(referenceToAssignmentState), Vault.StateStatus.UNCONSUMED,
+                            null);
+            List<StateAndRef<AssignmentState>> assignmentStateList =
+                    getServiceHub().getVaultService().queryBy(AssignmentState.class, inputCriteria).getStates();
             if (assignmentStateList.size() > 1) {
                 throw new FlowException("Incorrect amount of proposals found. Expected 1 got " + assignmentStateList.size());
             }
@@ -42,11 +43,12 @@ public class PickupProposalFlow {
             if (!getOurIdentity().equals(assignmentState.getLclCompany())) {
                 throw new FlowException("Flow can only be executed by correct LCL Company");
             }
-            PickupState pickupProposal = new PickupState(assignmentState.getBuyer(), assignmentState.getSupplier(), assignmentState.getLclCompany(), Collections.emptyList(),
-                    this.referenceToAssignmentState, "");
-            PickupProposal proposalState = new PickupProposal(assignmentState.getLclCompany(), assignmentState.getSupplier(), pickupProposal);
+            PickupState pickupState =
+                    new PickupState(assignmentState.getBuyer(), assignmentState.getSupplier(), assignmentState.getLclCompany(), Collections.emptyList(),
+                            this.referenceToAssignmentState, "");
+            PickupProposal pickupProposal = new PickupProposal(assignmentState.getLclCompany(), assignmentState.getSupplier(), pickupState);
 
-            return subFlow(new ProposalFlow.Initiator(proposalState));
+            return subFlow(new ProposalFlow.Initiator(pickupProposal));
         }
     }
 }
