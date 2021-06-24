@@ -1,4 +1,4 @@
-package com.template.webserver;
+package agata.lcl;
 
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
@@ -6,16 +6,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import static org.springframework.boot.WebApplicationType.SERVLET;
 
-/**
- * Our Spring Boot application.
- */
 @SpringBootApplication
-public class Starter {
-    /**
-     * Starts our Spring Boot application.
-     */
+public class Application {
+
     public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(Starter.class);
+        SpringApplication app = new SpringApplication(Application.class);
         app.setBannerMode(Banner.Mode.OFF);
         app.setWebApplicationType(SERVLET);
         app.run(args);
