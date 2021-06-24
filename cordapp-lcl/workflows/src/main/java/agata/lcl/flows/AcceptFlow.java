@@ -30,15 +30,18 @@ public class AcceptFlow {
     public static class Initiator extends FlowLogic<SignedTransaction> {
         private final UniqueIdentifier proposalId;
         private final GenericProposalContract.Commands.Accept commandType;
+        private final List<StateAndRef> additionalInputs;
 
         public Initiator(UniqueIdentifier proposalId) {
             this.proposalId = proposalId;
             this.commandType = new GenericProposalContract.Commands.Accept();
+            this.additionalInputs = Collections.emptyList();
         }
 
-        public Initiator(UniqueIdentifier proposalId, GenericProposalContract.Commands.Accept commandType) {
+        public Initiator(UniqueIdentifier proposalId, List<StateAndRef> additionalInputs, GenericProposalContract.Commands.Accept commandType) {
             this.proposalId = proposalId;
             this.commandType = commandType;
+            this.additionalInputs = additionalInputs;
         }
 
         @Suspendable
@@ -62,6 +65,10 @@ public class AcceptFlow {
                     .addInputState(inputStateAndRef)
                     .addOutputState(output)
                     .addCommand(command);
+
+            for (StateAndRef additionalInput : additionalInputs) {
+                txBuilder.addInputState(additionalInput);
+            }
 
             //Signing the transaction ourselves
             SignedTransaction partStx = getServiceHub().signInitialTransaction(txBuilder);
