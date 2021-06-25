@@ -1,6 +1,5 @@
 package agata.lcl.flows;
 
-import agata.lcl.states.Proposal;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -14,8 +13,8 @@ import java.util.List;
 
 public class LclFlowUtils {
 
-    public static <T extends Proposal> T resolveProposalId(Class<T> clazz, FlowLogic flowLogic, UniqueIdentifier proposalId) throws FlowException {
-        StateAndRef<T> stateAndRef = resolveIdToStateRef(proposalId, flowLogic, clazz);
+    public static <T extends ContractState> T resolveStateId(Class<T> clazz, FlowLogic flowLogic, UniqueIdentifier id) throws FlowException {
+        StateAndRef<T> stateAndRef = resolveIdToStateRef(id, flowLogic, clazz);
         return stateAndRef.getState().getData();
     }
 
@@ -24,7 +23,7 @@ public class LclFlowUtils {
                 new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(id), Vault.StateStatus.UNCONSUMED, null);
         List<StateAndRef<T>> stateRefs = flowLogic.getServiceHub().getVaultService().queryBy(clazz, inputCriteria).getStates();
         if (stateRefs.size() != 1) {
-            throw new FlowException("Expected one matching proposals for the given id but got " + stateRefs.size());
+            throw new FlowException("Expected one matching state of type " + clazz.toString() + " with id " + id.getId().toString() + " but got " + stateRefs.size());
         }
 
         return stateRefs.get(0);
