@@ -32,17 +32,16 @@ public class ContainerController extends BaseController {
         return this.getStates(ContainerRequestProposal.class);
     }
 
-    // TODO: Handle exception more explicitly
     @PostMapping("/proposals")
-    public ContainerRequestProposal addProposal(@RequestBody ContainerRequest request) throws Exception {
-        UniqueIdentifier proposalId = this.proxy.startFlowDynamic(
+    public ContainerRequestProposal addProposal(@RequestBody ContainerRequest request) {
+        UniqueIdentifier proposalId = this.startFlow(
                 ContainerRequestProposalFlow.Initiator.class,
                 request.getShippingLine(),
                 request.getLclDestination(),
                 request.getPortOfLoading(),
                 request.getPortOfDischarge(),
                 request.getForwardingAgentNo(),
-                request.getRequestedType()).getReturnValue().get();
+                request.getRequestedType());
         return this.queryStateById(ContainerRequestProposal.class, proposalId);
     }
 
@@ -50,7 +49,7 @@ public class ContainerController extends BaseController {
     public ContainerRequestProposal updateProposal(@PathVariable String id, @RequestBody ContainerAssignment requestUpdate) {
         UniqueIdentifier proposalId = this.toUniqueIdentifier(id);
         // The flow returns the proposal id, which remains unchanged and is therefore not used
-        this.proxy.startFlowDynamic(
+        this.startFlow(
                 AssignContainerFlow.Initiator.class,
                 proposalId,
                 requestUpdate.getVesselName(),

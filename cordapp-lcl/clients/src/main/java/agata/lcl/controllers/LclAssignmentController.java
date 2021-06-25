@@ -37,10 +37,9 @@ public class LclAssignmentController extends BaseController {
         return this.getStates(AssignmentProposal.class);
     }
 
-    // TODO: Handle exception more explicitly
     @PostMapping("/proposals")
-    public AssignmentProposal addLclCompanyAssignment(@RequestBody LclAssignment newAssignment) throws Exception {
-        UniqueIdentifier proposalId = this.proxy.startFlowDynamic(AssignmentProposalFlow.Initiator.class, newAssignment.getBuyer(), newAssignment.getSupplier(), newAssignment.getArrivalParty(), newAssignment.getDepartureAddress(), newAssignment.getArrivalAddress(), newAssignment.getExpectedGoods()).getReturnValue().get();
+    public AssignmentProposal addLclCompanyAssignment(@RequestBody LclAssignment newAssignment) {
+        UniqueIdentifier proposalId = this.startFlow(AssignmentProposalFlow.Initiator.class, newAssignment.getBuyer(), newAssignment.getSupplier(), newAssignment.getArrivalParty(), newAssignment.getDepartureAddress(), newAssignment.getArrivalAddress(), newAssignment.getExpectedGoods());
         return this.queryStateById(AssignmentProposal.class, proposalId);
     }
 
