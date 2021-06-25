@@ -25,6 +25,11 @@ public class LclAssignmentController extends BaseController {
         return this.getStates(AssignmentState.class);
     }
 
+    @GetMapping("/{id}")
+    public AssignmentState getFinalizedAssignment(@PathVariable String id) {
+        return this.queryStateById(AssignmentState.class, this.toUniqueIdentifier(id));
+    }
+
     // TODO: One common endpoint for all proposals and then via query param of which type? Then the finalized are in sth like lcl-assigments
     //  But then for acceptance, it is not clear what to do explicitly for this case, isn't it?
     @GetMapping("/proposals")
