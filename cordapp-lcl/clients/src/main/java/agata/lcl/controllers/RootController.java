@@ -9,13 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
-public class RootController {
-
-    private final CordaRPCOps proxy;
+public class RootController extends BaseController {
 
     @Autowired
     public RootController(CordaRPCOps proxy) {
-        this.proxy = proxy;
+        super(proxy);
     }
 
     @GetMapping("/info")
