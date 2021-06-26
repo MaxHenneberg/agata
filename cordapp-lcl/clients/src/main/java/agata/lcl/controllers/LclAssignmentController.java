@@ -52,7 +52,7 @@ public class LclAssignmentController extends BaseController {
 
     @PostMapping("/proposals/{proposalId}/acceptance")
     public AssignmentState acceptAssignment(@PathVariable String proposalId) {
-        return this.startGenericAcceptFlow(proposalId, AssignmentProposal.class).getProposedState();
+        return this.startGenericAcceptFlow(proposalId, AssignmentState.class);
     }
 
 }

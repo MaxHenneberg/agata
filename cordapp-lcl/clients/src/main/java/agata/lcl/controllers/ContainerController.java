@@ -2,6 +2,7 @@ package agata.lcl.controllers;
 
 import agata.lcl.bodies.ContainerAssignment;
 import agata.lcl.bodies.ContainerRequest;
+import agata.lcl.errors.ResourceNotFoundException;
 import agata.lcl.flows.container.AssignContainerFlow;
 import agata.lcl.flows.container.ContainerRequestProposalFlow;
 import agata.lcl.states.container.ContainerRequestProposal;
@@ -48,6 +49,12 @@ public class ContainerController extends BaseController {
     @PatchMapping("/proposals/{id}")
     public ContainerRequestProposal updateProposal(@PathVariable String id, @RequestBody ContainerAssignment requestUpdate) {
         UniqueIdentifier proposalId = this.toUniqueIdentifier(id);
+
+        // Check if a resource with the given id exists before executing the actual flow logic
+        if (this.queryStateById(ContainerRequestProposal.class, proposalId) == null) {
+            throw new ResourceNotFoundException(ContainerRequestProposal.class, id);
+        }
+
         // The flow returns the proposal id, which remains unchanged and is therefore not used
         this.startFlow(
                 AssignContainerFlow.Initiator.class,
@@ -59,7 +66,7 @@ public class ContainerController extends BaseController {
 
     @PostMapping("/proposals/{proposalId}/acceptance")
     public ContainerRequestState acceptAssignment(@PathVariable String proposalId) {
-        return this.startGenericAcceptFlow(proposalId, ContainerRequestProposal.class).getProposedState();
+        return this.startGenericAcceptFlow(proposalId, ContainerRequestState.class);
     }
 
 }
