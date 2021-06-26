@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
-public class GenericProposalContractUtils {
+public class BaseContractUtils {
     public static void checkMandatoryFields(ContractState toBeChecked, CommandData command, boolean isInput) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         List<String> missingMandatoryFields = new LinkedList<>();
         List<Field> fieldsForSecondCheck = new LinkedList<>();
