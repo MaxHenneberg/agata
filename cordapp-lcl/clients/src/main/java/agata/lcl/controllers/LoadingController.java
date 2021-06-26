@@ -7,6 +7,7 @@ import agata.lcl.flows.shiploading.ShiploadingProposalFlow;
 import agata.lcl.states.shiploading.ShiploadingProposal;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.messaging.CordaRPCOps;
+import net.corda.core.node.services.Vault;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,7 +59,7 @@ public class LoadingController extends BaseController {
     public BillOfLadingState acceptLoadingProposal(@PathVariable String proposalId) {
         UniqueIdentifier id = this.toUniqueIdentifier(proposalId);
         this.startFlow(ShiploadingAcceptFlow.Initiator.class, id);
-        return this.queryStateById(ShiploadingProposal.class, id).getProposedState();
+        return this.queryStateById(ShiploadingProposal.class, id, Vault.StateStatus.CONSUMED).getProposedState();
     }
 
 

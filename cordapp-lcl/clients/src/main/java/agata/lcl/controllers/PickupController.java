@@ -10,6 +10,7 @@ import agata.lcl.states.pickup.PickupProposal;
 import agata.lcl.states.pickup.PickupState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.messaging.CordaRPCOps;
+import net.corda.core.node.services.Vault;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,7 +67,7 @@ public class PickupController extends BaseController {
                 update.getPrepaid(),
                 update.getCollect()
         );
-        return this.queryStateById(PickupProposal.class, id).getProposedState();
+        return this.queryStateById(PickupProposal.class, id, Vault.StateStatus.CONSUMED).getProposedState();
     }
 
 }

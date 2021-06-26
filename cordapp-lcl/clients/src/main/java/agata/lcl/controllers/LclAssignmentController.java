@@ -28,7 +28,7 @@ public class LclAssignmentController extends BaseController {
 
     @GetMapping("/{id}")
     public AssignmentState getFinalizedAssignment(@PathVariable String id) {
-        return this.queryStateById(AssignmentState.class, this.toUniqueIdentifier(id));
+        return this.getResourceById(AssignmentState.class, id);
     }
 
     // TODO: These are not only house BoLs as we cannot distinguish for now
