@@ -1,5 +1,6 @@
 package agata.lcl.controllers;
 
+import agata.bol.states.BillOfLadingState;
 import agata.lcl.bodies.LclAssignment;
 import agata.lcl.flows.assignment.AssignmentProposalFlow;
 import agata.lcl.states.assignment.AssignmentProposal;
@@ -28,6 +29,12 @@ public class LclAssignmentController extends BaseController {
     @GetMapping("/{id}")
     public AssignmentState getFinalizedAssignment(@PathVariable String id) {
         return this.queryStateById(AssignmentState.class, this.toUniqueIdentifier(id));
+    }
+
+    // TODO: These are not only house BoLs as we cannot distinguish for now
+    @GetMapping("/{id}/house-bols")
+    public List<BillOfLadingState> getFinalizedHouseBillOfLadings() {
+        return this.getStates(BillOfLadingState.class);
     }
 
     // TODO: One common endpoint for all proposals and then via query param of which type? Then the finalized are in sth like lcl-assigments
