@@ -5,7 +5,6 @@ import agata.bol.dataholder.ContainerInformation;
 import agata.bol.dataholder.DescriptionOfGoods;
 import agata.bol.dataholder.ItemRow;
 import agata.bol.enums.ContainerType;
-import agata.lcl.enums.LclAssignmentStatus;
 import agata.lcl.flows.container.AssignContainerFlow;
 import agata.lcl.flows.container.ContainerRequestProposalFlow;
 import agata.lcl.states.Proposal;
@@ -93,8 +92,7 @@ public abstract class FlowTestBase {
         Party buyerParty = getParty(buyerMock);
         List<ItemRow> goods = Collections
                 .singletonList(new ItemRow("abc", goodsId, 3, new DescriptionOfGoods("iPhone", "pallet", 100), 12, 12, 456));
-        AssignmentState assignmentState = new AssignmentState(lclCompanyParty, buyerParty, supplierParty, buyerParty, address1, address2,
-                goods, LclAssignmentStatus.SlotBooked);
+        AssignmentState assignmentState = new AssignmentState(lclCompanyParty, buyerParty, supplierParty, buyerParty, address1, address2, goods, new UniqueIdentifier());
         Proposal proposal = new AssignmentProposal(lclCompanyParty, buyerParty, assignmentState);
         ProposalFlow.Initiator proposeFlow = new ProposalFlow.Initiator(proposal);
         Future<UniqueIdentifier> future1 = lclCompanyMock.startFlow(proposeFlow);

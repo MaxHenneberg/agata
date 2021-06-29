@@ -3,9 +3,9 @@ package agata.lcl.contracts.assignment;
 import agata.bol.dataholder.Address;
 import agata.bol.dataholder.DescriptionOfGoods;
 import agata.bol.dataholder.ItemRow;
-import agata.lcl.enums.LclAssignmentStatus;
 import agata.lcl.states.assignment.AssignmentProposal;
 import agata.lcl.states.assignment.AssignmentState;
+import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
 import net.corda.testing.core.TestIdentity;
@@ -36,7 +36,7 @@ public class AssignmentContractTest {
                 Party supplier = bob.getParty();
                 ItemRow r = new ItemRow("abc", "123", 3, new DescriptionOfGoods("iPhone", "pallet", 100), 12, 12, 456);
                 List<ItemRow> goods = Collections.singletonList(r);
-                AssignmentState state = new AssignmentState(lclCompany, buyer, supplier, supplier, address1, address2, goods, LclAssignmentStatus.SlotBooked);
+                AssignmentState state = new AssignmentState(lclCompany, buyer, supplier, supplier, address1, address2, goods, new UniqueIdentifier());
                 AssignmentProposal proposal = new AssignmentProposal(lclCompany, buyer, state);
                 tx.output(AssignmentContract.ID, proposal);
                 tx.command(Arrays.asList(lclCompany.getOwningKey(), buyer.getOwningKey()), new AssignmentContract.Commands.Propose());
@@ -54,7 +54,7 @@ public class AssignmentContractTest {
                 Party lclCompany = alice.getParty();
                 Party buyer = charlie.getParty();
                 Party supplier = bob.getParty();
-                AssignmentState state = new AssignmentState(lclCompany, null, supplier, supplier, address1, address2, Collections.emptyList(), LclAssignmentStatus.SlotBooked);
+                AssignmentState state = new AssignmentState(lclCompany, null, supplier, supplier, address1, address2, Collections.emptyList(), new UniqueIdentifier());
                 AssignmentProposal proposal = new AssignmentProposal(lclCompany, buyer, state);
                 tx.output(AssignmentContract.ID, proposal);
                 tx.command(Arrays.asList(lclCompany.getOwningKey(), buyer.getOwningKey()), new AssignmentContract.Commands.Propose());
