@@ -6,12 +6,10 @@ import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.Command;
 import net.corda.core.contracts.CommandData;
 import net.corda.core.contracts.UniqueIdentifier;
-import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
-import org.jetbrains.annotations.NotNull;
 
 import java.security.PublicKey;
 import java.util.Arrays;
@@ -62,27 +60,10 @@ public class ProposalFlow {
     }
 
     @InitiatedBy(Initiator.class)
-    public static class Responder extends FlowLogic<SignedTransaction> {
-        private FlowSession counterpartySession;
+    public static class Responder extends DefaultResponderFlow {
 
         public Responder(FlowSession counterpartySession) {
-            this.counterpartySession = counterpartySession;
-        }
-
-        @Suspendable
-        @Override
-        public SignedTransaction call() throws FlowException {
-
-            SignTransactionFlow signTransactionFlow = new SignTransactionFlow(counterpartySession) {
-
-                @Override
-                protected void checkTransaction(@NotNull SignedTransaction stx) {
-
-                }
-            };
-            SecureHash txId = subFlow(signTransactionFlow).getId();
-
-            return subFlow(new ReceiveFinalityFlow(this.counterpartySession, txId));
+            super(counterpartySession);
         }
     }
 
