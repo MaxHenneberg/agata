@@ -1,0 +1,53 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="Agata_Team" id="create_bol_state">
+        <createTable tableName="bol_states">
+            <column name="output_index" type="INT"/>
+            <column name="transaction_id" type="NVARCHAR(64)"/>
+
+            <column name="shipper" type="NVARCHAR(64)"/>
+            <column name="consignee" type="NVARCHAR(64)"/>
+            <column name="notifyParty" type="NVARCHAR(64)"/>
+
+            <column name="modeOfInitialCarriage" type="NVARCHAR(64)"/>
+            <column name="placeOfInitialReceipt" type="NVARCHAR(64)"/>
+
+            <column name="vesselName" type="NVARCHAR(64)"/>
+            <column name="portOfLoading" type="NVARCHAR(64)"/>
+            <column name="portOfDischarge" type="NVARCHAR(64)"/>
+            <column name="placeOfDeliveryByCarrier" type="NVARCHAR(64)"/>
+
+            <column name="bookingNo" type="NVARCHAR(64)"/>
+            <column name="billOfLadingNo" type="NVARCHAR(64)"/>
+
+            <column name="exportReference" type="NVARCHAR(64)"/>
+
+            <column name="forwardingAgent" type="NVARCHAR(64)"/>
+            <column name="fmcNo" type="NVARCHAR(64)"/>
+
+            <column name="pointAndCountry" type="NVARCHAR(64)"/>
+
+            <column name="cargoReleaser" type="NVARCHAR(64)"/>
+
+            <column name="domesticRoutingInstructions" type="NVARCHAR(64)"/>
+
+            <column name="freightPayableAt" type="NVARCHAR(64)"/>
+            <column name="typeOfMovement" type="NVARCHAR(64)"/>
+
+            <column name="goodsList" type="NVARCHAR(64)"/>
+
+            <column name="freightChargesList" type="NVARCHAR(64)"/>
+
+            <column name="prepaid" type="NVARCHAR(64)"/>
+            <column name="collect" type="NVARCHAR(64)"/>
+
+            <column name="incotermList" type="NVARCHAR(64)"/>
+
+            <column name="containerInformationList" type="NVARCHAR(64)"/>
+
+            <column name="linear_id" type="NVARCHAR(64)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

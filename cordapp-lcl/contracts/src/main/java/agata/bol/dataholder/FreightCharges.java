@@ -3,6 +3,7 @@ package agata.bol.dataholder;
 import lombok.*;
 import net.corda.core.serialization.CordaSerializable;
 
+@ToString
 @CordaSerializable
 @NoArgsConstructor
 @AllArgsConstructor
