@@ -1,7 +1,9 @@
 package agata.bol.dataholder;
 
+import lombok.ToString;
 import net.corda.core.serialization.CordaSerializable;
 
+@ToString
 @CordaSerializable
 public class FreightCharges {
 

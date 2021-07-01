@@ -1,9 +1,11 @@
 package agata.bol.dataholder;
 
+import lombok.ToString;
 import net.corda.core.serialization.CordaSerializable;
 
 import java.util.Objects;
 
+@ToString
 @CordaSerializable
 public class ItemRow {
     private final String mark;
