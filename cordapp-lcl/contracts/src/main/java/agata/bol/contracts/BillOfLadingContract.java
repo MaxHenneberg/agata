@@ -10,6 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
 public class BillOfLadingContract implements Contract {
+
+    public static String ID = "agata.bol.contracts.BillOfLadingContract";
+
     @Override
     public void verify(@NotNull LedgerTransaction tx) throws IllegalArgumentException {
         final Command command = tx.getCommand(0);
