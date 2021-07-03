@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Getter
 @EqualsAndHashCode
@@ -193,20 +194,22 @@ public class BillOfLadingState implements QueryableState, LinearState {
                     this.placeOfDeliveryByCarrier,
                     this.bookingNo,
                     this.billOfLadingNo,
-                    this.exportReference.stream().map(Object::toString).reduce("", (part, ele) -> part + "," + ele),
-                    this.forwardingAgent.getName().toString(),
+                    this.exportReference != null ? this.exportReference.stream().map(Object::toString).reduce("", (part, ele) -> part + "," + ele) : "",
+                    this.forwardingAgent != null ? this.forwardingAgent.getName().toString() : "",
                     this.fmcNo,
-                    this.pointAndCountry.toString(),
-                    this.cargoReleaser.getName().toString(),
+                    this.pointAndCountry != null ? this.pointAndCountry.toString() : "",
+                    this.cargoReleaser != null ? this.cargoReleaser.getName().toString() : "",
                     this.domesticRoutingInstructions,
                     this.freightPayableAt.toString(),
                     this.typeOfMovement.toString(),
-                    this.goodsList.stream().map(Object::toString).reduce("", (part, ele) -> part + "," + ele),
-                    this.freightChargesList.stream().map(Object::toString).reduce("", (part, ele) -> part + "," + ele),
-                    this.prepaid.toString(),
-                    this.collect.toString(),
-                    this.incotermList.stream().map(Object::toString).reduce("", (part, ele) -> part + "," + ele),
-                    this.containerInformationList.stream().map(Objects::toString).reduce("", (part, ele) -> part + "," + ele),
+                    this.goodsList != null ? this.goodsList.stream().map(BillOfLadingSchemaV1.ItemRowBE::new).collect(Collectors.toList()) : Collections
+                            .emptyList(),
+                    this.freightChargesList != null ? this.freightChargesList.stream().map(Object::toString).reduce("", (part, ele) -> part + "," + ele) : "",
+                    this.prepaid != null ? this.prepaid.toString() : "",
+                    this.collect != null ? this.collect.toString() : "",
+                    this.incotermList != null ? this.incotermList.stream().map(Object::toString).reduce("", (part, ele) -> part + "," + ele) : "",
+                    this.containerInformationList != null ? this.containerInformationList.stream().map(Objects::toString)
+                            .reduce("", (part, ele) -> part + "," + ele) : "",
                     this.getLinearId().getId()
             );
         } else {
@@ -218,5 +221,13 @@ public class BillOfLadingState implements QueryableState, LinearState {
     @Override
     public Iterable<MappedSchema> supportedSchemas() {
         return Collections.singletonList(new BillOfLadingSchemaV1());
+    }
+
+    private String cutToMaxLength(String input, int maxLength) {
+        if (input.length() > maxLength) {
+            return input.substring(0, maxLength);
+        } else {
+            return input;
+        }
     }
 }
