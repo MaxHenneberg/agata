@@ -1,0 +1,29 @@
+<div class="form-container">
+    <form [formGroup]="requestForm">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Shipping Line</mat-label>
+        <input matInput formControlName="shippingLine">
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Port of Lading</mat-label>
+        <input matInput formControlName="portOfLoading">
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Port of Discharge</mat-label>
+        <input matInput formControlName="portOfDischarge">
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Forwarding Agent No.</mat-label>
+        <input matInput formControlName="forwardingAgentNo">
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Request Type</mat-label>
+        <input matInput formControlName="requestedType">
+      </mat-form-field>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>LcL Destination</mat-label>
+        <input matInput formControlName="lclDestination">
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit">Request</button>
+    </form>
+</div>

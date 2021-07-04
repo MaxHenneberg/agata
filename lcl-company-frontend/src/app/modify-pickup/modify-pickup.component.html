@@ -1,0 +1,28 @@
+<div style="min-width: 80vw; margin-top: 2vh;">
+  <h1>Modify Pickup</h1>
+  <mat-divider></mat-divider>
+  <div style="width: 100%">
+    <div style="display: flex; justify-content: center">
+      <span style="justify-content: start; margin-right: 5vw;">Buyer: </span><span style="justify-content: end">{{proposal.buyer}}</span>
+    </div>
+    <div style="display: flex; justify-content: center">
+      <span style="justify-content: start; margin-right: 5vw;">Supplier: </span><span style="justify-content: end">{{proposal.supplier}}</span>
+    </div>
+    <div style="display: flex; justify-content: center">
+      <span style="justify-content: start; margin-right: 5vw;">LcL-Company: </span><span style="justify-content: end">{{proposal.lclCompany}}</span>
+    </div>
+    <div style="display: flex; justify-content: center">
+      <span style="justify-content: start; margin-right: 5vw;">Invoice Id: </span><span style="justify-content: end">{{proposal.invoiceId}}</span>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div>
+    <app-add-goods (onAddedItem)="onAddedItem($event)"></app-add-goods>
+  </div>
+  <mat-divider></mat-divider>
+  <div style="width: 100%">
+    <a routerLink="">
+      <button mat-raised-button color="primary" (click)="finishModify()" style="margin-top: 5vh; float: right">Finish Modify</button>
+    </a>
+  </div>
+</div>

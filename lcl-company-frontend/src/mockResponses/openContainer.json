@@ -1,0 +1,28 @@
+[
+  {
+    "containerId": "d8d2cdae-76f9-4963-be6d-01c79a95cc43",
+    "type": "40",
+    "bolList": [
+      "c6fb7437-4be3-4d87-b172-c09441ea5b35",
+      "d8d2cdae-76f9-4963-be6d-01c79a95cc43",
+      "c6fb7437-4be3-4d87-b172-c09441ea5b35"
+    ],
+    "fillPerc": "80%"
+  },
+  {
+    "containerId": "c6fb7437-4be3-4d87-b172-c09441ea5b35",
+    "type": "20",
+    "bolList": [
+      "c6fb7437-4be3-4d87-b172-c09441ea5b35",
+      "d8d2cdae-76f9-4963-be6d-01c79a95cc43"
+    ],
+    "fillPerc": "100%"
+  },
+  {
+    "containerId": "c6fb7437-4be3-4d87-b172-c09441ea5b35",
+    "type": "20",
+    "bolList": [
+    ],
+    "fillPerc": "0%"
+  }
+]

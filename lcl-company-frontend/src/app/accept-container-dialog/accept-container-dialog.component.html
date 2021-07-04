@@ -1,0 +1,68 @@
+<h1 mat-dialog-title>Found Container:</h1>
+<div mat-dialog-content>
+  <div>
+    <h2>Container Information: </h2>
+    <table>
+      <tr>
+        <td>Container Id:</td>
+        <td>{{container.containerNo}}</td>
+      </tr>
+      <tr>
+        <td>Type:</td>
+        <td>{{container.type}}</td>
+      </tr>
+      <tr>
+        <td>Seal:</td>
+        <td>{{container.sealNo}}</td>
+      </tr>
+    </table>
+  </div>
+  <mat-divider></mat-divider>
+  <div *ngIf="bol">
+    <h2>Master Bol: {{bol.billOfLadingNo}}</h2>
+    <table>
+      <tr>
+        <td>Shipper:</td>
+        <td>{{bol.shipper}}</td>
+      </tr>
+      <tr>
+        <td>Consignee:</td>
+        <td>{{bol.consignee}}</td>
+      </tr>
+      <tr>
+        <td>Notify Party:</td>
+        <td>{{bol.notifyParty}}</td>
+      </tr>
+    </table>
+    <table style="margin-top: 3vh">
+      <tr>
+        <td>Vessel Name:</td>
+        <td>{{bol.vesselName}}</td>
+      </tr>
+      <tr>
+        <td>Port Of Lading:</td>
+        <td>{{bol.portOfLoading}}</td>
+      </tr>
+      <tr>
+        <td>Port of Discharge:</td>
+        <td>{{bol.portOfDischarge}}</td>
+      </tr>
+      <tr>
+        <td>Place of Delivery By Carrier:</td>
+        <td>{{bol.placeOfDeliveryByCarrier}}</td>
+      </tr>
+    </table>
+    <mat-divider></mat-divider>
+    <div style="width: 100%; margin-top: 3vh">
+      <span style="float: left">
+        <button mat-raised-button color="primary" (click)="confirm(true)" style="">Confirm</button>
+      </span>
+      <span style="float: right">
+        <button mat-raised-button color="warn" (click)="confirm(false)" style="">Decline</button>
+      </span>
+    </div>
+  </div>
+  <div *ngIf="!bol">
+    <p style="color: red">Not Matching Master BoL Found</p>
+  </div>
+</div>

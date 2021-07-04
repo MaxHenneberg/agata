@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Scanned Item</h1>
+<div mat-dialog-content>
+  <table>
+    <tr>
+      <th>Mark</th>
+      <th>Id</th>
+      <th>Product</th>
+      <th>Package</th>
+      <th>Quantity</th>
+    </tr>
+    <tr>
+      <td>{{good?.mark}}</td>
+      <td>{{good?.identityNumber}}</td>
+      <td>{{good?.descriptionOfGoods?.product}}</td>
+      <td>{{good?.descriptionOfGoods?.typeOfPackage}}</td>
+      <td>{{good?.descriptionOfGoods?.quantity}}</td>
+    </tr>
+  </table>
+  <button mat-raised-button color="primary" (click)="onItemConfirm()">Confirm</button>
+</div>

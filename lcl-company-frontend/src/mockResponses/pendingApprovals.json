@@ -1,0 +1,212 @@
+[
+  {
+    "proposee": "O=PartyA, L=London, C=GB",
+    "proposer": "O=PartyB, L=New York, C=US",
+    "proposedState": {
+      "linearId": "c6fb7437-4be3-4d87-b172-c09441ea5b35",
+      "lclCompany": "O=PartyB, L=New York, C=US",
+      "buyer": "O=PartyA, L=London, C=GB",
+      "supplier": "O=PartyB, L=New York, C=US",
+      "arrivalParty": "O=PartyA, L=London, C=GB",
+      "departureAddress": {
+        "street": "Sample street 1",
+        "city": "London",
+        "state": "",
+        "postalCode": "123",
+        "country": "GB"
+      },
+      "arrivalAddress": {
+        "street": "Another street 2",
+        "city": "Hamburg",
+        "state": "abc",
+        "postalCode": "123",
+        "country": "DE"
+      },
+      "status": "SlotBooked",
+      "expectedGoods": [
+        {
+          "mark": "12",
+          "identityNumber": "34abcd",
+          "noOfPackages": 2,
+          "descriptionOfGoods": {
+            "product": "Foo",
+            "typeOfPackage": "test",
+            "quantity": 123
+          },
+          "netWeight": 1234,
+          "grossWeight": 1235,
+          "measurement": 456
+        }
+      ]
+    },
+    "linearId": "d8d2cdae-76f9-4963-be6d-01c79a95cc43"
+  },
+  {
+    "proposee": "O=PartyA, L=London, C=GB",
+    "proposer": "O=PartyB, L=New York, C=US",
+    "proposedState": {
+      "linearId": "c6fb7437-4be3-4d87-b172-c09441ea5b35",
+      "lclCompany": "O=PartyB, L=New York, C=US",
+      "buyer": "O=PartyA, L=London, C=GB",
+      "supplier": "O=PartyB, L=New York, C=US",
+      "arrivalParty": "O=PartyA, L=London, C=GB",
+      "departureAddress": {
+        "street": "Sample street 1",
+        "city": "London",
+        "state": "",
+        "postalCode": "123",
+        "country": "GB"
+      },
+      "arrivalAddress": {
+        "street": "Another street 2",
+        "city": "Hamburg",
+        "state": "abc",
+        "postalCode": "123",
+        "country": "DE"
+      },
+      "status": "SlotBooked",
+      "expectedGoods": [
+        {
+          "mark": "12",
+          "identityNumber": "34abcd",
+          "noOfPackages": 2,
+          "descriptionOfGoods": {
+            "product": "Foo",
+            "typeOfPackage": "test",
+            "quantity": 123
+          },
+          "netWeight": 1234,
+          "grossWeight": 1235,
+          "measurement": 456
+        }
+      ]
+    },
+    "linearId": "d8d2cdae-76f9-4963-be6d-01c79a95cc43"
+  },
+  {
+    "proposee": "O=PartyA, L=London, C=GB",
+    "proposer": "O=PartyB, L=New York, C=US",
+    "proposedState": {
+      "linearId": "c6fb7437-4be3-4d87-b172-c09441ea5b35",
+      "lclCompany": "O=PartyB, L=New York, C=US",
+      "buyer": "O=PartyA, L=London, C=GB",
+      "supplier": "O=PartyB, L=New York, C=US",
+      "arrivalParty": "O=PartyA, L=London, C=GB",
+      "departureAddress": {
+        "street": "Sample street 1",
+        "city": "London",
+        "state": "",
+        "postalCode": "123",
+        "country": "GB"
+      },
+      "arrivalAddress": {
+        "street": "Another street 2",
+        "city": "Hamburg",
+        "state": "abc",
+        "postalCode": "123",
+        "country": "DE"
+      },
+      "status": "SlotBooked",
+      "expectedGoods": [
+        {
+          "mark": "12",
+          "identityNumber": "34abcd",
+          "noOfPackages": 2,
+          "descriptionOfGoods": {
+            "product": "Foo",
+            "typeOfPackage": "test",
+            "quantity": 123
+          },
+          "netWeight": 1234,
+          "grossWeight": 1235,
+          "measurement": 456
+        }
+      ]
+    },
+    "linearId": "d8d2cdae-76f9-4963-be6d-01c79a95cc43"
+  },
+  {
+    "proposee": "O=PartyA, L=London, C=GB",
+    "proposer": "O=PartyB, L=New York, C=US",
+    "proposedState": {
+      "linearId": "c6fb7437-4be3-4d87-b172-c09441ea5b35",
+      "lclCompany": "O=PartyB, L=New York, C=US",
+      "buyer": "O=PartyA, L=London, C=GB",
+      "supplier": "O=PartyB, L=New York, C=US",
+      "arrivalParty": "O=PartyA, L=London, C=GB",
+      "departureAddress": {
+        "street": "Sample street 1",
+        "city": "London",
+        "state": "",
+        "postalCode": "123",
+        "country": "GB"
+      },
+      "arrivalAddress": {
+        "street": "Another street 2",
+        "city": "Hamburg",
+        "state": "abc",
+        "postalCode": "123",
+        "country": "DE"
+      },
+      "status": "SlotBooked",
+      "expectedGoods": [
+        {
+          "mark": "12",
+          "identityNumber": "34abcd",
+          "noOfPackages": 2,
+          "descriptionOfGoods": {
+            "product": "Foo",
+            "typeOfPackage": "test",
+            "quantity": 123
+          },
+          "netWeight": 1234,
+          "grossWeight": 1235,
+          "measurement": 456
+        }
+      ]
+    },
+    "linearId": "d8d2cdae-76f9-4963-be6d-01c79a95cc43"
+  },
+  {
+    "proposee": "O=PartyA, L=London, C=GB",
+    "proposer": "O=PartyB, L=New York, C=US",
+    "proposedState": {
+      "linearId": "c6fb7437-4be3-4d87-b172-c09441ea5b35",
+      "lclCompany": "O=PartyB, L=New York, C=US",
+      "buyer": "O=PartyA, L=London, C=GB",
+      "supplier": "O=PartyB, L=New York, C=US",
+      "arrivalParty": "O=PartyA, L=London, C=GB",
+      "departureAddress": {
+        "street": "Sample street 1",
+        "city": "London",
+        "state": "",
+        "postalCode": "123",
+        "country": "GB"
+      },
+      "arrivalAddress": {
+        "street": "Another street 2",
+        "city": "Hamburg",
+        "state": "abc",
+        "postalCode": "123",
+        "country": "DE"
+      },
+      "status": "SlotBooked",
+      "expectedGoods": [
+        {
+          "mark": "12",
+          "identityNumber": "34abcd",
+          "noOfPackages": 2,
+          "descriptionOfGoods": {
+            "product": "Foo",
+            "typeOfPackage": "test",
+            "quantity": 123
+          },
+          "netWeight": 1234,
+          "grossWeight": 1235,
+          "measurement": 456
+        }
+      ]
+    },
+    "linearId": "d8d2cdae-76f9-4963-be6d-01c79a95cc43"
+  }
+]
