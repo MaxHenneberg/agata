@@ -1,5 +1,6 @@
 package agata.lcl.flows.pickup;
 
+import agata.lcl.flows.LclFlowUtils;
 import agata.lcl.flows.ProposalFlow;
 import agata.lcl.states.assignment.AssignmentState;
 import agata.lcl.states.pickup.PickupProposal;
@@ -31,15 +32,8 @@ public class PickupProposalFlow {
         @Suspendable
         @Override
         public UniqueIdentifier call() throws FlowException {
-            QueryCriteria.LinearStateQueryCriteria inputCriteria =
-                    new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(referenceToAssignmentState), Vault.StateStatus.UNCONSUMED,
-                            null);
-            List<StateAndRef<AssignmentState>> assignmentStateList =
-                    getServiceHub().getVaultService().queryBy(AssignmentState.class, inputCriteria).getStates();
-            if (assignmentStateList.size() > 1) {
-                throw new FlowException("Incorrect amount of proposals found. Expected 1 got " + assignmentStateList.size());
-            }
-            final AssignmentState assignmentState = assignmentStateList.get(0).getState().getData();
+            final AssignmentState assignmentState = LclFlowUtils.resolveIdToStateRef(this.referenceToAssignmentState, this, AssignmentState.class).getState().getData();
+
             if (!getOurIdentity().equals(assignmentState.getLclCompany())) {
                 throw new FlowException("Flow can only be executed by correct LCL Company");
             }

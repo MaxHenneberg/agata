@@ -29,7 +29,7 @@ public class ShiploadingAcceptFlow {
         @Suspendable
         @Override
         public SignedTransaction call() throws FlowException {
-            ShiploadingProposal proposal = LclFlowUtils.resolveProposalId(ShiploadingProposal.class, this, proposalId);
+            ShiploadingProposal proposal = LclFlowUtils.resolveStateId(ShiploadingProposal.class, this, proposalId);
             final StateAndRef<ContainerRequestState> containerRequestStateStateAndRef = LclFlowUtils
                     .resolveIdToStateRef(proposal.getContainerId(), this, ContainerRequestState.class);
             final ContainerRequestState containerRequestState = containerRequestStateStateAndRef.getState().getData();

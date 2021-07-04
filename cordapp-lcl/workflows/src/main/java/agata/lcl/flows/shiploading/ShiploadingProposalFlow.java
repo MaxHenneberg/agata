@@ -65,6 +65,11 @@ public class ShiploadingProposalFlow {
         @Suspendable
         @Override
         public UniqueIdentifier call() throws FlowException {
+
+            if (this.houseBolIds.size() < 1) {
+                throw new FlowException("At least one house bill of lading must be passed to create the master bill of lading");
+            }
+
             QueryCriteria.LinearStateQueryCriteria inputCriteria =
                     new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(containerStateId), Vault.StateStatus.UNCONSUMED,
                             null);
