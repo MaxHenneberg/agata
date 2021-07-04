@@ -32,7 +32,7 @@ public class AssignContainerFlow {
         @Suspendable
         @Override
         public SignedTransaction call() throws FlowException {
-            final ContainerRequestProposal proposal = LclFlowUtils.resolveProposalId(ContainerRequestProposal.class, this, this.proposalId);
+            final ContainerRequestProposal proposal = LclFlowUtils.resolveStateId(ContainerRequestProposal.class, this, this.proposalId);
 
             final ContainerRequestState proposedState = proposal.getProposedState();
 
