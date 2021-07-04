@@ -30,7 +30,8 @@ public class BillOfLadingContract implements Contract {
 
     private void commonChecks(@NotNull LedgerTransaction tx, @NotNull Command command) {
         requireThat(require -> {
-            require.using("There is at least one input", tx.getInputStates().size() >= 1);
+            // TODO: Fix this temporary solution
+//            require.using("There is at least one input", tx.getInputStates().size() >= 1);
             return null;
         });
     }
