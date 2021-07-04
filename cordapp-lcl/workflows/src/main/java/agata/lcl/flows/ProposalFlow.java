@@ -33,6 +33,10 @@ public class ProposalFlow {
             this(proposalState, new GenericProposalContract.Commands.Propose(), new ArrayList<>());
         }
 
+        public Initiator(Proposal proposalState, List<ReferencedStateAndRef> additionalReferenceStates) {
+            this(proposalState, new GenericProposalContract.Commands.Propose(), additionalReferenceStates);
+        }
+
         public Initiator(Proposal proposalState, GenericProposalContract.Commands.Propose commandType, List<ReferencedStateAndRef> additionalReferenceStates) {
             this.proposalState = proposalState;
             this.commandType = commandType;

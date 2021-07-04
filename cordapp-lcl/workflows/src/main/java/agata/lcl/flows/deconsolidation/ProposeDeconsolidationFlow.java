@@ -1,7 +1,6 @@
 package agata.lcl.flows.deconsolidation;
 
 import agata.bol.states.BillOfLadingState;
-import agata.lcl.contracts.deconsolidation.DeconsolidationContract;
 import agata.lcl.flows.LclFlowUtils;
 import agata.lcl.flows.ProposalFlow;
 import agata.lcl.states.deconsolidation.DeconsolidationProposal;
@@ -47,10 +46,7 @@ public class ProposeDeconsolidationFlow {
             final DeconsolidationState proposedState = new DeconsolidationState(lclCompany, this.shippingLine, this.masterBillOfLadingId, containerNo);
             DeconsolidationProposal proposal = new DeconsolidationProposal(lclCompany, shippingLine, proposedState);
 
-            return subFlow(new ProposalFlow.Initiator(
-                    proposal,
-                    new DeconsolidationContract.Commands.Propose(),
-                    Collections.singletonList(masterBillOfLadingStateRef.referenced())));
+            return subFlow(new ProposalFlow.Initiator(proposal, Collections.singletonList(masterBillOfLadingStateRef.referenced())));
         }
     }
 
