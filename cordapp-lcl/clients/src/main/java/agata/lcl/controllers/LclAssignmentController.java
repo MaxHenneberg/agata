@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/lcl-assignments")
 public class LclAssignmentController extends BaseController {
@@ -46,7 +47,10 @@ public class LclAssignmentController extends BaseController {
 
     @PostMapping("/proposals")
     public AssignmentProposal addLclCompanyAssignment(@RequestBody LclAssignment newAssignment) {
-        UniqueIdentifier proposalId = this.startFlow(AssignmentProposalFlow.Initiator.class, newAssignment.getBuyer(), newAssignment.getSupplier(), newAssignment.getArrivalParty(), newAssignment.getDepartureAddress(), newAssignment.getArrivalAddress(), newAssignment.getExpectedGoods());
+        System.out.println("Received: " + newAssignment.toString());
+        UniqueIdentifier proposalId =
+                this.startFlow(AssignmentProposalFlow.Initiator.class, newAssignment.getBuyer(), newAssignment.getSupplier(), newAssignment.getArrivalParty(),
+                        newAssignment.getDepartureAddress(), newAssignment.getArrivalAddress(), newAssignment.getExpectedGoods());
         return this.queryStateById(AssignmentProposal.class, proposalId);
     }
 

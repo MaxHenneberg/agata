@@ -83,7 +83,7 @@ public abstract class BaseController {
             } else if (e instanceof ExecutionException) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getCause().getMessage());
             } else {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred:");
             }
         }
     }

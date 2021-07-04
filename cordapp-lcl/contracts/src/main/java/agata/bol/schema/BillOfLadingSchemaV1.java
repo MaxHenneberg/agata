@@ -176,7 +176,7 @@ public class BillOfLadingSchemaV1 extends MappedSchema {
         private final UUID id;
 
         @ManyToOne(targetEntity = PersistentBOL.class)
-        private final PersistentBOL bol_linearId;
+        private final PersistentBOL bol;
 
         @Column(name = "mark")
         private String mark;
@@ -199,7 +199,7 @@ public class BillOfLadingSchemaV1 extends MappedSchema {
         public ItemRowBE(String mark, String identityNumber, int noOfPackages, String descriptionOfGoods, int netWeight, int grossWeight,
                          int measurement) {
             this.id = UUID.randomUUID();
-            this.bol_linearId = null;
+            this.bol = null;
             this.mark = mark;
             this.identityNumber = identityNumber;
             this.noOfPackages = noOfPackages;
@@ -211,7 +211,7 @@ public class BillOfLadingSchemaV1 extends MappedSchema {
 
         public ItemRowBE(ItemRow itemRow) {
             this.id = UUID.randomUUID();
-            this.bol_linearId = null;
+            this.bol = null;
             this.mark = itemRow.getMark();
             this.identityNumber = itemRow.getIdentityNumber();
             this.noOfPackages = itemRow.getNoOfPackages();
@@ -223,7 +223,7 @@ public class BillOfLadingSchemaV1 extends MappedSchema {
 
         public ItemRowBE() {
             this.id = UUID.randomUUID();
-            this.bol_linearId = null;
+            this.bol = null;
             this.mark = "";
             this.identityNumber = "";
             this.noOfPackages = 0;

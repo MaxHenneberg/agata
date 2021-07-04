@@ -4,9 +4,11 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
     <changeSet author="Agata_Team" id="create_bol_state">
         <createTable tableName="itemRow">
+            <column name="output_index" type="INT"/>
+            <column name="transaction_id" type="NVARCHAR(5000)"/>
             <column name="id" type="NVARCHAR(64)"/>
-            <column name="bol_states_output_index" type="INT"/>
-            <column name="bol_states_transaction_id" type="NVARCHAR(5000)"/>
+            <column name="bol_output_index" type="INT"/>
+            <column name="bol_transaction_id" type="NVARCHAR(5000)"/>
             <column name="mark" type="NVARCHAR(200)"/>
             <column name="identityNumber" type="NVARCHAR(200)"/>
             <column name="noOfPackages" type="INT"/>
