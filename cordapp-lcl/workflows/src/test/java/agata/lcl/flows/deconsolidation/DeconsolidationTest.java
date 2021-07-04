@@ -4,6 +4,7 @@ import agata.bol.contracts.BillOfLadingContract;
 import agata.bol.dataholder.Address;
 import agata.bol.dataholder.ContainerInformation;
 import agata.bol.dataholder.Price;
+import agata.bol.enums.BillOfLadingType;
 import agata.bol.enums.ContainerType;
 import agata.bol.enums.Payable;
 import agata.bol.enums.TypeOfMovement;
@@ -52,7 +53,7 @@ public class DeconsolidationTest extends FlowTestBase {
         Address fakeAddress = new Address("", "", "", "", "");
         String containerNo = "123abc";
         List<ContainerInformation> containerList = Arrays.asList(new ContainerInformation(containerNo, "", ContainerType.Large));
-        BillOfLadingState masterBillOfLading = new BillOfLadingState(shippingLineParty, lclCompanyParty, lclCompanyParty, "", "", "", "", "", "", "", "", Lists.emptyList(), null, "", fakeAddress, null, "", Payable.Origin, TypeOfMovement.doorToDoor, Lists.emptyList(), Lists.emptyList(), null, null, Lists.emptyList(), containerList);
+        BillOfLadingState masterBillOfLading = new BillOfLadingState(BillOfLadingType.Master, shippingLineParty, lclCompanyParty, lclCompanyParty, "", "", "", "", "", "", "", "", Lists.emptyList(), null, "", fakeAddress, null, "", Payable.Origin, TypeOfMovement.doorToDoor, Lists.emptyList(), Lists.emptyList(), null, null, Lists.emptyList(), containerList);
         CreateBoLFlow.Initiator flow = new CreateBoLFlow.Initiator(masterBillOfLading, Lists.emptyList(), new BillOfLadingContract.BoLCommands.CreateMasterBoL());
         CordaFuture<UniqueIdentifier> future0 = this.shippingLine.startFlow(flow);
         network.runNetwork();

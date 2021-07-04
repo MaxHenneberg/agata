@@ -35,7 +35,7 @@ public class DeconsolidationContractTest {
                 DeconsolidationProposal proposal = new DeconsolidationProposal(lclCompany, shippingLine, state);
                 tx.output(DeconsolidationContract.ID, proposal);
                 tx.command(Arrays.asList(lclCompany.getOwningKey(), shippingLine.getOwningKey()), new DeconsolidationContract.Commands.Propose());
-                return tx.failsWith("Following Fields for Input State agata.lcl.states.deconsolidation.DeconsolidationState must not be null: [billOfLadingReference]");
+                return tx.failsWith("Following Fields for Input State agata.lcl.states.deconsolidation.DeconsolidationState must not be null: [masterBillOfLadingId]");
             });
             return null;
         });

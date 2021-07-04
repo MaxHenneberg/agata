@@ -3,6 +3,7 @@ package agata.lcl.flows.pickup;
 import agata.bol.contracts.BillOfLadingContract;
 import agata.bol.dataholder.FreightCharges;
 import agata.bol.dataholder.Price;
+import agata.bol.enums.BillOfLadingType;
 import agata.bol.enums.Payable;
 import agata.bol.enums.TypeOfMovement;
 import agata.bol.flows.CreateBoLFlow;
@@ -80,7 +81,7 @@ public class PickupAcceptFlow {
             }
 
             // Consignee on the house bill of lading is always the buyer
-            BillOfLadingState billOfLadingState = new BillOfLadingState(getOurIdentity(), assignmentState.getBuyer(), assignmentState.getBuyer(),
+            BillOfLadingState billOfLadingState = new BillOfLadingState(BillOfLadingType.House, getOurIdentity(), assignmentState.getBuyer(), assignmentState.getBuyer(),
                     this.modeOfInitialCarriage,
                     this.placeOfInitialReceipt, containerRequestState.getVesselName(), containerRequestState.getPortOfLoading(),
                     containerRequestState.getPortOfDischarge(),

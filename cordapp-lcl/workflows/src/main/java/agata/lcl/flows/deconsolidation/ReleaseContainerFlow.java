@@ -1,6 +1,7 @@
 package agata.lcl.flows.deconsolidation;
 
 import agata.bol.dataholder.Price;
+import agata.bol.enums.BillOfLadingType;
 import agata.bol.states.BillOfLadingState;
 import agata.lcl.contracts.deconsolidation.DeconsolidationContract;
 import agata.lcl.flows.LclFlowUtils;
@@ -37,7 +38,7 @@ public class ReleaseContainerFlow {
         public SignedTransaction call() throws FlowException {
 
             final DeconsolidationProposal inputProposal = LclFlowUtils.resolveStateId(DeconsolidationProposal.class, this, this.proposalId);
-            final BillOfLadingState masterBillOfLading = LclFlowUtils.resolveStateId(BillOfLadingState.class, this, inputProposal.getProposedState().getMasterBillOfLadingId());
+            final BillOfLadingState masterBillOfLading = LclFlowUtils.resolveBillOfLadingId(this, inputProposal.getProposedState().getMasterBillOfLadingId(), BillOfLadingType.Master);
 
             if (!getOurIdentity().equals(masterBillOfLading.getShipper())) {
                 throw new FlowException("Flow can only be executed by correct shipper");

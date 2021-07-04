@@ -1,9 +1,11 @@
 package agata.lcl.contracts.delivery;
 
+import agata.bol.enums.BillOfLadingType;
 import agata.bol.states.BillOfLadingState;
 import agata.lcl.contracts.GenericProposalContract;
 import agata.lcl.states.delivery.PackageDeliveryProposal;
 import agata.lcl.states.delivery.PackageDeliveryState;
+import agata.utils.ContractUtils;
 import net.corda.core.contracts.Command;
 import net.corda.core.transactions.LedgerTransaction;
 import org.jetbrains.annotations.NotNull;
@@ -40,14 +42,15 @@ public class PackageDeliveryContract extends GenericProposalContract {
                 require.using("Proposee must be the arrival party", proposal.getProposee().equals(proposedState.getArrivalParty()));
 
                 PackageDeliveryState inputState = tx.inputsOfType(PackageDeliveryProposal.class).get(0).getProposedState();
-                BillOfLadingState houseBol = tx.findReferenceInputRef(BillOfLadingState.class, x -> x.getLinearId().equals(inputState.getHouseBolId())).getState().getData();
-                require.using("The LCL company must be the shipper in the house bill of lading", proposedState.getLclCompany().equals(houseBol.getShipper()));
-                require.using("The arrival party must be the consignee in the house bill of lading", proposedState.getArrivalParty().equals(houseBol.getConsignee()));
+                BillOfLadingState bol = ContractUtils.resolveBillOfLadingReference(tx, inputState.getHouseBolId());
+                require.using("The passed bill of lading needs to be a house bill of lading", bol.getType() == BillOfLadingType.House);
+                require.using("The LCL company must be the shipper in the house bill of lading", proposedState.getLclCompany().equals(bol.getShipper()));
+                require.using("The arrival party must be the consignee in the house bill of lading", proposedState.getArrivalParty().equals(bol.getConsignee()));
 
                 // Verify that the delivered goods match the goods defined in the house bill of lading
                 require.using(
                         "Delivered goods must be equal to the goods listed in the house bill of lading",
-                        proposedState.getDeliveredGoods().equals(houseBol.getGoodsList()));
+                        proposedState.getDeliveredGoods().equals(bol.getGoodsList()));
 
                 // Verify that all fields except the delivered goods remain unchanged
                 boolean otherFieldsUnchanged = Objects.equals(inputState.getLinearId(), proposedState.getLinearId()) &&

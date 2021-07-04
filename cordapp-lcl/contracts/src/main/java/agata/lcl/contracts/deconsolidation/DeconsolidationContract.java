@@ -1,11 +1,12 @@
 package agata.lcl.contracts.deconsolidation;
 
+import agata.bol.enums.BillOfLadingType;
 import agata.bol.states.BillOfLadingState;
 import agata.lcl.contracts.GenericProposalContract;
 import agata.lcl.states.deconsolidation.DeconsolidationProposal;
 import agata.lcl.states.deconsolidation.DeconsolidationState;
+import agata.utils.ContractUtils;
 import net.corda.core.contracts.Command;
-import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.transactions.LedgerTransaction;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +28,8 @@ public class DeconsolidationContract extends GenericProposalContract {
             require.using("Proposee must be the shipping line", proposal.getProposee().equals(proposedState.getShippingLine()));
             // Non-null checks are handled by the annotations in the state
 
-            BillOfLadingState bol = resolveBillOfLadingReference(tx, proposedState.getMasterBillOfLadingId());
+            BillOfLadingState bol = ContractUtils.resolveBillOfLadingReference(tx, proposedState.getMasterBillOfLadingId());
+            require.using("The passed bill of lading needs to be a master bill of lading", bol.getType() == BillOfLadingType.Master);
             require.using("The LCL company must be the consignee in the master bill of lading", proposedState.getLclCompany().equals(bol.getConsignee()));
             require.using("The shipping line must be the shipper in the master bill of lading", proposedState.getShippingLine().equals(bol.getShipper()));
 
@@ -67,10 +69,6 @@ public class DeconsolidationContract extends GenericProposalContract {
             isValidCommand = true;
         }
         return isValidCommand;
-    }
-
-    private BillOfLadingState resolveBillOfLadingReference(LedgerTransaction tx, UniqueIdentifier id) {
-        return tx.findReferenceInputRef(BillOfLadingState.class, x -> x.getLinearId().equals(id)).getState().getData();
     }
 
     public interface Commands extends GenericProposalContract.Commands {
