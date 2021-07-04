@@ -79,7 +79,8 @@ public class PickupAcceptFlow {
                 throw new FlowException("Flow can only be executed by correct LCL Company");
             }
 
-            BillOfLadingState billOfLadingState = new BillOfLadingState(getOurIdentity(), assignmentState.getSupplier(), assignmentState.getBuyer(),
+            // Consignee on the house bill of lading is always the buyer
+            BillOfLadingState billOfLadingState = new BillOfLadingState(getOurIdentity(), assignmentState.getBuyer(), assignmentState.getBuyer(),
                     this.modeOfInitialCarriage,
                     this.placeOfInitialReceipt, containerRequestState.getVesselName(), containerRequestState.getPortOfLoading(),
                     containerRequestState.getPortOfDischarge(),
