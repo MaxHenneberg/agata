@@ -1,0 +1,64 @@
+<div style="min-width: 50%;width: fit-content; margin: 0 auto">
+  <h2>BOL: {{bol.billOfLadingNo}}</h2>
+  <mat-divider></mat-divider>
+  <div style="display: flex; justify-content: center">
+    <table style="width: 100%">
+      <tr>
+        <td style="width: 50%;">Shipper</td>
+        <td>{{bol.shipper}}</td>
+      </tr>
+      <tr>
+        <td>Consignee</td>
+        <td>{{bol.consignee}}</td>
+      </tr>
+      <tr>
+        <td>Notify Party</td>
+        <td>{{bol.notifyParty}}</td>
+      </tr>
+    </table>
+  </div>
+  <mat-divider></mat-divider>
+  <h3>Shipping Information:</h3>
+  <div style="display: flex; justify-content: center">
+    <table style="width: 100%">
+      <tr>
+        <td style="width: 50%;">Vessel Name</td>
+        <td>{{bol.vesselName}}</td>
+      </tr>
+      <tr>
+        <td>Port of Loading</td>
+        <td>{{bol.portOfLoading}}</td>
+      </tr>
+      <tr>
+        <td>Port of Discharge</td>
+        <td>{{bol.portOfDischarge}}</td>
+      </tr>
+      <tr>
+        <td>Place Of Delivery By Carrier</td>
+        <td>{{bol.placeOfDeliveryByCarrier}}</td>
+      </tr>
+    </table>
+  </div>
+  <mat-divider></mat-divider>
+  <h3>Shipping Details:</h3>
+  <div style="display: flex; justify-content: center">
+    <table style="width: 100%">
+      <tr>
+        <td style="width: 50%;">Booking No:</td>
+        <td>{{bol.bookingNo}}</td>
+      </tr>
+      <tr>
+        <td>Bill Of Lading No:</td>
+        <td>{{bol.billOfLadingNo}}</td>
+      </tr>
+      <tr>
+        <td>Forwarding Agent</td>
+        <td>{{bol.forwardingAgent}}</td>
+      </tr>
+      <tr>
+        <td>Fmc No:</td>
+        <td>{{bol.fmcNo}}</td>
+      </tr>
+    </table>
+  </div>
+</div>
