@@ -1,16 +1,8 @@
 package agata.lcl.flows.delivery;
 
-import agata.bol.dataholder.Address;
-import agata.bol.dataholder.DescriptionOfGoods;
-import agata.bol.dataholder.FreightCharges;
 import agata.bol.dataholder.ItemRow;
-import agata.bol.enums.Payable;
-import agata.bol.enums.TypeOfMovement;
 import agata.bol.states.BillOfLadingState;
 import agata.lcl.flows.FlowTestBase;
-import agata.lcl.flows.pickup.PickupAcceptFlow;
-import agata.lcl.flows.pickup.PickupAddGoodsFlow;
-import agata.lcl.flows.pickup.PickupProposalFlow;
 import agata.lcl.states.delivery.PackageDeliveryState;
 import net.corda.core.concurrent.CordaFuture;
 import net.corda.core.contracts.ContractState;
@@ -31,13 +23,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 import static org.junit.Assert.assertEquals;
 
 public class PackageDeliveryTest extends FlowTestBase {
-    Address address1 = new Address("Sample street 1", "New York", "", "", "US");
-    Address address2 = new Address("Hafenstrasse", "Hamburg", "", "", "DE");
     private StartedMockNode lclCompany;
     private StartedMockNode buyer;
     private StartedMockNode supplier;
@@ -63,7 +52,7 @@ public class PackageDeliveryTest extends FlowTestBase {
         Party lclCompanyParty = getParty(this.lclCompany);
 
         // Create fake house bill of lading
-        UniqueIdentifier houseBillOfLadingId = this.createHouseBol("123abc");
+        UniqueIdentifier houseBillOfLadingId = this.createHouseBol("123abc", lclCompany, supplier, buyer, shippingLine);
 
         // PROPOSE
         ProposeDeliveryFlow.Initiator proposeFlow = new ProposeDeliveryFlow.Initiator(lclCompanyParty, houseBillOfLadingId);
@@ -106,33 +95,5 @@ public class PackageDeliveryTest extends FlowTestBase {
         }
 
     }
-
-    // TODO: Make reusable (just copied)
-    private UniqueIdentifier createHouseBol(String id) throws ExecutionException, InterruptedException {
-        final UniqueIdentifier assignmentStateId = createAssignmentState(lclCompany, supplier, buyer, address1, address2, id);
-        final UniqueIdentifier containerStateId = createContainerState(lclCompany, shippingLine);
-
-        PickupProposalFlow.Initiator pickupProposeFlow = new PickupProposalFlow.Initiator(assignmentStateId);
-        Future<UniqueIdentifier> future1 = this.lclCompany.startFlow(pickupProposeFlow);
-        network.runNetwork();
-
-        UniqueIdentifier pickupProposalId = future1.get();
-
-        PickupAddGoodsFlow.Initiator modifyFlow = new PickupAddGoodsFlow.Initiator(pickupProposalId,
-                Collections.singletonList(new ItemRow("abc", id, 3, new DescriptionOfGoods("iPhone", "pallet", 100), 12, 12, 456)),
-                "NotBlank");
-        Future future2 = this.supplier.startFlow(modifyFlow);
-        network.runNetwork();
-        future2.get();
-
-        PickupAcceptFlow.Initiator acceptFlow = new PickupAcceptFlow.Initiator(pickupProposalId, containerStateId, "initCarriage",
-                "placeOfReceipt", "deliveryByCarrier", "bookingNo", "boeNo", Collections.singletonList("ref"), Payable.Origin,
-                TypeOfMovement.doorToDoor, Collections.singletonList(new FreightCharges("Reason", null)),
-                null, null);
-        Future<UniqueIdentifier> future3 = this.lclCompany.startFlow(acceptFlow);
-        network.runNetwork();
-        return future3.get();
-    }
-
 
 }
