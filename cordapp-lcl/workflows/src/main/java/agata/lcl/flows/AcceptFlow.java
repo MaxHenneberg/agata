@@ -19,9 +19,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.security.PublicKey;
 import java.security.SignatureException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AcceptFlow {
 
@@ -55,7 +55,7 @@ public class AcceptFlow {
             LinearState output = input.getProposedState();
 
             //Creating the command
-            List<PublicKey> requiredSigners = Arrays.asList(input.getProposee().getOwningKey(), input.getProposer().getOwningKey());
+            List<PublicKey> requiredSigners = output.getParticipants().stream().map(x -> x.getOwningKey()).collect(Collectors.toList());
             Command command = new Command(this.commandType, requiredSigners);
 
             //Building the transaction
@@ -74,11 +74,10 @@ public class AcceptFlow {
             SignedTransaction partStx = getServiceHub().signInitialTransaction(txBuilder);
 
             //Gathering the counterparty's signature
-            Party counterparty = (getOurIdentity().equals(input.getProposer())) ? input.getProposee() : input.getProposer();
-            FlowSession counterpartySession = initiateFlow(counterparty);
-            SignedTransaction fullyStx = subFlow(new CollectSignaturesFlow(partStx, Collections.singletonList(counterpartySession)));
-
-            return subFlow(new FinalityFlow(fullyStx, Collections.singletonList(counterpartySession)));
+            List<Party> otherParties = output.getParticipants().stream().filter(x -> !x.equals(getOurIdentity())).map(x -> (Party) x).collect(Collectors.toList());
+            List<FlowSession> sessions = otherParties.stream().map(this::initiateFlow).collect(Collectors.toList());
+            SignedTransaction fullyStx = subFlow(new CollectSignaturesFlow(partStx, sessions));
+            return subFlow(new FinalityFlow(fullyStx, sessions));
         }
     }
 

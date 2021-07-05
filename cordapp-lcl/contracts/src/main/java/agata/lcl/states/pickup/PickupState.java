@@ -86,6 +86,6 @@ public class PickupState implements LinearState {
     @NotNull
     @Override
     public List<AbstractParty> getParticipants() {
-        return Arrays.asList(supplier, lclCompany);
+        return Arrays.asList(supplier, buyer, lclCompany);
     }
 }

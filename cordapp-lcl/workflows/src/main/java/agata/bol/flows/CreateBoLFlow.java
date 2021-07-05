@@ -15,7 +15,7 @@ import net.corda.core.transactions.TransactionBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.security.PublicKey;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,28 +36,31 @@ public class CreateBoLFlow {
         @Suspendable
         @Override
         public UniqueIdentifier call() throws FlowException {
-            List<PublicKey> requiredSigners = toBeCreated.getParticipants().stream().map(AbstractParty::getOwningKey).collect(Collectors.toList());
-            Command command = new Command(this.commandData, requiredSigners);
-
             final Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
+            TransactionBuilder txBuilder = new TransactionBuilder(notary);
+            txBuilder.addOutputState(this.toBeCreated);
 
-            TransactionBuilder txBuilder = new TransactionBuilder(notary)
-                    .addOutputState(this.toBeCreated)
-                    .addCommand(command);
-
+            List<AbstractParty> otherParties = new ArrayList<>();
+            otherParties.addAll(toBeCreated.getParticipants());
             for (StateAndRef input : inputStateRefs) {
                 txBuilder.addInputState(input);
+                otherParties.addAll(input.getState().getData().getParticipants());
             }
+            otherParties = otherParties.stream().distinct().filter(x -> !x.equals(getOurIdentity())).collect(Collectors.toList());
+
+            List<PublicKey> requiredSigners = otherParties.stream().map(AbstractParty::getOwningKey).collect(Collectors.toList());
+            Command command = new Command(this.commandData, requiredSigners);
+            txBuilder.addCommand(command);
 
             //Signing the transaction ourselves
             SignedTransaction partStx = getServiceHub().signInitialTransaction(txBuilder);
 
             //Gather counterparty sigs
-            FlowSession counterpartySession = initiateFlow(this.toBeCreated.getConsignee());
-            SignedTransaction fullyStx = subFlow(new CollectSignaturesFlow(partStx, Collections.singletonList(counterpartySession)));
+            List<FlowSession> sessions = otherParties.stream().map(this::initiateFlow).collect(Collectors.toList());
+            SignedTransaction fullyStx = subFlow(new CollectSignaturesFlow(partStx, sessions));
 
             //Finalise the transaction
-            SignedTransaction finalisedTx = subFlow(new FinalityFlow(fullyStx, Collections.singletonList(counterpartySession)));
+            SignedTransaction finalisedTx = subFlow(new FinalityFlow(fullyStx, sessions));
             return finalisedTx.getTx().outputsOfType(BillOfLadingState.class).get(0).getLinearId();
         }
     }
