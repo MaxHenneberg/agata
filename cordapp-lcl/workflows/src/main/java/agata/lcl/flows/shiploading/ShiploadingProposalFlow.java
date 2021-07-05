@@ -94,6 +94,13 @@ public class ShiploadingProposalFlow {
                 throw new FlowException("Could not find all House BoLs");
             }
 
+            for (StateAndRef<BillOfLadingState> billOfLadingStateStateAndRef : houseBolList) {
+                final BillOfLadingState billOfLadingState = billOfLadingStateStateAndRef.getState().getData();
+                if (!billOfLadingState.getContainerInformationList().get(0).getContainerNo().equals(containerState.getContainer().getContainerNo())) {
+                    throw new FlowException("All House BoLs need to be for the same Container. Wrong House BoL: " + billOfLadingState.getLinearId());
+                }
+            }
+
             final BillOfLadingState houseBol = houseBolList.get(0).getState().getData();
             List<ItemRow> packingList = houseBolList.stream().flatMap(bol -> bol.getState().getData().getGoodsList().stream()).collect(Collectors.toList());
 
