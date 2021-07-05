@@ -3,7 +3,7 @@
     <mat-expansion-panel style="width: 800px;display: block;" *ngFor="let pendingApproval of pendingApprovals">
       <mat-expansion-panel-header>
         <mat-panel-title>
-          {{pendingApproval.linearId}}
+          {{pendingApproval.linearId.id}}
         </mat-panel-title>
         <mat-panel-description>
         </mat-panel-description>
@@ -19,7 +19,7 @@
         </tr>
         <tr>
           <td>Proposed State Id: </td>
-          <td>{{pendingApproval.proposedState.linearId}}</td>
+          <td>{{pendingApproval?.proposedState?.linearId.id}}</td>
         </tr>
       </table>
       <br/>
@@ -32,7 +32,7 @@
           <th>Type of Package</th>
           <th>Quantity</th>
         </tr>
-        <tr *ngFor="let good of pendingApproval.proposedState.expectedGoods">
+        <tr *ngFor="let good of pendingApproval?.proposedState?.expectedGoods">
           <td>{{good.mark}}</td>
           <td>{{good.identityNumber}}</td>
           <td>{{good.descriptionOfGoods.product}}</td>
@@ -40,7 +40,7 @@
           <td>{{good.descriptionOfGoods.quantity}}</td>
         </tr>
       </table>
-      <button mat-raised-button color="primary" style="height: 50px; width: 100px; display: inline-block" (click)="approve(pendingApproval)">Approve</button>
+      <button mat-raised-button color="primary" style="height: 50px; width: 100px; display: inline-block" (click)="approve(pendingApproval.linearId.id)">Approve</button>
     </mat-expansion-panel>
   </mat-accordion>
 </div>

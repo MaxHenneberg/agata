@@ -31,6 +31,7 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { ContainerFromShippinglineComponent } from './container-from-shippingline/container-from-shippingline.component';
 import { GoodsFromLclcompanyComponent } from './goods-from-lclcompany/goods-from-lclcompany.component';
 import { BolViewComponent } from './bol-view/bol-view.component';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { BolViewComponent } from './bol-view/bol-view.component';
     MatSidenavModule,
     MatDividerModule,
     MatTableModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

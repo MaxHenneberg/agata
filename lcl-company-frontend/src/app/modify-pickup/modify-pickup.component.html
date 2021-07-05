@@ -3,17 +3,23 @@
   <mat-divider></mat-divider>
   <div style="width: 100%">
     <div style="display: flex; justify-content: center">
-      <span style="justify-content: start; margin-right: 5vw;">Buyer: </span><span style="justify-content: end">{{proposal.buyer}}</span>
+      <span style="justify-content: start; margin-right: 5vw;">Buyer: </span><span style="justify-content: end">{{proposal?.proposedState.buyer}}</span>
     </div>
     <div style="display: flex; justify-content: center">
-      <span style="justify-content: start; margin-right: 5vw;">Supplier: </span><span style="justify-content: end">{{proposal.supplier}}</span>
+      <span style="justify-content: start; margin-right: 5vw;">Supplier: </span><span style="justify-content: end">{{proposal?.proposedState.supplier}}</span>
     </div>
     <div style="display: flex; justify-content: center">
-      <span style="justify-content: start; margin-right: 5vw;">LcL-Company: </span><span style="justify-content: end">{{proposal.lclCompany}}</span>
+      <span style="justify-content: start; margin-right: 5vw;">LcL-Company: </span><span style="justify-content: end">{{proposal?.proposedState.lclCompany}}</span>
     </div>
-    <div style="display: flex; justify-content: center">
-      <span style="justify-content: start; margin-right: 5vw;">Invoice Id: </span><span style="justify-content: end">{{proposal.invoiceId}}</span>
-    </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div style="display: flex; justify-content: center">
+    <form [formGroup]="invoiceForm">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Invoice Id</mat-label>
+        <input matInput formControlName="invoiceId" required>
+      </mat-form-field>
+    </form>
   </div>
   <mat-divider></mat-divider>
   <div>

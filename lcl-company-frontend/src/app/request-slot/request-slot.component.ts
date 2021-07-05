@@ -70,29 +70,26 @@ export class RequestSlotComponent implements OnInit {
   }
 
   submit() {
-    if (this.requestForm.valid) {
-      console.log(this.requestForm.value);
-      this.requestSlotService.requestSlot({
-        arrivalAddress: {
-          street: this.requestForm.controls.arrStreet.value,
-          city: this.requestForm.controls.arrCity.value,
-          country: this.requestForm.controls.arrCountry.value,
-          postalCode: this.requestForm.controls.arrPostalCode.value,
-          state: this.requestForm.controls.arrState.value
-        },
-        arrivalParty: this.requestForm.controls.arrivalParty.value,
-        departureAddress: {
-          street: this.requestForm.controls.depStreet.value,
-          city: this.requestForm.controls.depCity.value,
-          country: this.requestForm.controls.depCountry.value,
-          postalCode: this.requestForm.controls.depPostalCode.value,
-          state: this.requestForm.controls.depState.value
-        },
-        expectedGoods: this.requestForm.controls.expectedGoods.value,
-        supplier: this.requestForm.controls.supplier.value,
-        buyer: this.requestForm.controls.buyer.value
-      });
-    }
+    this.requestSlotService.requestSlot({
+      arrivalAddress: {
+        street: this.requestForm.controls.arrStreet.value,
+        city: this.requestForm.controls.arrCity.value,
+        country: this.requestForm.controls.arrCountry.value,
+        postalCode: this.requestForm.controls.arrPostalCode.value,
+        state: this.requestForm.controls.arrState.value
+      },
+      arrivalParty: this.requestForm.controls.arrivalParty.value,
+      departureAddress: {
+        street: this.requestForm.controls.depStreet.value,
+        city: this.requestForm.controls.depCity.value,
+        country: this.requestForm.controls.depCountry.value,
+        postalCode: this.requestForm.controls.depPostalCode.value,
+        state: this.requestForm.controls.depState.value
+      },
+      expectedGoods: this.requestForm.controls.expectedGoods.value,
+      supplier: this.requestForm.controls.supplier.value,
+      buyer: this.requestForm.controls.buyer.value
+    });
   }
 
 }

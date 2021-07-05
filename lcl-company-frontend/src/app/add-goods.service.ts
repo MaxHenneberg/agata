@@ -1,41 +1,57 @@
 import {Injectable} from '@angular/core';
 import {ItemRow} from '../dataholder/ItemRow';
+import {HttpBaseService} from './http-base.service';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AddGoodsService {
 
-  constructor() {
+  constructor(private httpClient: HttpBaseService) {
   }
 
   resolveGoodsId(id: string): ItemRow {
-    return {
-      mark: '12',
-      identityNumber: '34abcd',
-      noOfPackages: 2,
-      descriptionOfGoods: {
-        product: 'Foo',
-        typeOfPackage: 'test',
-        quantity: 123
-      },
-      netWeight: 1234,
-      grossWeight: 1235,
-      measurement: 456
-    };
+    switch (id) {
+      case '1234':
+        return {
+          mark: '1234',
+          identityNumber: '1234',
+          noOfPackages: 23,
+          descriptionOfGoods: {
+            product: 'sdgfsdgdsg',
+            typeOfPackage: '23',
+            quantity: 3
+          },
+          netWeight: 23,
+          grossWeight: 23,
+          measurement: 23
+        };
+      case '5678':
+        return {
+          mark: '5678',
+          identityNumber: '5678',
+          noOfPackages: 23,
+          descriptionOfGoods: {
+            product: 'My Awesome Product',
+            typeOfPackage: '23',
+            quantity: 3
+          },
+          netWeight: 23,
+          grossWeight: 23,
+          measurement: 23
+        };
+    }
   }
 
-  resolveProposalId(id: string): any {
-    return {
-      buyer: 'buyer123',
-      supplier: 'supplier123',
-      lclCompany: 'company24',
-      invoiceId: '123-123-ABC'
-    };
+  resolveProposalId(id: string): Observable<any> {
+    return this.httpClient.get('/pickups/proposals/' + id);
   }
 
-  finishModfiy(id: string, addedGoods: ItemRow[]) {
+  finishModfiy(id: string, invoiceId: string, addedGoods: ItemRow[]) {
     console.log('Finished Modify');
+    console.log(invoiceId);
     console.log(addedGoods);
+    return this.httpClient.patch('/pickups/proposals/' + id, {goods: addedGoods, invoiceId}).subscribe(res => console.log(res));
   }
 }

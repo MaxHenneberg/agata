@@ -15,7 +15,11 @@ export class ApproveSlotComponent implements OnInit {
 
   ngOnInit(): void {
     this.pendingApprovals = [];
-    this.requestSlotService.onPendingApproval().subscribe(next => this.pendingApprovals.push(next));
+    this.requestSlotService.onPendingApproval().subscribe(next => {
+      this.pendingApprovals.push(next);
+      console.log('Received: ');
+      console.log(next);
+    });
     this.requestSlotService.pollPendingApprovals();
   }
 

@@ -5,23 +5,14 @@
         <mat-form-field class="form-field" appearance="outline">
           <mat-label>Buyer</mat-label>
           <input matInput formControlName="buyer" required>
-          <mat-error *ngIf="requestForm.controls.buyer.touched || requestForm.controls.buyer.errors.required">
-            <span *ngIf="requestForm.controls.buyer.errors.required">This field is mandatory.</span>
-          </mat-error>
         </mat-form-field>
         <mat-form-field class="form-field" appearance="outline">
           <mat-label>Supplier</mat-label>
           <input matInput formControlName="supplier" required>
-          <mat-error *ngIf="requestForm.controls.supplier.touched || requestForm.controls.supplier.errors.required">
-            <span *ngIf="requestForm.controls.supplier.errors.required">This field is mandatory.</span>
-          </mat-error>
         </mat-form-field>
         <mat-form-field class="form-field" appearance="outline">
           <mat-label>ArrivalParty</mat-label>
           <input matInput formControlName="arrivalParty" required>
-          <mat-error *ngIf="requestForm.controls.arrivalParty.touched || requestForm.controls.arrivalParty.errors.required">
-            <span *ngIf="requestForm.controls.arrivalParty.errors.required">This field is mandatory.</span>
-          </mat-error>
         </mat-form-field>
       </div>
       <div style="display: block">
@@ -32,37 +23,22 @@
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>Street</mat-label>
             <input matInput formControlName="depStreet" required>
-            <mat-error *ngIf="requestForm.controls.depStreet.touched || requestForm.controls.depState.errors.required">
-              <span *ngIf="requestForm.controls.depStreet.errors.required">This field is mandatory.</span>
-            </mat-error>
           </mat-form-field>
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>City</mat-label>
             <input matInput formControlName="depCity" required>
-            <mat-error *ngIf="requestForm.controls.depCity.touched || requestForm.controls.depState.errors.required">
-              <span *ngIf="requestForm.controls.depCity.errors.required">This field is mandatory.</span>
-            </mat-error>
           </mat-form-field>
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>State</mat-label>
             <input matInput formControlName="depState" required>
-            <mat-error *ngIf="requestForm.controls.depState.touched || requestForm.controls.depState.errors.required">
-              <span *ngIf="requestForm.controls.depState.errors.required">This field is mandatory.</span>
-            </mat-error>
           </mat-form-field>
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>Postal Code</mat-label>
             <input matInput formControlName="depPostalCode" required>
-            <mat-error *ngIf="requestForm.controls.depPostalCode.touched || requestForm.controls.depState.errors.required">
-              <span *ngIf="requestForm.controls.depPostalCode.errors.required">This field is mandatory.</span>
-            </mat-error>
           </mat-form-field>
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>Country</mat-label>
             <input matInput formControlName="depCountry" required>
-            <mat-error *ngIf="requestForm.controls.depCountry.touched || requestForm.controls.depState.errors.required">
-              <span *ngIf="requestForm.controls.depCountry.errors.required">This field is mandatory.</span>
-            </mat-error>
           </mat-form-field>
         </span>
         <span class="address">
@@ -72,37 +48,22 @@
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>Street</mat-label>
             <input matInput formControlName="arrStreet" required>
-            <mat-error *ngIf="requestForm.controls.arrStreet.touched || requestForm.controls.arrState.errors.required">
-              <span *ngIf="requestForm.controls.arrStreet.errors.required">This field is mandatory.</span>
-            </mat-error>
           </mat-form-field>
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>City</mat-label>
             <input matInput formControlName="arrCity" required>
-            <mat-error *ngIf="requestForm.controls.arrCity.touched || requestForm.controls.arrState.errors.required">
-              <span *ngIf="requestForm.controls.arrCity.errors.required">This field is mandatory.</span>
-            </mat-error>
           </mat-form-field>
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>State</mat-label>
             <input matInput formControlName="arrState" required>
-            <mat-error *ngIf="requestForm.controls.arrState.touched || requestForm.controls.arrState.errors.required">
-              <span *ngIf="requestForm.controls.arrState.errors.required">This field is mandatory.</span>
-            </mat-error>
           </mat-form-field>
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>Postal Code</mat-label>
             <input matInput formControlName="arrPostalCode" required>
-            <mat-error *ngIf="requestForm.controls.arrPostalCode.touched || requestForm.controls.arrState.errors.required">
-              <span *ngIf="requestForm.controls.arrPostalCode.errors.required">This field is mandatory.</span>
-            </mat-error>
           </mat-form-field>
           <mat-form-field class="form-field" appearance="outline">
             <mat-label>Country</mat-label>
             <input matInput formControlName="depCountry" required>
-            <mat-error *ngIf="requestForm.controls.arrCountry.touched || requestForm.controls.arrState.errors.required">
-              <span *ngIf="requestForm.controls.arrCountry.errors.required">This field is mandatory.</span>
-            </mat-error>
           </mat-form-field>
         </span>
       </div>
