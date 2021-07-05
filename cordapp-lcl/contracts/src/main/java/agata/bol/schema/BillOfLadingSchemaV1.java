@@ -29,6 +29,8 @@ public class BillOfLadingSchemaV1 extends MappedSchema {
     @Getter
     @Table(name = "bol_states")
     public static class PersistentBOL extends PersistentState {
+        @Column(name = "type")
+        private final String type;
         @Column(name = "shipper")
         private final String shipper;
         @Column(name = "consignee")
@@ -102,12 +104,13 @@ public class BillOfLadingSchemaV1 extends MappedSchema {
         @Type(type = "uuid-char")
         private final UUID linearId;
 
-        public PersistentBOL(String shipper, String consignee, String notifyParty, String modeOfInitialCarriage, String placeOfInitialReceipt,
+        public PersistentBOL(String type, String shipper, String consignee, String notifyParty, String modeOfInitialCarriage, String placeOfInitialReceipt,
                              String vesselName, String portOfLoading, String portOfDischarge, String placeOfDeliveryByCarrier, String bookingNo,
                              String billOfLadingNo, String exportReference, String forwardingAgent, String fmcNo, String pointAndCountry,
                              String cargoReleaser, String domesticRoutingInstructions, String freightPayableAt, String typeOfMovement,
                              List<ItemRowBE> goodsList,
                              String freightChargesList, String prepaid, String collect, String incotermList, String containerInformationList, UUID linearId) {
+            this.type = type;
             this.shipper = shipper;
             this.consignee = consignee;
             this.notifyParty = notifyParty;
@@ -137,6 +140,7 @@ public class BillOfLadingSchemaV1 extends MappedSchema {
         }
 
         public PersistentBOL() {
+            this.type = "";
             this.shipper = "";
             this.consignee = "";
             this.notifyParty = "";

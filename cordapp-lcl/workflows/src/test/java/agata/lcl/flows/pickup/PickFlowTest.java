@@ -91,7 +91,7 @@ public class PickFlowTest extends FlowTestBase {
         network.runNetwork();
         future3.get();
 
-        Arrays.asList(lclCompany, supplier).forEach(node -> node.transaction(() -> {
+        Arrays.asList(lclCompany, buyer).forEach(node -> node.transaction(() -> {
             List<StateAndRef<PickupState>> pickUpStateList = node.getServices().getVaultService().queryBy(PickupState.class).getStates();
             Assert.assertEquals(0, pickUpStateList.size());
 

@@ -4,6 +4,7 @@ import agata.lcl.contracts.GenericProposalContract;
 import agata.lcl.states.Proposal;
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.Command;
+import net.corda.core.contracts.ReferencedStateAndRef;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.crypto.SecureHash;
@@ -18,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.security.PublicKey;
 import java.security.SignatureException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -30,17 +32,21 @@ public class ModifyFlow {
         private final UniqueIdentifier proposalId;
         private final Proposal counterProposal;
         private final GenericProposalContract.Commands.Modify commandType;
+        private final List<ReferencedStateAndRef> additionalReferenceStates;
 
         public Initiator(UniqueIdentifier proposalId, Proposal counterProposal) {
-            this.proposalId = proposalId;
-            this.counterProposal = counterProposal;
-            this.commandType = new GenericProposalContract.Commands.Modify();
+            this(proposalId, counterProposal, new GenericProposalContract.Commands.Modify(), new ArrayList<>());
         }
 
-        public Initiator(UniqueIdentifier proposalId, Proposal counterProposal, GenericProposalContract.Commands.Modify commandType) {
+        public Initiator(
+                UniqueIdentifier proposalId,
+                Proposal counterProposal,
+                GenericProposalContract.Commands.Modify commandType,
+                List<ReferencedStateAndRef> additionalReferenceStates) {
             this.proposalId = proposalId;
             this.counterProposal = counterProposal;
             this.commandType = commandType;
+            this.additionalReferenceStates = additionalReferenceStates;
         }
 
         @Suspendable
@@ -69,6 +75,10 @@ public class ModifyFlow {
                     .addInputState(inputStateAndRef)
                     .addOutputState(counterProposal)
                     .addCommand(command);
+            if (this.additionalReferenceStates != null) {
+                this.additionalReferenceStates.forEach(txBuilder::addReferenceState);
+            }
+
 
             //Signing the transaction ourselves
             SignedTransaction partStx = getServiceHub().signInitialTransaction(txBuilder);

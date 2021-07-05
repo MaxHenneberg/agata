@@ -2,6 +2,7 @@ package agata.bol.states;
 
 import agata.bol.contracts.BillOfLadingContract;
 import agata.bol.dataholder.*;
+import agata.bol.enums.BillOfLadingType;
 import agata.bol.enums.Payable;
 import agata.bol.enums.TypeOfMovement;
 import agata.bol.schema.BillOfLadingSchemaV1;
@@ -30,6 +31,8 @@ import java.util.stream.Collectors;
 public class BillOfLadingState implements QueryableState, LinearState {
 
     private final UniqueIdentifier linearId;
+
+    private final BillOfLadingType type;
 
     private final Party shipper;
     private final Party consignee;
@@ -76,7 +79,7 @@ public class BillOfLadingState implements QueryableState, LinearState {
 
     private final List<ContainerInformation> containerInformationList;
 
-    public BillOfLadingState(Party shipper, Party consignee, Party notifyParty, String modeOfInitialCarriage, String placeOfInitialReceipt, String vesselName,
+    public BillOfLadingState(BillOfLadingType type, Party shipper, Party consignee, Party notifyParty, String modeOfInitialCarriage, String placeOfInitialReceipt, String vesselName,
                              String portOfLoading,
                              String portOfDischarge, String placeOfDeliveryByCarrier, String bookingNo, String billOfLadingNo, List<String> exportReference,
                              Party forwardingAgent, String fmcNo,
@@ -85,6 +88,7 @@ public class BillOfLadingState implements QueryableState, LinearState {
                              List<FreightCharges> freightChargesList, Price prepaid, Price collect, List<Incoterm> incotermList,
                              List<ContainerInformation> containerInformationList) {
         this.linearId = new UniqueIdentifier();
+        this.type = type;
         this.shipper = shipper;
         this.consignee = consignee;
         this.notifyParty = notifyParty;
@@ -113,7 +117,7 @@ public class BillOfLadingState implements QueryableState, LinearState {
     }
 
     @ConstructorForDeserialization
-    public BillOfLadingState(Party shipper, Party consignee, Party notifyParty, String modeOfInitialCarriage, String placeOfInitialReceipt, String vesselName,
+    public BillOfLadingState(BillOfLadingType type, Party shipper, Party consignee, Party notifyParty, String modeOfInitialCarriage, String placeOfInitialReceipt, String vesselName,
                              String portOfLoading,
                              String portOfDischarge, String placeOfDeliveryByCarrier, String bookingNo, String billOfLadingNo, List<String> exportReference,
                              Party forwardingAgent, String fmcNo,
@@ -122,6 +126,7 @@ public class BillOfLadingState implements QueryableState, LinearState {
                              List<FreightCharges> freightChargesList, Price prepaid, Price collect, List<Incoterm> incotermList,
                              List<ContainerInformation> containerInformationList, UniqueIdentifier linearId) {
         this.linearId = linearId;
+        this.type = type;
         this.shipper = shipper;
         this.consignee = consignee;
         this.notifyParty = notifyParty;
@@ -183,6 +188,7 @@ public class BillOfLadingState implements QueryableState, LinearState {
     public PersistentState generateMappedObject(@NotNull MappedSchema schema) {
         if (schema instanceof BillOfLadingSchemaV1) {
             return new BillOfLadingSchemaV1.PersistentBOL(
+                    this.type.toString(),
                     this.shipper.getName().toString(),
                     this.consignee.getName().toString(),
                     this.notifyParty.getName().toString(),
