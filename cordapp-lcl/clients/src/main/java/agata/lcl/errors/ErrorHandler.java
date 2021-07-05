@@ -12,7 +12,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
     ResponseEntity<ErrorResponse> handleStatusException(ResponseStatusException ex) {
-        ErrorResponse res = new ErrorResponse(ex.getStatus(), ex.getReason());
+        ErrorResponse res = new ErrorResponse(ex.getStatus(), ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(res);
     }
 

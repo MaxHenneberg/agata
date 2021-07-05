@@ -1,5 +1,6 @@
 package agata.lcl.controllers;
 
+import agata.bol.states.BillOfLadingState;
 import agata.lcl.bodies.PickupFinalization;
 import agata.lcl.bodies.PickupInitialization;
 import agata.lcl.bodies.UpdatePickupGoods;
@@ -34,6 +35,11 @@ public class PickupController extends BaseController {
     @GetMapping("/proposals")
     public List<PickupProposal> getProposals() {
         return this.getStates(PickupProposal.class);
+    }
+
+    @GetMapping("/bols")
+    public List<BillOfLadingState> getBols() {
+        return this.getStates(BillOfLadingState.class);
     }
 
     @GetMapping("/proposals/{proposalId}")
