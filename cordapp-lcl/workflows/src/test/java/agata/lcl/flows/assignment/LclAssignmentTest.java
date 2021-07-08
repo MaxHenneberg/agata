@@ -13,6 +13,7 @@ import net.corda.core.contracts.TransactionState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
+import net.corda.core.node.services.Vault;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.testing.node.StartedMockNode;
 import org.junit.Before;
@@ -76,7 +77,7 @@ public class LclAssignmentTest extends FlowTestBase {
             assertEquals(arrivalAddress, recordedState.getArrivalAddress());
             assertEquals(expectedGoods, recordedState.getExpectedGoods());
 
-            TrackingState trackingState = recordedState.getStatus().resolve(node.getServices()).getState().getData();
+            TrackingState trackingState = this.resolveStateId(TrackingState.class, recordedState.getTrackingStateId(), node, Vault.StateStatus.UNCONSUMED);
             assertEquals(buyerParty, trackingState.getBuyer());
             assertEquals(supplierParty, trackingState.getSupplier());
             assertEquals(lclCompanyParty, trackingState.getLclCompany());

@@ -2,7 +2,6 @@ package agata.lcl.states.assignment;
 
 import agata.bol.dataholder.Address;
 import agata.bol.dataholder.ItemRow;
-import agata.lcl.contracts.GenericProposalContract;
 import agata.lcl.contracts.annotations.MandatoryForContract;
 import agata.lcl.contracts.assignment.AssignmentContract;
 import agata.lcl.states.tracking.TrackingState;
@@ -49,7 +48,7 @@ public class AssignmentState implements LinearState {
     private final List<ItemRow> expectedGoods;
 
     @MandatoryForContract
-    protected final LinearPointer<TrackingState> status;
+    protected final UniqueIdentifier trackingStateId;
 
     public AssignmentState(Party lclCompany, Party buyer, Party supplier, Party arrivalParty, Address departureAddress, Address arrivalAddress, List<ItemRow> expectedGoods, UniqueIdentifier trackingStateId) {
         this.linearId = new UniqueIdentifier();
@@ -60,11 +59,11 @@ public class AssignmentState implements LinearState {
         this.lclCompany = lclCompany;
         this.expectedGoods = expectedGoods;
         this.arrivalParty = arrivalParty;
-        this.status = new LinearPointer<>(trackingStateId, TrackingState.class);
+        this.trackingStateId = trackingStateId;
     }
 
     @ConstructorForDeserialization
-    public AssignmentState(UniqueIdentifier linearId, Party lclCompany, Party buyer, Party supplier, Party arrivalParty, Address departureAddress, Address arrivalAddress, List<ItemRow> expectedGoods, LinearPointer<TrackingState> status) {
+    public AssignmentState(UniqueIdentifier linearId, Party lclCompany, Party buyer, Party supplier, Party arrivalParty, Address departureAddress, Address arrivalAddress, List<ItemRow> expectedGoods, UniqueIdentifier trackingStateId) {
         this.linearId = linearId;
         this.buyer = buyer;
         this.departureAddress = departureAddress;
@@ -73,7 +72,7 @@ public class AssignmentState implements LinearState {
         this.lclCompany = lclCompany;
         this.expectedGoods = expectedGoods;
         this.arrivalParty = arrivalParty;
-        this.status = status;
+        this.trackingStateId = trackingStateId;
     }
 
     @NotNull

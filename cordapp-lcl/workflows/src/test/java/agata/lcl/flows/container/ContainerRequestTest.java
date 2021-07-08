@@ -2,58 +2,50 @@ package agata.lcl.flows.container;
 
 import agata.bol.dataholder.ContainerInformation;
 import agata.bol.enums.ContainerType;
-import agata.lcl.flows.AcceptFlow;
+import agata.lcl.enums.TrackingStatus;
+import agata.lcl.flows.FlowTestBase;
+import agata.lcl.states.assignment.AssignmentState;
 import agata.lcl.states.container.ContainerRequestState;
+import agata.lcl.states.tracking.TrackingState;
 import net.corda.core.concurrent.CordaFuture;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.contracts.TransactionState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
-import net.corda.core.node.NetworkParameters;
+import net.corda.core.node.services.Vault;
 import net.corda.core.transactions.SignedTransaction;
-import net.corda.testing.node.MockNetwork;
-import net.corda.testing.node.MockNetworkParameters;
 import net.corda.testing.node.StartedMockNode;
-import net.corda.testing.node.TestCordapp;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.Instant;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static org.junit.Assert.assertEquals;
 
-public class ContainerRequestTest {
-    private MockNetwork network;
+public class ContainerRequestTest extends FlowTestBase {
     private StartedMockNode lclCompany;
     private StartedMockNode shippingLine;
+    private StartedMockNode supplier;
+    private StartedMockNode buyer;
 
     @Before
-    public void setup() {
-        network = new MockNetwork(new MockNetworkParameters().withCordappsForAllNodes(Arrays.asList(
-                TestCordapp.findCordapp("agata.lcl.contracts"),
-                TestCordapp.findCordapp("agata.lcl.flows"))).withNetworkParameters(new NetworkParameters(4, Collections.emptyList(),
-                10485760, 10485760 * 50, Instant.now(), 1,
-                Collections.emptyMap()))
-        );
+    public void setupTest() {
         lclCompany = network.createPartyNode(new CordaX500Name("LCL Company", "New York", "US"));
         shippingLine = network.createPartyNode(new CordaX500Name("Shipping Line A", "New York", "US"));
+        supplier = network.createPartyNode(new CordaX500Name("Supplier", "New York", "US"));
+        buyer = network.createPartyNode(new CordaX500Name("Buyer", "New York", "US"));
         network.runNetwork();
     }
 
-    @After
-    public void tearDown() {
-        network.stopNodes();
-    }
-
-    // TODO: Separate these steps of different flows?
     @Test
     public void testEntireContainerRequestFlow() throws ExecutionException, InterruptedException {
+
+        UniqueIdentifier assignmentId = this.createAssignmentState(this.lclCompany, this.supplier, this.buyer, this.departureAddress, this.arrivalAddress, "xyz");
+        UniqueIdentifier trackingStateId = this.resolveStateId(AssignmentState.class, assignmentId, this.lclCompany, Vault.StateStatus.UNCONSUMED).getTrackingStateId();
+
         Party lclCompanyParty = getParty(this.lclCompany);
         Party shippingLineParty = getParty(this.shippingLine);
 
@@ -77,7 +69,7 @@ public class ContainerRequestTest {
         network.runNetwork();
 
         // ACCEPT
-        AcceptContainerFlow.Initiator acceptFlow = new AcceptContainerFlow.Initiator(containerRequestProposalId);
+        AcceptContainerFlow.Initiator acceptFlow = new AcceptContainerFlow.Initiator(containerRequestProposalId, trackingStateId);
         CordaFuture<SignedTransaction> future3 = this.lclCompany.startFlow(acceptFlow);
         network.runNetwork();
         SignedTransaction tx = future3.get();
@@ -99,12 +91,10 @@ public class ContainerRequestTest {
             assertEquals(requestedType, recordedState.getRequestedType());
             assertEquals(vesselName, recordedState.getVesselName());
             assertEquals(assignedContainer, recordedState.getContainer());
+
+            TrackingState trackingState = this.resolveStateId(TrackingState.class, trackingStateId, node, Vault.StateStatus.UNCONSUMED);
+            assertEquals(trackingState.getStatus(), TrackingStatus.ContainerAssigned);
         }
 
     }
-
-    protected Party getParty(StartedMockNode mockNode) {
-        return mockNode.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
-    }
-
 }

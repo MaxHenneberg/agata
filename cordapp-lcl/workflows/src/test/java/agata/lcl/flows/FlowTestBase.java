@@ -4,19 +4,22 @@ import agata.bol.dataholder.*;
 import agata.bol.enums.ContainerType;
 import agata.bol.enums.Payable;
 import agata.bol.enums.TypeOfMovement;
+import agata.lcl.flows.assignment.AssignmentAcceptFlow;
+import agata.lcl.flows.assignment.AssignmentProposalFlow;
 import agata.lcl.flows.container.AssignContainerFlow;
 import agata.lcl.flows.container.ContainerRequestProposalFlow;
 import agata.lcl.flows.pickup.PickupAcceptFlow;
 import agata.lcl.flows.pickup.PickupAddGoodsFlow;
 import agata.lcl.flows.pickup.PickupProposalFlow;
-import agata.lcl.states.Proposal;
-import agata.lcl.states.assignment.AssignmentProposal;
-import agata.lcl.states.assignment.AssignmentState;
 import net.corda.core.concurrent.CordaFuture;
+import net.corda.core.contracts.ContractState;
 import net.corda.core.contracts.LinearState;
+import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.Party;
 import net.corda.core.node.NetworkParameters;
+import net.corda.core.node.services.Vault;
+import net.corda.core.node.services.vault.QueryCriteria;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.testing.node.MockNetwork;
 import net.corda.testing.node.MockNetworkParameters;
@@ -34,6 +37,9 @@ import java.util.concurrent.Future;
 
 public abstract class FlowTestBase {
     protected MockNetwork network;
+
+    protected Address arrivalAddress = new Address("Arrival street 1", "Klm", "Def", "45678", "Bar");
+    protected Address departureAddress = new Address("Departure street 1", "Abc", "Def", "12345", "Foo");
 
     @Before
     public void setup() {
@@ -89,20 +95,17 @@ public abstract class FlowTestBase {
 
     protected UniqueIdentifier createAssignmentState(StartedMockNode lclCompanyMock, StartedMockNode supplierMock, StartedMockNode buyerMock, Address address1,
                                                      Address address2, String goodsId) throws ExecutionException, InterruptedException {
-        Party lclCompanyParty = getParty(lclCompanyMock);
         Party supplierParty = getParty(supplierMock);
         Party buyerParty = getParty(buyerMock);
         List<ItemRow> goods = Collections
                 .singletonList(new ItemRow("abc", goodsId, 3, new DescriptionOfGoods("iPhone", "pallet", 100), 12, 12, 456));
-        AssignmentState assignmentState = new AssignmentState(lclCompanyParty, buyerParty, supplierParty, buyerParty, address1, address2, goods, new UniqueIdentifier());
-        Proposal proposal = new AssignmentProposal(lclCompanyParty, buyerParty, assignmentState);
-        ProposalFlow.Initiator proposeFlow = new ProposalFlow.Initiator(proposal);
+        AssignmentProposalFlow.Initiator proposeFlow = new AssignmentProposalFlow.Initiator(buyerParty, supplierParty, supplierParty, address1, address2, goods);
         Future<UniqueIdentifier> future1 = lclCompanyMock.startFlow(proposeFlow);
         network.runNetwork();
 
         UniqueIdentifier assignmentProposalUId = future1.get();
 
-        AcceptFlow.Initiator acceptFlow = new AcceptFlow.Initiator(assignmentProposalUId);
+        AssignmentAcceptFlow.Initiator acceptFlow = new AssignmentAcceptFlow.Initiator(assignmentProposalUId);
         Future future = buyerMock.startFlow(acceptFlow);
         network.runNetwork();
         SignedTransaction pickUpStateTx = (SignedTransaction) future.get();
@@ -139,5 +142,13 @@ public abstract class FlowTestBase {
         Future<UniqueIdentifier> future3 = lclCompany.startFlow(acceptFlow);
         network.runNetwork();
         return future3.get();
+    }
+
+    protected <T extends ContractState> T resolveStateId(Class<T> clazz, UniqueIdentifier id, StartedMockNode node, Vault.StateStatus status) {
+        List<StateAndRef<T>> results = node.getServices().getVaultService().queryBy(
+                clazz,
+                new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(id), status, null)).getStates();
+        assert (results.size() == 1);
+        return results.get(0).getState().getData();
     }
 }
