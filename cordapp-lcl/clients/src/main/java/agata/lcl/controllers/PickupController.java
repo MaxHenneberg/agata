@@ -1,5 +1,6 @@
 package agata.lcl.controllers;
 
+import agata.bol.states.BillOfLadingState;
 import agata.lcl.bodies.PickupFinalization;
 import agata.lcl.bodies.PickupInitialization;
 import agata.lcl.bodies.UpdatePickupGoods;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/pickups")
 public class PickupController extends BaseController {
@@ -33,6 +35,16 @@ public class PickupController extends BaseController {
     @GetMapping("/proposals")
     public List<PickupProposal> getProposals() {
         return this.getStates(PickupProposal.class);
+    }
+
+    @GetMapping("/bols")
+    public List<BillOfLadingState> getBols() {
+        return this.getStates(BillOfLadingState.class);
+    }
+
+    @GetMapping("/proposals/{proposalId}")
+    public PickupProposal getProposal(@PathVariable String proposalId) {
+        return this.queryStateById(PickupProposal.class, this.toUniqueIdentifier(proposalId));
     }
 
     @PostMapping("/proposals")

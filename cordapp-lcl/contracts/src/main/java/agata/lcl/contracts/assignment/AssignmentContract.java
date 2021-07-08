@@ -23,8 +23,4 @@ public class AssignmentContract extends GenericProposalContract {
             return null;
         });
     }
-
-    public interface Commands extends GenericProposalContract.Commands {
-
-    }
 }

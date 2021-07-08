@@ -3,6 +3,7 @@ package agata.lcl.flows.shiploading;
 import agata.bol.dataholder.FreightCharges;
 import agata.bol.dataholder.ItemRow;
 import agata.bol.dataholder.Price;
+import agata.bol.enums.BillOfLadingType;
 import agata.bol.enums.Payable;
 import agata.bol.enums.TypeOfMovement;
 import agata.bol.states.BillOfLadingState;
@@ -90,14 +91,14 @@ public class ShiploadingProposalFlow {
                     getServiceHub().getVaultService().queryBy(BillOfLadingState.class, inputCriteriaBol).getStates();
 
             if (houseBolList.size() != this.houseBolIds.size()) {
-                throw new FlowException("Could not find all House BoEs");
+                throw new FlowException("Could not find all House BoLs");
             }
 
             final BillOfLadingState houseBol = houseBolList.get(0).getState().getData();
             List<ItemRow> packingList = houseBolList.stream().flatMap(bol -> bol.getState().getData().getGoodsList().stream()).collect(Collectors.toList());
 
             BillOfLadingState billOfLadingState =
-                    new BillOfLadingState(shippingLine, houseBol.getShipper(), containerState.getLclDestination(),
+                    new BillOfLadingState(BillOfLadingType.Master, shippingLine, houseBol.getShipper(), containerState.getLclDestination(),
                             this.modeOfInitialCarriage,
                             this.placeOfInitialReceipt, houseBol.getVesselName(), houseBol.getPortOfLoading(),
                             houseBol.getPortOfDischarge(),

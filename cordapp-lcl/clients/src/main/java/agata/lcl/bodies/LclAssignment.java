@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
+@ToString
 public class LclAssignment {
 
     // The party type properties here are automatically deserialized from the Corda extension for Jackson.

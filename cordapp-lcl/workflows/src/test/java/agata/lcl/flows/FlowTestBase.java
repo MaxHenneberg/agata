@@ -1,12 +1,14 @@
 package agata.lcl.flows;
 
-import agata.bol.dataholder.Address;
-import agata.bol.dataholder.ContainerInformation;
-import agata.bol.dataholder.DescriptionOfGoods;
-import agata.bol.dataholder.ItemRow;
+import agata.bol.dataholder.*;
 import agata.bol.enums.ContainerType;
+import agata.bol.enums.Payable;
+import agata.bol.enums.TypeOfMovement;
 import agata.lcl.flows.container.AssignContainerFlow;
 import agata.lcl.flows.container.ContainerRequestProposalFlow;
+import agata.lcl.flows.pickup.PickupAcceptFlow;
+import agata.lcl.flows.pickup.PickupAddGoodsFlow;
+import agata.lcl.flows.pickup.PickupProposalFlow;
 import agata.lcl.states.Proposal;
 import agata.lcl.states.assignment.AssignmentProposal;
 import agata.lcl.states.assignment.AssignmentState;
@@ -108,5 +110,34 @@ public abstract class FlowTestBase {
         final LinearState state = (LinearState) pickUpStateTx.getCoreTransaction().getOutputStates().get(0);
 
         return state.getLinearId();
+    }
+
+    protected UniqueIdentifier createHouseBol(String id, StartedMockNode lclCompany, StartedMockNode supplier, StartedMockNode buyer, StartedMockNode shippingLine) throws ExecutionException, InterruptedException {
+        Address address1 = new Address("Sample street 1", "New York", "", "", "US");
+        Address address2 = new Address("Hafenstrasse", "Hamburg", "", "", "DE");
+
+        final UniqueIdentifier assignmentStateId = createAssignmentState(lclCompany, supplier, buyer, address1, address2, id);
+        final UniqueIdentifier containerStateId = createContainerState(lclCompany, shippingLine);
+
+        PickupProposalFlow.Initiator pickupProposeFlow = new PickupProposalFlow.Initiator(assignmentStateId);
+        Future<UniqueIdentifier> future1 = lclCompany.startFlow(pickupProposeFlow);
+        network.runNetwork();
+
+        UniqueIdentifier pickupProposalId = future1.get();
+
+        PickupAddGoodsFlow.Initiator modifyFlow = new PickupAddGoodsFlow.Initiator(pickupProposalId,
+                Collections.singletonList(new ItemRow("abc", id, 3, new DescriptionOfGoods("iPhone", "pallet", 100), 12, 12, 456)),
+                "NotBlank");
+        Future future2 = supplier.startFlow(modifyFlow);
+        network.runNetwork();
+        future2.get();
+
+        PickupAcceptFlow.Initiator acceptFlow = new PickupAcceptFlow.Initiator(pickupProposalId, containerStateId, "initCarriage",
+                "placeOfReceipt", "deliveryByCarrier", "bookingNo", "boeNo", Collections.singletonList("ref"), Payable.Origin,
+                TypeOfMovement.doorToDoor, Collections.singletonList(new FreightCharges("Reason", null)),
+                null, null);
+        Future<UniqueIdentifier> future3 = lclCompany.startFlow(acceptFlow);
+        network.runNetwork();
+        return future3.get();
     }
 }

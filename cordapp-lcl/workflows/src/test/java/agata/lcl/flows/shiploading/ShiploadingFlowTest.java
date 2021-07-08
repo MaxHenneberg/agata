@@ -1,20 +1,21 @@
 package agata.lcl.flows.shiploading;
 
-import agata.bol.dataholder.Address;
-import agata.bol.dataholder.DescriptionOfGoods;
-import agata.bol.dataholder.FreightCharges;
 import agata.bol.dataholder.ItemRow;
 import agata.bol.enums.Payable;
 import agata.bol.enums.TypeOfMovement;
+import agata.bol.schema.BillOfLadingSchemaV1;
 import agata.bol.states.BillOfLadingState;
 import agata.lcl.flows.FlowTestBase;
-import agata.lcl.flows.pickup.PickupAcceptFlow;
-import agata.lcl.flows.pickup.PickupAddGoodsFlow;
-import agata.lcl.flows.pickup.PickupProposalFlow;
 import agata.lcl.states.shiploading.ShiploadingProposal;
+import net.corda.core.contracts.ContractState;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.CordaX500Name;
+import net.corda.core.node.services.Vault;
+import net.corda.core.node.services.vault.Builder;
+import net.corda.core.node.services.vault.CriteriaExpression;
+import net.corda.core.node.services.vault.FieldInfo;
+import net.corda.core.node.services.vault.QueryCriteria;
 import net.corda.testing.node.StartedMockNode;
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,13 +29,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
+import static net.corda.core.node.services.vault.QueryCriteriaUtils.getField;
+
 public class ShiploadingFlowTest extends FlowTestBase {
     private StartedMockNode lclCompany;
     private StartedMockNode supplier;
     private StartedMockNode buyer;
     private StartedMockNode shippingLine;
-    Address address1 = new Address("Sample street 1", "New York", "", "", "US");
-    Address address2 = new Address("Hafenstrasse", "Hamburg", "", "", "DE");
 
     @Before
     public void setupShiploadingTest() {
@@ -46,11 +47,11 @@ public class ShiploadingFlowTest extends FlowTestBase {
     }
 
     @Test
-    public void shipLoadingTest() throws ExecutionException, InterruptedException {
+    public void shipLoadingTest() throws ExecutionException, InterruptedException, NoSuchFieldException {
         final UniqueIdentifier containerStateId = createContainerState(lclCompany, shippingLine);
         List<UniqueIdentifier> houseBolList = new ArrayList<>(10);
         for (int i = 0; i < 10; i++) {
-            houseBolList.add(createHouseBol(i + ""));
+            houseBolList.add(this.createHouseBol(i + "", this.lclCompany, this.supplier, this.buyer, this.shippingLine));
         }
 
         ShiploadingProposalFlow.Initiator shipLoadingProposalFlow =
@@ -76,6 +77,15 @@ public class ShiploadingFlowTest extends FlowTestBase {
         List<StateAndRef<BillOfLadingState>> lclCompanyBillOfLadingStateList =
                 lclCompany.getServices().getVaultService().queryBy(BillOfLadingState.class).getStates();
         Assert.assertEquals(11, lclCompanyBillOfLadingStateList.size());
+
+        QueryCriteria generalCriteria = new QueryCriteria.VaultQueryCriteria(Vault.StateStatus.ALL);
+        FieldInfo attributeShipper = getField("shipper", BillOfLadingSchemaV1.PersistentBOL.class);
+        CriteriaExpression shipperIndex = Builder.equal(attributeShipper, getParty(shippingLine).getName().toString());
+        QueryCriteria customCriteria1 = new QueryCriteria.VaultCustomQueryCriteria(shipperIndex);
+        QueryCriteria criteria = generalCriteria.and(customCriteria1);
+        Vault.Page<ContractState> results = lclCompany.getServices().getVaultService().queryBy(BillOfLadingState.class, criteria);
+        results.getStates().forEach((e) -> System.out.println(e.getState().getData().toString()));
+
         final List<ItemRow> packingList =
                 lclCompanyBillOfLadingStateList.stream().map(e -> e.getState().getData()).filter(bol -> bol.getGoodsList().size() == 1)
                         .flatMap(bol -> bol.getGoodsList().stream()).collect(
@@ -88,31 +98,5 @@ public class ShiploadingFlowTest extends FlowTestBase {
         for (ItemRow itemRow : packingList) {
             Assert.assertTrue(shippingLineBillOfLadingStateList.get(0).getState().getData().getGoodsList().contains(itemRow));
         }
-    }
-
-    private UniqueIdentifier createHouseBol(String id) throws ExecutionException, InterruptedException {
-        final UniqueIdentifier assignmentStateId = createAssignmentState(lclCompany, supplier, buyer, address1, address2, id);
-        final UniqueIdentifier containerStateId = createContainerState(lclCompany, shippingLine);
-
-        PickupProposalFlow.Initiator pickupProposeFlow = new PickupProposalFlow.Initiator(assignmentStateId);
-        Future<UniqueIdentifier> future1 = this.lclCompany.startFlow(pickupProposeFlow);
-        network.runNetwork();
-
-        UniqueIdentifier pickupProposalId = future1.get();
-
-        PickupAddGoodsFlow.Initiator modifyFlow = new PickupAddGoodsFlow.Initiator(pickupProposalId,
-                Collections.singletonList(new ItemRow("abc", id, 3, new DescriptionOfGoods("iPhone", "pallet", 100), 12, 12, 456)),
-                "NotBlank");
-        Future future2 = this.supplier.startFlow(modifyFlow);
-        network.runNetwork();
-        future2.get();
-
-        PickupAcceptFlow.Initiator acceptFlow = new PickupAcceptFlow.Initiator(pickupProposalId, containerStateId, "initCarriage",
-                "placeOfReceipt", "deliveryByCarrier", "bookingNo", "boeNo", Collections.singletonList("ref"), Payable.Origin,
-                TypeOfMovement.doorToDoor, Collections.singletonList(new FreightCharges("Reason", null)),
-                null, null);
-        Future<UniqueIdentifier> future3 = this.lclCompany.startFlow(acceptFlow);
-        network.runNetwork();
-        return future3.get();
     }
 }

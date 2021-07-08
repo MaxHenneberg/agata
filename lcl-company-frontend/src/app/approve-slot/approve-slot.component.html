@@ -1,0 +1,46 @@
+<div class="centerContainer">
+  <mat-accordion>
+    <mat-expansion-panel style="width: 800px;display: block;" *ngFor="let pendingApproval of pendingApprovals">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{pendingApproval.linearId.id}}
+        </mat-panel-title>
+        <mat-panel-description>
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <table>
+        <tr>
+          <td>Proposee: </td>
+          <td>{{pendingApproval.proposee}}</td>
+        </tr>
+        <tr>
+          <td>Proposer: </td>
+          <td>{{pendingApproval.proposer}}</td>
+        </tr>
+        <tr>
+          <td>Proposed State Id: </td>
+          <td>{{pendingApproval?.proposedState?.linearId.id}}</td>
+        </tr>
+      </table>
+      <br/>
+      <p>Expected Goods: </p>
+      <table>
+        <tr>
+          <th>Mark</th>
+          <th>Identity Number</th>
+          <th>Product</th>
+          <th>Type of Package</th>
+          <th>Quantity</th>
+        </tr>
+        <tr *ngFor="let good of pendingApproval?.proposedState?.expectedGoods">
+          <td>{{good.mark}}</td>
+          <td>{{good.identityNumber}}</td>
+          <td>{{good.descriptionOfGoods.product}}</td>
+          <td>{{good.descriptionOfGoods.typeOfPackage}}</td>
+          <td>{{good.descriptionOfGoods.quantity}}</td>
+        </tr>
+      </table>
+      <button mat-raised-button color="primary" style="height: 50px; width: 100px; display: inline-block" (click)="approve(pendingApproval.linearId.id)">Approve</button>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/loadings")
 public class LoadingController extends BaseController {
@@ -32,6 +33,7 @@ public class LoadingController extends BaseController {
     public List<ShiploadingProposal> getLoadingProposals() {
         return this.getStates(ShiploadingProposal.class);
     }
+
 
     @PostMapping("/proposals")
     public ShiploadingProposal addLoadingProposal(@RequestBody ShipmentDetails details) {

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/container-requests")
 public class ContainerController extends BaseController {
@@ -31,6 +32,12 @@ public class ContainerController extends BaseController {
     @GetMapping("/proposals")
     public List<ContainerRequestProposal> getProposals() {
         return this.getStates(ContainerRequestProposal.class);
+    }
+
+    @GetMapping("/containerStateById/{containerId}")
+    public ContainerRequestState getContainerStateByContainerId(@PathVariable String containerId) {
+        List<ContainerRequestState> finalizedState = getFinalizedRequests();
+        return finalizedState.stream().filter(state -> state.getContainer().getContainerNo().equals(containerId)).findFirst().get();
     }
 
     @PostMapping("/proposals")

@@ -12,13 +12,13 @@ public class ErrorHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
     ResponseEntity<ErrorResponse> handleStatusException(ResponseStatusException ex) {
-        ErrorResponse res = new ErrorResponse(ex.getStatus(), ex.getReason());
+        ErrorResponse res = new ErrorResponse(ex.getStatus(), ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(res);
     }
 
     @ExceptionHandler(RuntimeException.class)
     ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex) {
-        ErrorResponse res = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
+        ErrorResponse res = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred: \n" + ex.getMessage());
         return ResponseEntity.status(res.getStatus()).body(res);
     }
 

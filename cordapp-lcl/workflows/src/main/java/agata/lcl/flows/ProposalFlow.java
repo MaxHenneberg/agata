@@ -5,6 +5,7 @@ import agata.lcl.states.Proposal;
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.Command;
 import net.corda.core.contracts.CommandData;
+import net.corda.core.contracts.ReferencedStateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
@@ -12,6 +13,7 @@ import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 
 import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -23,15 +25,20 @@ public class ProposalFlow {
     public static class Initiator extends FlowLogic<UniqueIdentifier> {
         private final Proposal proposalState;
         private final CommandData commandType;
+        private final List<ReferencedStateAndRef> additionalReferenceStates;
 
         public Initiator(Proposal proposalState) {
-            this.proposalState = proposalState;
-            this.commandType = new GenericProposalContract.Commands.Propose();
+            this(proposalState, new GenericProposalContract.Commands.Propose(), new ArrayList<>());
         }
 
-        public Initiator(Proposal proposalState, GenericProposalContract.Commands.Propose commandType) {
+        public Initiator(Proposal proposalState, List<ReferencedStateAndRef> additionalReferenceStates) {
+            this(proposalState, new GenericProposalContract.Commands.Propose(), additionalReferenceStates);
+        }
+
+        public Initiator(Proposal proposalState, GenericProposalContract.Commands.Propose commandType, List<ReferencedStateAndRef> additionalReferenceStates) {
             this.proposalState = proposalState;
             this.commandType = commandType;
+            this.additionalReferenceStates = additionalReferenceStates;
         }
 
         @Suspendable
@@ -45,6 +52,9 @@ public class ProposalFlow {
             TransactionBuilder txBuilder = new TransactionBuilder(notary)
                     .addOutputState(this.proposalState)
                     .addCommand(command);
+            if (this.additionalReferenceStates != null) {
+                this.additionalReferenceStates.forEach(txBuilder::addReferenceState);
+            }
 
             //Signing the transaction ourselves
             SignedTransaction partStx = getServiceHub().signInitialTransaction(txBuilder);

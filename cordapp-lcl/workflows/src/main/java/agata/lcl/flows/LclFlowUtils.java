@@ -1,5 +1,7 @@
 package agata.lcl.flows;
 
+import agata.bol.enums.BillOfLadingType;
+import agata.bol.states.BillOfLadingState;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -27,6 +29,14 @@ public class LclFlowUtils {
         }
 
         return stateRefs.get(0);
+    }
+
+    public static BillOfLadingState resolveBillOfLadingId(FlowLogic flowLogic, UniqueIdentifier id, BillOfLadingType type) throws FlowException {
+        BillOfLadingState bol = resolveIdToStateRef(id, flowLogic, BillOfLadingState.class).getState().getData();
+        if (bol.getType() != type) {
+            throw new FlowException("The id " + id.toString() + "is not associated to a " + type.toString() + " bill of lading");
+        }
+        return bol;
     }
 
 }

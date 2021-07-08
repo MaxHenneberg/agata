@@ -1,5 +1,6 @@
 package agata.lcl.contracts.shiploading;
 
+import agata.bol.enums.BillOfLadingType;
 import agata.lcl.contracts.GenericProposalContract;
 import agata.lcl.states.shiploading.ShiploadingProposal;
 import net.corda.core.contracts.Command;
@@ -15,9 +16,10 @@ public class ShiploadingContract extends GenericProposalContract {
     @Override
     protected void extendedVerifyPropose(@NotNull LedgerTransaction tx, @NotNull Command command) {
         requireThat(require -> {
-            ShiploadingProposal pickupProposal = tx.outputsOfType(ShiploadingProposal.class).get(0);
-            require.using("Proposee must be Shipping Line", pickupProposal.getProposee().equals(pickupProposal.getProposedState().getShipper()));
-            require.using("Proposer must be LCL-Company", pickupProposal.getProposer().equals(pickupProposal.getProposedState().getConsignee()));
+            ShiploadingProposal proposal = tx.outputsOfType(ShiploadingProposal.class).get(0);
+            require.using("Proposee must be Shipping Line", proposal.getProposee().equals(proposal.getProposedState().getShipper()));
+            require.using("Proposer must be LCL-Company", proposal.getProposer().equals(proposal.getProposedState().getConsignee()));
+            require.using("Proposed bill of lading needs to be a master bill of lading", proposal.getProposedState().getType() == BillOfLadingType.Master);
             return null;
         });
     }
