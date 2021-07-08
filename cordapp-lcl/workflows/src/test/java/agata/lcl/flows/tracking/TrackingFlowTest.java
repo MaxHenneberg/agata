@@ -100,7 +100,7 @@ public class TrackingFlowTest {
             assertEquals(supplierParty, trackingState.getSupplier());
             assertEquals(lclCompanyParty, trackingState.getLclCompany());
             assertEquals(shippingLineParty, trackingState.getShippingLine());
-            assertEquals(currentPort, trackingState.getCurrentPort());
+            assertEquals(currentPort, trackingState.getLastPort());
             assertEquals(TrackingStatus.ContainerAssigned, trackingState.getStatus());
         }
 
@@ -134,7 +134,7 @@ public class TrackingFlowTest {
             assertEquals(supplierParty, trackingState.getSupplier());
             assertEquals(lclCompanyParty, trackingState.getLclCompany());
             assertEquals(shippingLineParty, trackingState.getShippingLine());
-            assertEquals(currentPort, trackingState.getCurrentPort());
+            assertEquals(currentPort, trackingState.getLastPort());
             assertEquals(TrackingStatus.LoadedOnShip, trackingState.getStatus());
         }
 

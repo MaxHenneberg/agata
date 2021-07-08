@@ -24,17 +24,17 @@ public class ShippingTrackingState extends TrackingState {
     private final Party shippingLine;
 
     @MandatoryForContract
-    private final String currentPort;
+    private final String lastPort;
 
     public ShippingTrackingState(ShippingTrackingState toCopy) {
-        this(toCopy.getLinearId(), toCopy.getLclCompany(), toCopy.getBuyer(), toCopy.getSupplier(), toCopy.getShippingLine(), toCopy.getCurrentPort(), toCopy.getStatus());
+        this(toCopy.getLinearId(), toCopy.getLclCompany(), toCopy.getBuyer(), toCopy.getSupplier(), toCopy.getShippingLine(), toCopy.getLastPort(), toCopy.getStatus());
     }
 
     @ConstructorForDeserialization
-    public ShippingTrackingState(UniqueIdentifier linearId, Party lclCompany, Party buyer, Party supplier, Party shippingLine, String currentPort, TrackingStatus status) {
+    public ShippingTrackingState(UniqueIdentifier linearId, Party lclCompany, Party buyer, Party supplier, Party shippingLine, String lastPort, TrackingStatus status) {
         super(linearId, lclCompany, buyer, supplier, status);
         this.shippingLine = shippingLine;
-        this.currentPort = currentPort;
+        this.lastPort = lastPort;
     }
 
     @NotNull

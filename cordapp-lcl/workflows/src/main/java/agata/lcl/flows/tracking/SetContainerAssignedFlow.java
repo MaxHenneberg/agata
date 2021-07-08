@@ -21,12 +21,12 @@ public class SetContainerAssignedFlow {
 
         private final UniqueIdentifier stateId;
         private final Party shippingLine;
-        private final String currentPort;
+        private final String lastPort;
 
-        public Initiator(UniqueIdentifier stateId, Party shippingLine, String currentPort) {
+        public Initiator(UniqueIdentifier stateId, Party shippingLine, String lastPort) {
             this.stateId = stateId;
             this.shippingLine = shippingLine;
-            this.currentPort = currentPort;
+            this.lastPort = lastPort;
         }
 
         @Override
@@ -38,7 +38,7 @@ public class SetContainerAssignedFlow {
                 throw new FlowException("Flow can only be executed by correct LCL Company");
             }
 
-            ShippingTrackingState output = new ShippingTrackingState(inputState.getLinearId(), inputState.getLclCompany(), inputState.getBuyer(), inputState.getSupplier(), shippingLine, currentPort, TrackingStatus.ContainerAssigned);
+            ShippingTrackingState output = new ShippingTrackingState(inputState.getLinearId(), inputState.getLclCompany(), inputState.getBuyer(), inputState.getSupplier(), shippingLine, lastPort, TrackingStatus.ContainerAssigned);
 
             return subFlow(new GenericTrackingUpdateFlow.Initiator(input, output, new TrackingContract.Commands.SetContainerAssigned()));
         }

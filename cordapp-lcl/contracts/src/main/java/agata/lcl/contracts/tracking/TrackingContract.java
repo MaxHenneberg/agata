@@ -64,7 +64,7 @@ public class TrackingContract extends BaseContract {
                 ShippingTrackingState output = tx.outputsOfType(ShippingTrackingState.class).get(0);
                 require.using("The status is set to ContainerAssigned", output.getStatus() == TrackingStatus.ContainerAssigned);
                 require.using("The shipping line is set", output.getShippingLine() != null);
-                require.using("The current port is set", output.getCurrentPort() != null);
+                require.using("The current port is set", output.getLastPort() != null);
 
                 require.using("The LCL company is a required signer", command.getSigners().contains(output.getLclCompany().getOwningKey()));
                 require.using("The shipping line is a required signer", command.getSigners().contains(output.getShippingLine().getOwningKey()));
@@ -118,7 +118,7 @@ public class TrackingContract extends BaseContract {
 
         return areBasePropertiesUnchanged &&
                 Objects.equals(output.getShippingLine(), input.getShippingLine()) &&
-                Objects.equals(output.getCurrentPort(), input.getCurrentPort());
+                Objects.equals(output.getLastPort(), input.getLastPort());
     }
 
     public interface Commands extends CommandData {
