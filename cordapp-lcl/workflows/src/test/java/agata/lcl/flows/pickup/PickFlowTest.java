@@ -7,11 +7,15 @@ import agata.bol.dataholder.ItemRow;
 import agata.bol.enums.Payable;
 import agata.bol.enums.TypeOfMovement;
 import agata.bol.states.BillOfLadingState;
+import agata.lcl.enums.TrackingStatus;
 import agata.lcl.flows.FlowTestBase;
+import agata.lcl.states.assignment.AssignmentState;
 import agata.lcl.states.pickup.PickupState;
+import agata.lcl.states.tracking.TrackingState;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.CordaX500Name;
+import net.corda.core.node.services.Vault;
 import net.corda.testing.node.StartedMockNode;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,6 +27,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PickFlowTest extends FlowTestBase {
@@ -68,7 +73,8 @@ public class PickFlowTest extends FlowTestBase {
     @Test
     public void testAccept() throws ExecutionException, InterruptedException {
         final UniqueIdentifier assignmentStateId = createAssignmentState(lclCompany, supplier, buyer, address1, address2, "123");
-        final UniqueIdentifier containerStateId = createContainerState(lclCompany, shippingLine);
+        UniqueIdentifier trackingStateId = this.resolveStateId(AssignmentState.class, assignmentStateId, this.lclCompany, Vault.StateStatus.UNCONSUMED).getTrackingStateId();
+        final UniqueIdentifier containerStateId = createContainerState(lclCompany, shippingLine, Collections.singletonList(trackingStateId));
 
         PickupProposalFlow.Initiator pickupProposeFlow = new PickupProposalFlow.Initiator(assignmentStateId);
         Future<UniqueIdentifier> future1 = this.lclCompany.startFlow(pickupProposeFlow);
@@ -83,7 +89,7 @@ public class PickFlowTest extends FlowTestBase {
         network.runNetwork();
         future2.get();
 
-        PickupAcceptFlow.Initiator acceptFlow = new PickupAcceptFlow.Initiator(pickupProposalId, containerStateId, "initCarriage",
+        PickupAcceptFlow.Initiator acceptFlow = new PickupAcceptFlow.Initiator(pickupProposalId, containerStateId, trackingStateId, "initCarriage",
                 "placeOfReceipt", "deliveryByCarrier", "bookingNo", "boeNo", Collections.singletonList("ref"), Payable.Origin,
                 TypeOfMovement.doorToDoor, Collections.singletonList(new FreightCharges("Reason", null)),
                 null, null);
@@ -97,6 +103,9 @@ public class PickFlowTest extends FlowTestBase {
 
             List<StateAndRef<BillOfLadingState>> billOfLadingStateList = node.getServices().getVaultService().queryBy(BillOfLadingState.class).getStates();
             Assert.assertEquals(1, billOfLadingStateList.size());
+
+            TrackingState trackingState = this.resolveStateId(TrackingState.class, trackingStateId, node, Vault.StateStatus.UNCONSUMED);
+            assertEquals(trackingState.getStatus(), TrackingStatus.PickupCompleted);
             return null;
         }));
     }

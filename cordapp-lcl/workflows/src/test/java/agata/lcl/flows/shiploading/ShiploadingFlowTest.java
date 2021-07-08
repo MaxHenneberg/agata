@@ -5,8 +5,12 @@ import agata.bol.enums.Payable;
 import agata.bol.enums.TypeOfMovement;
 import agata.bol.schema.BillOfLadingSchemaV1;
 import agata.bol.states.BillOfLadingState;
+import agata.lcl.enums.TrackingStatus;
 import agata.lcl.flows.FlowTestBase;
+import agata.lcl.states.assignment.AssignmentState;
 import agata.lcl.states.shiploading.ShiploadingProposal;
+import agata.lcl.states.tracking.ShippingTrackingState;
+import agata.lcl.states.tracking.TrackingState;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -48,22 +52,35 @@ public class ShiploadingFlowTest extends FlowTestBase {
 
     @Test
     public void shipLoadingTest() throws ExecutionException, InterruptedException, NoSuchFieldException {
-        final UniqueIdentifier containerStateId = createContainerState(lclCompany, shippingLine);
-        List<UniqueIdentifier> houseBolList = new ArrayList<>(10);
-        for (int i = 0; i < 10; i++) {
-            houseBolList.add(this.createHouseBol(i + "", this.lclCompany, this.supplier, this.buyer, this.shippingLine));
+
+        List<UniqueIdentifier> assignmentIds = new ArrayList<>(3);
+        List<UniqueIdentifier> trackingStateIds = new ArrayList<>(3);
+        for (int i = 0; i < 3; i++) {
+            // Create fake LCL contract and retrieve associated tracking state id
+            final UniqueIdentifier assignmentStateId = createAssignmentState(lclCompany, supplier, buyer, this.departureAddress, this.arrivalAddress, i + "");
+            assignmentIds.add(assignmentStateId);
+            UniqueIdentifier trackingStateId = this.resolveStateId(AssignmentState.class, assignmentStateId, this.lclCompany, Vault.StateStatus.UNCONSUMED).getTrackingStateId();
+            trackingStateIds.add(trackingStateId);
+        }
+
+        // Request container for all these packages
+        final UniqueIdentifier containerStateId = createContainerState(lclCompany, shippingLine, trackingStateIds);
+
+        // Pickup goods of each LCL assignment
+        List<UniqueIdentifier> houseBolIds = new ArrayList<>(assignmentIds.size());
+        for (int i = 0; i < assignmentIds.size(); i++) {
+            houseBolIds.add(this.createHouseBol(i + "", assignmentIds.get(i), containerStateId, this.lclCompany, this.supplier));
         }
 
         ShiploadingProposalFlow.Initiator shipLoadingProposalFlow =
-                new ShiploadingProposalFlow.Initiator(containerStateId, getParty(shippingLine), houseBolList, "initCarriage",
+                new ShiploadingProposalFlow.Initiator(containerStateId, getParty(shippingLine), houseBolIds, "initCarriage",
                         "place", "123", "123", Collections.singletonList("123"), Payable.Origin, TypeOfMovement.doorToDoor,
                         null, null, null);
         Future<UniqueIdentifier> future1 = this.lclCompany.startFlow(shipLoadingProposalFlow);
         network.runNetwork();
         UniqueIdentifier shipLoadingProposalId = future1.get();
 
-        ShiploadingAcceptFlow.Initiator acceptFlow = new ShiploadingAcceptFlow.Initiator(shipLoadingProposalId);
-
+        ShiploadingAcceptFlow.Initiator acceptFlow = new ShiploadingAcceptFlow.Initiator(shipLoadingProposalId, trackingStateIds);
         Future future2 = this.shippingLine.startFlow(acceptFlow);
         network.runNetwork();
         future2.get();
@@ -71,12 +88,19 @@ public class ShiploadingFlowTest extends FlowTestBase {
         Arrays.asList(lclCompany, shippingLine).forEach(node -> node.transaction(() -> {
             List<StateAndRef<ShiploadingProposal>> pickUpStateList = node.getServices().getVaultService().queryBy(ShiploadingProposal.class).getStates();
             Assert.assertEquals(0, pickUpStateList.size());
+
+            // Check if all tracking states are set as expected
+            for (UniqueIdentifier trackingStateId : trackingStateIds) {
+                TrackingState state = this.resolveStateId(ShippingTrackingState.class, trackingStateId, node, Vault.StateStatus.UNCONSUMED);
+                Assert.assertEquals(TrackingStatus.LoadedOnShip, state.getStatus());
+            }
+
             return null;
         }));
 
         List<StateAndRef<BillOfLadingState>> lclCompanyBillOfLadingStateList =
                 lclCompany.getServices().getVaultService().queryBy(BillOfLadingState.class).getStates();
-        Assert.assertEquals(11, lclCompanyBillOfLadingStateList.size());
+        Assert.assertEquals(4, lclCompanyBillOfLadingStateList.size());
 
         QueryCriteria generalCriteria = new QueryCriteria.VaultQueryCriteria(Vault.StateStatus.ALL);
         FieldInfo attributeShipper = getField("shipper", BillOfLadingSchemaV1.PersistentBOL.class);

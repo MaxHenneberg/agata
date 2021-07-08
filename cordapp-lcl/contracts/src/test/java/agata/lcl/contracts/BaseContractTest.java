@@ -2,26 +2,22 @@ package agata.lcl.contracts;
 
 import agata.lcl.contracts.assignment.AssignmentContract;
 import agata.lcl.contracts.test.DummyProposalContract;
-import agata.lcl.states.assignment.AssignmentProposal;
-import agata.lcl.states.assignment.AssignmentState;
 import agata.lcl.states.test.DummyProposal;
 import agata.lcl.states.test.DummyState;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
-import net.corda.testing.contracts.DummyContract;
 import net.corda.testing.core.TestIdentity;
 import net.corda.testing.node.MockServices;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collections;
 
 import static net.corda.testing.node.NodeTestUtils.ledger;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class GenericProposalContractTest {
+public class BaseContractTest {
     private final MockServices ledgerServices = new MockServices(Collections.singletonList("agata.lcl"));
     TestIdentity alice = new TestIdentity(new CordaX500Name("alice", "New York", "US"));
     TestIdentity bob = new TestIdentity(new CordaX500Name("bob", "London", "GB"));
@@ -31,7 +27,7 @@ public class GenericProposalContractTest {
     public void testMandatoryCheck() {
         DummyState dummyState = new DummyState(alice.getParty(), bob.getParty(), "", "", null, null, "", null);
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> GenericProposalContractUtils.checkMandatoryFields(dummyState,
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> BaseContractUtils.checkMandatoryFields(dummyState,
                 new GenericProposalContract.Commands.Propose(), true));
 
         Assert.assertNotNull(exception);
@@ -42,7 +38,7 @@ public class GenericProposalContractTest {
     @Test
     public void testMandatoryCheckForCommand() {
         DummyState dummyState = new DummyState(alice.getParty(), bob.getParty(), "", "", null, null, "", null);
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> GenericProposalContractUtils.checkMandatoryFields(dummyState,
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> BaseContractUtils.checkMandatoryFields(dummyState,
                 new GenericProposalContract.Commands.Modify(), true));
 
         Assert.assertNotNull(exception);

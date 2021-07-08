@@ -2,8 +2,12 @@ package agata.lcl.flows.delivery;
 
 import agata.bol.dataholder.ItemRow;
 import agata.bol.states.BillOfLadingState;
+import agata.lcl.enums.TrackingStatus;
 import agata.lcl.flows.FlowTestBase;
+import agata.lcl.states.assignment.AssignmentState;
 import agata.lcl.states.delivery.PackageDeliveryState;
+import agata.lcl.states.tracking.ShippingTrackingState;
+import agata.lcl.states.tracking.TrackingState;
 import net.corda.core.concurrent.CordaFuture;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.contracts.StateAndRef;
@@ -15,7 +19,7 @@ import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.testing.node.StartedMockNode;
-import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,18 +45,18 @@ public class PackageDeliveryTest extends FlowTestBase {
         network.runNetwork();
     }
 
-    @After
-    public void tearDown() {
-        network.stopNodes();
-    }
-
     @Test
     public void testPackageDeliveryFlows() throws ExecutionException, InterruptedException {
 
         Party lclCompanyParty = getParty(this.lclCompany);
 
         // Create fake house bill of lading
-        UniqueIdentifier houseBillOfLadingId = this.createHouseBol("123abc", lclCompany, supplier, buyer, shippingLine);
+        String goodsId = "123";
+        final UniqueIdentifier assignmentId = createAssignmentState(lclCompany, supplier, buyer, this.departureAddress, this.arrivalAddress, goodsId);
+        final UniqueIdentifier trackingStateId = this.resolveStateId(AssignmentState.class, assignmentId, lclCompany, Vault.StateStatus.UNCONSUMED).getTrackingStateId();
+
+        final UniqueIdentifier containerStateId = createContainerState(lclCompany, shippingLine, Collections.singletonList(trackingStateId));
+        UniqueIdentifier houseBillOfLadingId = this.createHouseBol(goodsId, assignmentId, containerStateId, lclCompany, supplier);
 
         // PROPOSE
         ProposeDeliveryFlow.Initiator proposeFlow = new ProposeDeliveryFlow.Initiator(lclCompanyParty, houseBillOfLadingId);
@@ -75,7 +79,7 @@ public class PackageDeliveryTest extends FlowTestBase {
         future2.get();
 
         // ACCEPT
-        AcceptDeliveryFlow.Initiator acceptFlow = new AcceptDeliveryFlow.Initiator(deliveryProposalId);
+        AcceptDeliveryFlow.Initiator acceptFlow = new AcceptDeliveryFlow.Initiator(deliveryProposalId, trackingStateId);
         CordaFuture<SignedTransaction> future3 = this.buyer.startFlow(acceptFlow);
         network.runNetwork();
         SignedTransaction tx = future3.get();
@@ -92,6 +96,9 @@ public class PackageDeliveryTest extends FlowTestBase {
             assertEquals(getParty(this.buyer), recordedState.getArrivalParty());
             assertEquals(deliveredGoods, recordedState.getDeliveredGoods());
             assertEquals(bol.getLinearId(), recordedState.getHouseBolId());
+
+            TrackingState state = this.resolveStateId(ShippingTrackingState.class, trackingStateId, node, Vault.StateStatus.UNCONSUMED);
+            Assert.assertEquals(TrackingStatus.GoodsDelivered, state.getStatus());
         }
 
     }

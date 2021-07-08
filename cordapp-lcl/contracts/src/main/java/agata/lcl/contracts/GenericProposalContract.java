@@ -3,34 +3,19 @@ package agata.lcl.contracts;
 import agata.lcl.states.Proposal;
 import net.corda.core.contracts.Command;
 import net.corda.core.contracts.CommandData;
-import net.corda.core.contracts.Contract;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.transactions.LedgerTransaction;
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.InvocationTargetException;
-
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
-public abstract class GenericProposalContract implements Contract {
-    public static String ID = "agata.lcl.contracts.GenericProposalContract";
+public abstract class GenericProposalContract extends BaseContract {
 
     @Override
-    public void verify(@NotNull LedgerTransaction tx) throws IllegalArgumentException {
-        final Command command = tx.getCommand(0);
-        final CommandData commandData = command.getValue();
-        for (ContractState contractState : tx.getOutputStates()) {
-            try {
-                GenericProposalContractUtils.checkMandatoryFields(contractState, commandData, false);
-                if (contractState instanceof Proposal) {
-                    GenericProposalContractUtils.checkMandatoryFields(((Proposal) contractState).getProposedState(), commandData, true);
-                }
-            } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-                throw new RuntimeException(e.getMessage());
-            }
-        }
-
-
+    public void verifyCommands(LedgerTransaction tx) throws IllegalArgumentException {
+        Command command = tx.getCommand(0);
+        CommandData commandData = command.getValue();
+        
         boolean isValidCommand = false;
         if (commandData instanceof Commands.Propose) {
             verifyPropose(tx, command);
