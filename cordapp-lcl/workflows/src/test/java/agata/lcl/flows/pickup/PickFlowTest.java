@@ -73,7 +73,8 @@ public class PickFlowTest extends FlowTestBase {
     @Test
     public void testAccept() throws ExecutionException, InterruptedException {
         final UniqueIdentifier assignmentStateId = createAssignmentState(lclCompany, supplier, buyer, address1, address2, "123");
-        final UniqueIdentifier containerStateId = createContainerState(lclCompany, shippingLine);
+        UniqueIdentifier trackingStateId = this.resolveStateId(AssignmentState.class, assignmentStateId, this.lclCompany, Vault.StateStatus.UNCONSUMED).getTrackingStateId();
+        final UniqueIdentifier containerStateId = createContainerState(lclCompany, shippingLine, Collections.singletonList(trackingStateId));
 
         PickupProposalFlow.Initiator pickupProposeFlow = new PickupProposalFlow.Initiator(assignmentStateId);
         Future<UniqueIdentifier> future1 = this.lclCompany.startFlow(pickupProposeFlow);
@@ -88,7 +89,6 @@ public class PickFlowTest extends FlowTestBase {
         network.runNetwork();
         future2.get();
 
-        UniqueIdentifier trackingStateId = this.resolveStateId(AssignmentState.class, assignmentStateId, this.lclCompany, Vault.StateStatus.UNCONSUMED).getTrackingStateId();
         PickupAcceptFlow.Initiator acceptFlow = new PickupAcceptFlow.Initiator(pickupProposalId, containerStateId, trackingStateId, "initCarriage",
                 "placeOfReceipt", "deliveryByCarrier", "bookingNo", "boeNo", Collections.singletonList("ref"), Payable.Origin,
                 TypeOfMovement.doorToDoor, Collections.singletonList(new FreightCharges("Reason", null)),

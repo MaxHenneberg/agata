@@ -25,7 +25,7 @@ public class GenericTrackingUpdateFlow {
         private final TrackingState output;
         private final CommandData commandData;
 
-        public Initiator(StateAndRef<TrackingState> input, TrackingState output, CommandData commandData) {
+        public Initiator(StateAndRef input, TrackingState output, CommandData commandData) {
             this.input = input;
             this.output = output;
             this.commandData = commandData;

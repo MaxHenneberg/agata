@@ -13,6 +13,8 @@ import net.corda.core.flows.InitiatingFlow;
 import net.corda.core.flows.StartableByRPC;
 import net.corda.core.transactions.SignedTransaction;
 
+import java.util.List;
+
 public class AcceptContainerFlow {
 
     @InitiatingFlow
@@ -20,11 +22,11 @@ public class AcceptContainerFlow {
     public static class Initiator extends FlowLogic<SignedTransaction> {
 
         private final UniqueIdentifier proposalId;
-        private final UniqueIdentifier trackingStateId;
+        private final List<UniqueIdentifier> trackingStateIds;
 
-        public Initiator(UniqueIdentifier proposalId, UniqueIdentifier trackingStateId) {
+        public Initiator(UniqueIdentifier proposalId, List<UniqueIdentifier> trackingStateIds) {
             this.proposalId = proposalId;
-            this.trackingStateId = trackingStateId;
+            this.trackingStateIds = trackingStateIds;
         }
 
         @Suspendable
@@ -37,8 +39,10 @@ public class AcceptContainerFlow {
                 throw new FlowException("Flow can only be executed by correct LCL company");
             }
 
-            // Update responsibility in tracking state
-            subFlow(new SetContainerAssignedFlow.Initiator(this.trackingStateId, proposedState.getShippingLine(), proposedState.getPortOfLoading()));
+            // Update responsibility in each tracking state of a package associated to this container
+            for (UniqueIdentifier trackingStateId : this.trackingStateIds) {
+                subFlow(new SetContainerAssignedFlow.Initiator(trackingStateId, proposedState.getShippingLine(), proposedState.getPortOfLoading()));
+            }
 
             return subFlow(new AcceptFlow.Initiator(this.proposalId));
         }

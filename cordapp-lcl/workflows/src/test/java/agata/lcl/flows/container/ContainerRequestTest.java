@@ -20,6 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -69,7 +70,7 @@ public class ContainerRequestTest extends FlowTestBase {
         network.runNetwork();
 
         // ACCEPT
-        AcceptContainerFlow.Initiator acceptFlow = new AcceptContainerFlow.Initiator(containerRequestProposalId, trackingStateId);
+        AcceptContainerFlow.Initiator acceptFlow = new AcceptContainerFlow.Initiator(containerRequestProposalId, Collections.singletonList(trackingStateId));
         CordaFuture<SignedTransaction> future3 = this.lclCompany.startFlow(acceptFlow);
         network.runNetwork();
         SignedTransaction tx = future3.get();

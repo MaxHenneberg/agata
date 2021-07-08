@@ -3,6 +3,7 @@ package agata.lcl.flows.delivery;
 import agata.bol.dataholder.ItemRow;
 import agata.bol.states.BillOfLadingState;
 import agata.lcl.flows.FlowTestBase;
+import agata.lcl.states.assignment.AssignmentState;
 import agata.lcl.states.delivery.PackageDeliveryState;
 import net.corda.core.concurrent.CordaFuture;
 import net.corda.core.contracts.ContractState;
@@ -15,7 +16,6 @@ import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.testing.node.StartedMockNode;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,7 +47,11 @@ public class PackageDeliveryTest extends FlowTestBase {
         Party lclCompanyParty = getParty(this.lclCompany);
 
         // Create fake house bill of lading
-        UniqueIdentifier houseBillOfLadingId = this.createHouseBol("123abc", lclCompany, supplier, buyer, shippingLine);
+        final UniqueIdentifier assignmentId = createAssignmentState(lclCompany, supplier, buyer, this.departureAddress, this.arrivalAddress, "1234");
+        final UniqueIdentifier trackingStateId = this.resolveStateId(AssignmentState.class, assignmentId, lclCompany, Vault.StateStatus.UNCONSUMED).getTrackingStateId();
+
+        final UniqueIdentifier containerStateId = createContainerState(lclCompany, shippingLine, Collections.singletonList(trackingStateId));
+        UniqueIdentifier houseBillOfLadingId = this.createHouseBol("123abc", assignmentId, containerStateId, lclCompany, supplier);
 
         // PROPOSE
         ProposeDeliveryFlow.Initiator proposeFlow = new ProposeDeliveryFlow.Initiator(lclCompanyParty, houseBillOfLadingId);

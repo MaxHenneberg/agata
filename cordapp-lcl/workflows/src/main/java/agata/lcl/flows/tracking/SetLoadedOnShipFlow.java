@@ -27,8 +27,8 @@ public class SetLoadedOnShipFlow {
         @Override
         @Suspendable
         public SignedTransaction call() throws FlowException {
-            StateAndRef<TrackingState> input = LclFlowUtils.resolveIdToStateRef(stateId, this, TrackingState.class);
-            ShippingTrackingState inputState = (ShippingTrackingState) input.getState().getData();
+            StateAndRef<ShippingTrackingState> input = LclFlowUtils.resolveIdToStateRef(stateId, this, ShippingTrackingState.class);
+            ShippingTrackingState inputState = input.getState().getData();
             if (!getOurIdentity().equals(inputState.getShippingLine())) {
                 throw new FlowException("Flow can only be executed by correct shipping line");
             }

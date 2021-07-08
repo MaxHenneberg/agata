@@ -26,12 +26,6 @@ public class ShippingTrackingState extends TrackingState {
     @MandatoryForContract
     private final String currentPort;
 
-    public ShippingTrackingState(Party lclCompany, Party buyer, Party supplier, Party shippingLine, String currentPort) {
-        super(lclCompany, buyer, supplier);
-        this.shippingLine = shippingLine;
-        this.currentPort = currentPort;
-    }
-
     public ShippingTrackingState(ShippingTrackingState toCopy) {
         this(toCopy.getLinearId(), toCopy.getLclCompany(), toCopy.getBuyer(), toCopy.getSupplier(), toCopy.getShippingLine(), toCopy.getCurrentPort(), toCopy.getStatus());
     }

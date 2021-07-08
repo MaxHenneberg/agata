@@ -6,6 +6,7 @@ import agata.bol.enums.Payable;
 import agata.bol.enums.TypeOfMovement;
 import agata.lcl.flows.assignment.AssignmentAcceptFlow;
 import agata.lcl.flows.assignment.AssignmentProposalFlow;
+import agata.lcl.flows.container.AcceptContainerFlow;
 import agata.lcl.flows.container.AssignContainerFlow;
 import agata.lcl.flows.container.ContainerRequestProposalFlow;
 import agata.lcl.flows.pickup.PickupAcceptFlow;
@@ -62,7 +63,7 @@ public abstract class FlowTestBase {
     }
 
     protected UniqueIdentifier createContainerState(StartedMockNode lclCompanyMock,
-                                                    StartedMockNode shippingLineMock) throws ExecutionException, InterruptedException {
+                                                    StartedMockNode shippingLineMock, List<UniqueIdentifier> trackingStateIds) throws ExecutionException, InterruptedException {
         Party lclCompanyParty = getParty(lclCompanyMock);
         Party shippingLineParty = getParty(shippingLineMock);
 
@@ -87,7 +88,7 @@ public abstract class FlowTestBase {
         network.runNetwork();
 
         // ACCEPT
-        AcceptFlow.Initiator acceptFlow = new AcceptFlow.Initiator(containerRequestProposalId);
+        AcceptContainerFlow.Initiator acceptFlow = new AcceptContainerFlow.Initiator(containerRequestProposalId, trackingStateIds);
         CordaFuture<SignedTransaction> future3 = lclCompanyMock.startFlow(acceptFlow);
         network.runNetwork();
         SignedTransaction tx = future3.get();
@@ -109,20 +110,14 @@ public abstract class FlowTestBase {
         AssignmentAcceptFlow.Initiator acceptFlow = new AssignmentAcceptFlow.Initiator(assignmentProposalUId);
         Future future = buyerMock.startFlow(acceptFlow);
         network.runNetwork();
-        SignedTransaction pickUpStateTx = (SignedTransaction) future.get();
 
-        final LinearState state = (LinearState) pickUpStateTx.getCoreTransaction().getOutputStates().get(0);
+        SignedTransaction assignmentState = (SignedTransaction) future.get();
+        final LinearState state = (LinearState) assignmentState.getCoreTransaction().getOutputStates().get(0);
 
         return state.getLinearId();
     }
 
-    protected UniqueIdentifier createHouseBol(String id, StartedMockNode lclCompany, StartedMockNode supplier, StartedMockNode buyer, StartedMockNode shippingLine) throws ExecutionException, InterruptedException {
-        Address address1 = new Address("Sample street 1", "New York", "", "", "US");
-        Address address2 = new Address("Hafenstrasse", "Hamburg", "", "", "DE");
-
-        final UniqueIdentifier assignmentStateId = createAssignmentState(lclCompany, supplier, buyer, address1, address2, id);
-        final UniqueIdentifier containerStateId = createContainerState(lclCompany, shippingLine);
-
+    protected UniqueIdentifier createHouseBol(String id, UniqueIdentifier assignmentStateId, UniqueIdentifier containerStateId, StartedMockNode lclCompany, StartedMockNode supplier) throws ExecutionException, InterruptedException {
         PickupProposalFlow.Initiator pickupProposeFlow = new PickupProposalFlow.Initiator(assignmentStateId);
         Future<UniqueIdentifier> future1 = lclCompany.startFlow(pickupProposeFlow);
         network.runNetwork();

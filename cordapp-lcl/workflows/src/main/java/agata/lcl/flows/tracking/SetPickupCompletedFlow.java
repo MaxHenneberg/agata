@@ -3,7 +3,7 @@ package agata.lcl.flows.tracking;
 import agata.lcl.contracts.tracking.TrackingContract;
 import agata.lcl.enums.TrackingStatus;
 import agata.lcl.flows.LclFlowUtils;
-import agata.lcl.states.tracking.TrackingState;
+import agata.lcl.states.tracking.ShippingTrackingState;
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -26,13 +26,13 @@ public class SetPickupCompletedFlow {
         @Override
         @Suspendable
         public SignedTransaction call() throws FlowException {
-            StateAndRef<TrackingState> input = LclFlowUtils.resolveIdToStateRef(stateId, this, TrackingState.class);
-            TrackingState inputState = input.getState().getData();
+            StateAndRef<ShippingTrackingState> input = LclFlowUtils.resolveIdToStateRef(stateId, this, ShippingTrackingState.class);
+            ShippingTrackingState inputState = input.getState().getData();
             if (!getOurIdentity().equals(inputState.getLclCompany())) {
                 throw new FlowException("Flow can only be executed by correct LCL Company");
             }
 
-            TrackingState output = new TrackingState(inputState);
+            ShippingTrackingState output = new ShippingTrackingState(inputState);
             output.setStatus(TrackingStatus.PickupCompleted);
 
             return subFlow(new GenericTrackingUpdateFlow.Initiator(input, output, new TrackingContract.Commands.SetPickupCompleted()));
