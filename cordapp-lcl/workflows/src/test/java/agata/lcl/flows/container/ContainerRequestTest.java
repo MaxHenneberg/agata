@@ -77,7 +77,7 @@ public class ContainerRequestTest {
         network.runNetwork();
 
         // ACCEPT
-        AcceptFlow.Initiator acceptFlow = new AcceptFlow.Initiator(containerRequestProposalId);
+        AcceptContainerFlow.Initiator acceptFlow = new AcceptContainerFlow.Initiator(containerRequestProposalId);
         CordaFuture<SignedTransaction> future3 = this.lclCompany.startFlow(acceptFlow);
         network.runNetwork();
         SignedTransaction tx = future3.get();
