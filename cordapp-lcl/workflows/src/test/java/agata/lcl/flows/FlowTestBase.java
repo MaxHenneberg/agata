@@ -11,6 +11,7 @@ import agata.lcl.flows.container.ContainerRequestProposalFlow;
 import agata.lcl.flows.pickup.PickupAcceptFlow;
 import agata.lcl.flows.pickup.PickupAddGoodsFlow;
 import agata.lcl.flows.pickup.PickupProposalFlow;
+import agata.lcl.states.assignment.AssignmentState;
 import net.corda.core.concurrent.CordaFuture;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.contracts.LinearState;
@@ -135,7 +136,8 @@ public abstract class FlowTestBase {
         network.runNetwork();
         future2.get();
 
-        PickupAcceptFlow.Initiator acceptFlow = new PickupAcceptFlow.Initiator(pickupProposalId, containerStateId, "initCarriage",
+        UniqueIdentifier trackingStateId = this.resolveStateId(AssignmentState.class, assignmentStateId, lclCompany, Vault.StateStatus.UNCONSUMED).getTrackingStateId();
+        PickupAcceptFlow.Initiator acceptFlow = new PickupAcceptFlow.Initiator(pickupProposalId, containerStateId, trackingStateId, "initCarriage",
                 "placeOfReceipt", "deliveryByCarrier", "bookingNo", "boeNo", Collections.singletonList("ref"), Payable.Origin,
                 TypeOfMovement.doorToDoor, Collections.singletonList(new FreightCharges("Reason", null)),
                 null, null);

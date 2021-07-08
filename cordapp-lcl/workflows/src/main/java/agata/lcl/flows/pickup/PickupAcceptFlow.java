@@ -10,6 +10,7 @@ import agata.bol.flows.CreateBoLFlow;
 import agata.bol.states.BillOfLadingState;
 import agata.lcl.flows.AcceptFlow;
 import agata.lcl.flows.LclFlowUtils;
+import agata.lcl.flows.tracking.SetPickupCompletedFlow;
 import agata.lcl.states.assignment.AssignmentState;
 import agata.lcl.states.container.ContainerRequestState;
 import agata.lcl.states.pickup.PickupState;
@@ -31,6 +32,7 @@ public class PickupAcceptFlow {
     public static class Initiator extends FlowLogic<UniqueIdentifier> {
         private final UniqueIdentifier proposalId;
         private final UniqueIdentifier referenceToContainerRequest;
+        private final UniqueIdentifier trackingStateId;
 
         private final String modeOfInitialCarriage;
         private final String placeOfInitialReceipt;
@@ -44,11 +46,12 @@ public class PickupAcceptFlow {
         private final Price prepaid;
         private final Price collect;
 
-        public Initiator(UniqueIdentifier proposalId, UniqueIdentifier referenceToContainerRequest, String modeOfInitialCarriage, String placeOfInitialReceipt,
+        public Initiator(UniqueIdentifier proposalId, UniqueIdentifier referenceToContainerRequest, UniqueIdentifier trackingStateId, String modeOfInitialCarriage, String placeOfInitialReceipt,
                          String placeOfDeliveryByCarrier, String bookingNo, String billOfLadingNo, List<String> exportReference, Payable freightPayableAt,
                          TypeOfMovement typeOfMovement, List<FreightCharges> freightChargesList, Price prepaid, Price collect) {
             this.proposalId = proposalId;
             this.referenceToContainerRequest = referenceToContainerRequest;
+            this.trackingStateId = trackingStateId;
             this.modeOfInitialCarriage = modeOfInitialCarriage;
             this.placeOfInitialReceipt = placeOfInitialReceipt;
             this.placeOfDeliveryByCarrier = placeOfDeliveryByCarrier;
@@ -67,6 +70,9 @@ public class PickupAcceptFlow {
         public UniqueIdentifier call() throws FlowException {
             final SignedTransaction signedTransaction = subFlow(new AcceptFlow.Initiator(proposalId));
             final PickupState pickupState = (PickupState) signedTransaction.getCoreTransaction().getOutputStates().get(0);
+
+            // Update responsibility in tracking state
+            subFlow(new SetPickupCompletedFlow.Initiator(this.trackingStateId));
 
             final StateAndRef<AssignmentState> assignmentStateRef =
                     LclFlowUtils.resolveIdToStateRef(pickupState.getReferenceToAssignmentState().getPointer(), this, AssignmentState.class);
