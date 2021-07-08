@@ -4,6 +4,7 @@ import agata.bol.states.BillOfLadingState;
 import agata.lcl.contracts.delivery.PackageDeliveryContract;
 import agata.lcl.flows.AcceptFlow;
 import agata.lcl.flows.LclFlowUtils;
+import agata.lcl.flows.tracking.SetGoodsDeliveredFlow;
 import agata.lcl.states.delivery.PackageDeliveryProposal;
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.StateAndRef;
@@ -22,9 +23,11 @@ public class AcceptDeliveryFlow {
     @StartableByRPC
     public static class Initiator extends FlowLogic<SignedTransaction> {
         private final UniqueIdentifier proposalId;
+        private final UniqueIdentifier trackingStateId;
 
-        public Initiator(UniqueIdentifier proposalId) {
+        public Initiator(UniqueIdentifier proposalId, UniqueIdentifier trackingStateId) {
             this.proposalId = proposalId;
+            this.trackingStateId = trackingStateId;
         }
 
         @Suspendable
@@ -35,6 +38,9 @@ public class AcceptDeliveryFlow {
             if (!getOurIdentity().equals(proposal.getProposedState().getArrivalParty())) {
                 throw new FlowException("Flow can only be executed by the defined arrival party");
             }
+
+            // Update tracking state
+            subFlow(new SetGoodsDeliveredFlow.Initiator(trackingStateId));
 
             // Add house bill of lading as additional input in order to consume this state
             final StateAndRef<BillOfLadingState> houseBolRef = LclFlowUtils.resolveIdToStateRef(proposal.getProposedState().getHouseBolId(), this, BillOfLadingState.class);

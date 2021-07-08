@@ -111,6 +111,24 @@ public class TrackingContract extends BaseContract {
 
                 return null;
             });
+        } else if (commandData instanceof Commands.SetGoodsDelivered) {
+            requireThat(require -> {
+                require.using("There is exactly one input, which is of type ShippingTrackingState",
+                        tx.getInputStates().size() == 1 && tx.getInput(0) instanceof ShippingTrackingState);
+                require.using("Only one output state should be created, which is of type ShippingTrackingState",
+                        tx.getOutputs().size() == 1 && tx.getOutput(0) instanceof ShippingTrackingState);
+
+                ShippingTrackingState output = tx.outputsOfType(ShippingTrackingState.class).get(0);
+                require.using("The status is set to GoodsDelivered", output.getStatus() == TrackingStatus.GoodsDelivered);
+
+                require.using("The LCL company is a required signer", command.getSigners().contains(output.getLclCompany().getOwningKey()));
+                require.using("The buyer is a required signer", command.getSigners().contains(output.getBuyer().getOwningKey()));
+
+                ShippingTrackingState input = tx.inputsOfType(ShippingTrackingState.class).get(0);
+                require.using("Except for the status previously set fields remain unchanged", isShippingTrackingStateUnchanged(input, output));
+
+                return null;
+            });
         } else {
             throw new IllegalArgumentException("Command of incorrect type");
         }
@@ -146,6 +164,9 @@ public class TrackingContract extends BaseContract {
         }
 
         class SetDeconsolidated implements Commands {
+        }
+
+        class SetGoodsDelivered implements Commands {
         }
 
     }
