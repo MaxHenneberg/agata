@@ -18,9 +18,11 @@ public class SetContainerDeconsolidatedFlow {
     public static class Initiator extends FlowLogic<SignedTransaction> {
 
         private final UniqueIdentifier stateId;
+        private final String lastPort;
 
-        public Initiator(UniqueIdentifier stateId) {
+        public Initiator(UniqueIdentifier stateId, String lastPort) {
             this.stateId = stateId;
+            this.lastPort = lastPort;
         }
 
         @Override
@@ -34,6 +36,7 @@ public class SetContainerDeconsolidatedFlow {
 
             ShippingTrackingState output = new ShippingTrackingState(inputState);
             output.setStatus(TrackingStatus.Deconsolidated);
+            output.setLastPort(lastPort);
 
             return subFlow(new GenericTrackingUpdateFlow.Initiator(input, output, new TrackingContract.Commands.SetDeconsolidated()));
         }

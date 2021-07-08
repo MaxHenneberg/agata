@@ -37,13 +37,14 @@ public class AcceptDeconsolidationFlow {
             DeconsolidationProposal proposal = LclFlowUtils.resolveStateId(DeconsolidationProposal.class, this, proposalId);
             StateAndRef<BillOfLadingState> masterBillOfLadingRef = LclFlowUtils.resolveIdToStateRef(proposal.getProposedState().getMasterBillOfLadingId(), this, BillOfLadingState.class);
 
-            if (!getOurIdentity().equals(masterBillOfLadingRef.getState().getData().getConsignee())) {
+            BillOfLadingState masterBillOfLading = masterBillOfLadingRef.getState().getData();
+            if (!getOurIdentity().equals(masterBillOfLading.getConsignee())) {
                 throw new FlowException("Flow can only be executed by correct consignee");
             }
 
             // Update responsibility in each tracking state of a package associated to this container
             for (UniqueIdentifier trackingStateId : this.trackingStateIds) {
-                subFlow(new SetContainerDeconsolidatedFlow.Initiator(trackingStateId));
+                subFlow(new SetContainerDeconsolidatedFlow.Initiator(trackingStateId, masterBillOfLading.getPortOfDischarge()));
             }
 
             // Consume the master bill of lading as input if the proposal is accepted (to avoid reuse during container release)

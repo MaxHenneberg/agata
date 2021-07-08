@@ -139,7 +139,8 @@ public class TrackingFlowTest {
         }
 
         // SET DECONSOLIDATED
-        SetContainerDeconsolidatedFlow.Initiator flow5 = new SetContainerDeconsolidatedFlow.Initiator(stateId);
+        String arrivalPort = "Port B";
+        SetContainerDeconsolidatedFlow.Initiator flow5 = new SetContainerDeconsolidatedFlow.Initiator(stateId, arrivalPort);
         this.lclCompany.startFlow(flow5);
         network.runNetwork();
         for (StartedMockNode node : Arrays.asList(lclCompany, shippingLine, buyer, supplier)) {
@@ -147,6 +148,7 @@ public class TrackingFlowTest {
             assert (states.size() == 1);
             ShippingTrackingState trackingState = (ShippingTrackingState) states.get(0).getState().getData();
             assertEquals(TrackingStatus.Deconsolidated, trackingState.getStatus());
+            assertEquals(arrivalPort, trackingState.getLastPort());
         }
 
     }

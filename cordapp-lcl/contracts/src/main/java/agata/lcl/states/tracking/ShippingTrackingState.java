@@ -5,6 +5,7 @@ import agata.lcl.contracts.tracking.TrackingContract;
 import agata.lcl.enums.TrackingStatus;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.AbstractParty;
@@ -23,8 +24,9 @@ public class ShippingTrackingState extends TrackingState {
     @MandatoryForContract
     private final Party shippingLine;
 
+    @Setter
     @MandatoryForContract
-    private final String lastPort;
+    private String lastPort;
 
     public ShippingTrackingState(ShippingTrackingState toCopy) {
         this(toCopy.getLinearId(), toCopy.getLclCompany(), toCopy.getBuyer(), toCopy.getSupplier(), toCopy.getShippingLine(), toCopy.getLastPort(), toCopy.getStatus());
