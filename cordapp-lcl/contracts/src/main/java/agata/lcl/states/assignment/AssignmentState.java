@@ -48,8 +48,20 @@ public class AssignmentState implements LinearState {
     @MandatoryForContract
     private final List<ItemRow> expectedGoods;
 
-    @MandatoryForContract(value = GenericProposalContract.Commands.Accept.class)
-    protected LinearPointer<TrackingState> status;
+    @MandatoryForContract
+    protected final LinearPointer<TrackingState> status;
+
+    public AssignmentState(Party lclCompany, Party buyer, Party supplier, Party arrivalParty, Address departureAddress, Address arrivalAddress, List<ItemRow> expectedGoods, UniqueIdentifier trackingStateId) {
+        this.linearId = new UniqueIdentifier();
+        this.buyer = buyer;
+        this.departureAddress = departureAddress;
+        this.supplier = supplier;
+        this.arrivalAddress = arrivalAddress;
+        this.lclCompany = lclCompany;
+        this.expectedGoods = expectedGoods;
+        this.arrivalParty = arrivalParty;
+        this.status = new LinearPointer<>(trackingStateId, TrackingState.class);
+    }
 
     @ConstructorForDeserialization
     public AssignmentState(UniqueIdentifier linearId, Party lclCompany, Party buyer, Party supplier, Party arrivalParty, Address departureAddress, Address arrivalAddress, List<ItemRow> expectedGoods, LinearPointer<TrackingState> status) {
@@ -62,18 +74,6 @@ public class AssignmentState implements LinearState {
         this.expectedGoods = expectedGoods;
         this.arrivalParty = arrivalParty;
         this.status = status;
-    }
-
-    public AssignmentState(Party lclCompany, Party buyer, Party supplier, Party arrivalParty, Address departureAddress, Address arrivalAddress, List<ItemRow> expectedGoods, UniqueIdentifier trackingStateId) {
-        this.linearId = new UniqueIdentifier();
-        this.buyer = buyer;
-        this.departureAddress = departureAddress;
-        this.supplier = supplier;
-        this.arrivalAddress = arrivalAddress;
-        this.lclCompany = lclCompany;
-        this.expectedGoods = expectedGoods;
-        this.arrivalParty = arrivalParty;
-        this.status = new LinearPointer<>(trackingStateId, TrackingState.class);
     }
 
     @NotNull

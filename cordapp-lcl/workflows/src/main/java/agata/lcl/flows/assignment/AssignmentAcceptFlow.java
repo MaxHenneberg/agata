@@ -2,6 +2,7 @@ package agata.lcl.flows.assignment;
 
 import agata.lcl.flows.AcceptFlow;
 import agata.lcl.flows.LclFlowUtils;
+import agata.lcl.states.assignment.AssignmentProposal;
 import agata.lcl.states.assignment.AssignmentState;
 import co.paralleluniverse.fibers.Suspendable;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -26,9 +27,9 @@ public class AssignmentAcceptFlow {
         @Suspendable
         @Override
         public SignedTransaction call() throws FlowException {
+            AssignmentState proposedState = LclFlowUtils.resolveStateId(AssignmentProposal.class, this, this.proposalId).getProposedState();
 
-            AssignmentState state = LclFlowUtils.resolveStateId(AssignmentState.class, this, this.proposalId);
-            if (!getOurIdentity().equals(state.getBuyer())) {
+            if (!getOurIdentity().equals(proposedState.getBuyer())) {
                 throw new FlowException("Flow can only be executed by correct buyer");
             }
 
