@@ -41,11 +41,6 @@ public class PackageDeliveryTest extends FlowTestBase {
         network.runNetwork();
     }
 
-    @After
-    public void tearDown() {
-        network.stopNodes();
-    }
-
     @Test
     public void testPackageDeliveryFlows() throws ExecutionException, InterruptedException {
 
