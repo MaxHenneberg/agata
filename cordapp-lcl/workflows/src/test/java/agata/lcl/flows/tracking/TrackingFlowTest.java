@@ -84,29 +84,8 @@ public class TrackingFlowTest {
             assertEquals(TrackingStatus.SlotBooked, trackingState.getStatus());
         }
 
-
-        // SET PICKUP COMPLETED
-        UniqueIdentifier stateId = ((TrackingState) tx.getTx().getOutput(0)).getLinearId();
-        SetPickupCompletedFlow.Initiator flow2 = new SetPickupCompletedFlow.Initiator(stateId);
-        CordaFuture<SignedTransaction> future2 = this.lclCompany.startFlow(flow2);
-        network.runNetwork();
-        tx = future2.get();
-
-        for (StartedMockNode node : Arrays.asList(lclCompany, buyer, supplier)) {
-            List<StateAndRef<TrackingState>> states = getTrackingStates(node, stateId, Vault.StateStatus.UNCONSUMED);
-            assert (states.size() == 1);
-            TrackingState trackingState = states.get(0).getState().getData();
-
-            assertEquals(buyerParty, trackingState.getBuyer());
-            assertEquals(supplierParty, trackingState.getSupplier());
-            assertEquals(lclCompanyParty, trackingState.getLclCompany());
-            assertEquals(TrackingStatus.PickupCompleted, trackingState.getStatus());
-
-            assert (getTrackingStates(node, stateId, Vault.StateStatus.ALL).size() == 2);
-        }
-
         // SET CONTAINER ASSIGNED
-        stateId = ((TrackingState) tx.getTx().getOutput(0)).getLinearId();
+        UniqueIdentifier stateId = ((TrackingState) tx.getTx().getOutput(0)).getLinearId();
         String currentPort = "Port A";
         SetContainerAssignedFlow.Initiator flow3 = new SetContainerAssignedFlow.Initiator(stateId, shippingLineParty, currentPort);
         this.lclCompany.startFlow(flow3);
@@ -125,8 +104,23 @@ public class TrackingFlowTest {
             assertEquals(TrackingStatus.ContainerAssigned, trackingState.getStatus());
         }
 
+        // SET PICKUP COMPLETED
+        SetPickupCompletedFlow.Initiator flow2 = new SetPickupCompletedFlow.Initiator(stateId);
+        this.lclCompany.startFlow(flow2);
+        network.runNetwork();
+
+        for (StartedMockNode node : Arrays.asList(lclCompany, buyer, supplier)) {
+            List<StateAndRef<TrackingState>> states = getTrackingStates(node, stateId, Vault.StateStatus.UNCONSUMED);
+            assert (states.size() == 1);
+            TrackingState trackingState = states.get(0).getState().getData();
+
+            assertEquals(buyerParty, trackingState.getBuyer());
+            assertEquals(supplierParty, trackingState.getSupplier());
+            assertEquals(lclCompanyParty, trackingState.getLclCompany());
+            assertEquals(TrackingStatus.PickupCompleted, trackingState.getStatus());
+        }
+
         // SET LOADED ON SHIP
-        stateId = ((TrackingState) tx.getTx().getOutput(0)).getLinearId();
         SetLoadedOnShipFlow.Initiator flow4 = new SetLoadedOnShipFlow.Initiator(stateId);
         this.shippingLine.startFlow(flow4);
         network.runNetwork();
