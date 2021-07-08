@@ -12,6 +12,8 @@ import agata.lcl.flows.container.ContainerRequestProposalFlow;
 import agata.lcl.flows.pickup.PickupAcceptFlow;
 import agata.lcl.flows.pickup.PickupAddGoodsFlow;
 import agata.lcl.flows.pickup.PickupProposalFlow;
+import agata.lcl.flows.shiploading.ShiploadingAcceptFlow;
+import agata.lcl.flows.shiploading.ShiploadingProposalFlow;
 import agata.lcl.states.assignment.AssignmentState;
 import net.corda.core.concurrent.CordaFuture;
 import net.corda.core.contracts.ContractState;
@@ -139,6 +141,23 @@ public abstract class FlowTestBase {
         Future<UniqueIdentifier> future3 = lclCompany.startFlow(acceptFlow);
         network.runNetwork();
         return future3.get();
+    }
+
+    protected UniqueIdentifier executeShiploading(StartedMockNode shippingLine, StartedMockNode lclCompany, List<UniqueIdentifier> trackingStateIds, UniqueIdentifier containerStateId, List<UniqueIdentifier> houseBolIds) throws ExecutionException, InterruptedException {
+        ShiploadingProposalFlow.Initiator shipLoadingProposalFlow =
+                new ShiploadingProposalFlow.Initiator(containerStateId, getParty(shippingLine), houseBolIds, "initCarriage",
+                        "place", "123", "123", Collections.singletonList("123"), Payable.Origin, TypeOfMovement.doorToDoor,
+                        null, null, null);
+        Future<UniqueIdentifier> future1 = lclCompany.startFlow(shipLoadingProposalFlow);
+        network.runNetwork();
+        UniqueIdentifier shipLoadingProposalId = future1.get();
+
+        ShiploadingAcceptFlow.Initiator acceptFlow = new ShiploadingAcceptFlow.Initiator(shipLoadingProposalId, trackingStateIds);
+        CordaFuture<SignedTransaction> future2 = shippingLine.startFlow(acceptFlow);
+        network.runNetwork();
+
+        // Return id of created master bill of lading
+        return ((LinearState) future2.get().getCoreTransaction().getOutputStates().get(0)).getLinearId();
     }
 
     protected <T extends ContractState> T resolveStateId(Class<T> clazz, UniqueIdentifier id, StartedMockNode node, Vault.StateStatus status) {

@@ -81,7 +81,6 @@ public class ShiploadingFlowTest extends FlowTestBase {
         UniqueIdentifier shipLoadingProposalId = future1.get();
 
         ShiploadingAcceptFlow.Initiator acceptFlow = new ShiploadingAcceptFlow.Initiator(shipLoadingProposalId, trackingStateIds);
-
         Future future2 = this.shippingLine.startFlow(acceptFlow);
         network.runNetwork();
         future2.get();

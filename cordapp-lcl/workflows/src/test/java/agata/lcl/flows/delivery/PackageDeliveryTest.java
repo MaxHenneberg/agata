@@ -47,11 +47,12 @@ public class PackageDeliveryTest extends FlowTestBase {
         Party lclCompanyParty = getParty(this.lclCompany);
 
         // Create fake house bill of lading
-        final UniqueIdentifier assignmentId = createAssignmentState(lclCompany, supplier, buyer, this.departureAddress, this.arrivalAddress, "1234");
+        String goodsId = "123";
+        final UniqueIdentifier assignmentId = createAssignmentState(lclCompany, supplier, buyer, this.departureAddress, this.arrivalAddress, goodsId);
         final UniqueIdentifier trackingStateId = this.resolveStateId(AssignmentState.class, assignmentId, lclCompany, Vault.StateStatus.UNCONSUMED).getTrackingStateId();
 
         final UniqueIdentifier containerStateId = createContainerState(lclCompany, shippingLine, Collections.singletonList(trackingStateId));
-        UniqueIdentifier houseBillOfLadingId = this.createHouseBol("123abc", assignmentId, containerStateId, lclCompany, supplier);
+        UniqueIdentifier houseBillOfLadingId = this.createHouseBol(goodsId, assignmentId, containerStateId, lclCompany, supplier);
 
         // PROPOSE
         ProposeDeliveryFlow.Initiator proposeFlow = new ProposeDeliveryFlow.Initiator(lclCompanyParty, houseBillOfLadingId);

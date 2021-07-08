@@ -144,6 +144,17 @@ public class TrackingFlowTest {
             assertEquals(TrackingStatus.LoadedOnShip, trackingState.getStatus());
         }
 
+        // SET DECONSOLIDATED
+        SetContainerDeconsolidatedFlow.Initiator flow5 = new SetContainerDeconsolidatedFlow.Initiator(stateId);
+        this.lclCompany.startFlow(flow5);
+        network.runNetwork();
+        for (StartedMockNode node : Arrays.asList(lclCompany, shippingLine, buyer, supplier)) {
+            List<StateAndRef<TrackingState>> states = getTrackingStates(node, stateId, Vault.StateStatus.UNCONSUMED);
+            assert (states.size() == 1);
+            ShippingTrackingState trackingState = (ShippingTrackingState) states.get(0).getState().getData();
+            assertEquals(TrackingStatus.Deconsolidated, trackingState.getStatus());
+        }
+
     }
 
     private List<StateAndRef<TrackingState>> getTrackingStates(StartedMockNode node, UniqueIdentifier stateId, Vault.StateStatus status) {

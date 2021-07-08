@@ -6,6 +6,7 @@ import agata.lcl.states.tracking.ShippingTrackingState;
 import agata.lcl.states.tracking.TrackingState;
 import net.corda.core.contracts.Command;
 import net.corda.core.contracts.CommandData;
+import net.corda.core.contracts.Requirements;
 import net.corda.core.transactions.LedgerTransaction;
 
 import java.util.Objects;
@@ -75,26 +76,33 @@ public class TrackingContract extends BaseContract {
             });
         } else if (commandData instanceof Commands.SetLoadedOnShip) {
             requireThat(require -> {
-                require.using("There is exactly one input, which is of type ShippingTrackingState",
-                        tx.getInputStates().size() == 1 && tx.getInput(0) instanceof ShippingTrackingState);
-                require.using("Only one output state should be created, which is of type ShippingTrackingState",
-                        tx.getOutputs().size() == 1 && tx.getOutput(0) instanceof ShippingTrackingState);
-
-                ShippingTrackingState output = tx.outputsOfType(ShippingTrackingState.class).get(0);
-                require.using("The status is set to LoadedOnShip", output.getStatus() == TrackingStatus.LoadedOnShip);
-
-                require.using("The LCL company is a required signer", command.getSigners().contains(output.getLclCompany().getOwningKey()));
-                require.using("The shipping line is a required signer", command.getSigners().contains(output.getShippingLine().getOwningKey()));
-
-                ShippingTrackingState input = tx.inputsOfType(ShippingTrackingState.class).get(0);
-                require.using("Except for the status previously set fields remain unchanged", isShippingTrackingStateUnchanged(input, output));
-
+                assertShipmentCommand(TrackingStatus.LoadedOnShip, require, tx, command);
                 return null;
             });
-
+        } else if (commandData instanceof Commands.SetDeconsolidated) {
+            requireThat(require -> {
+                assertShipmentCommand(TrackingStatus.Deconsolidated, require, tx, command);
+                return null;
+            });
         } else {
             throw new IllegalArgumentException("Command of incorrect type");
         }
+    }
+
+    private void assertShipmentCommand(TrackingStatus status, Requirements require, LedgerTransaction tx, Command command){
+        require.using("There is exactly one input, which is of type ShippingTrackingState",
+                tx.getInputStates().size() == 1 && tx.getInput(0) instanceof ShippingTrackingState);
+        require.using("Only one output state should be created, which is of type ShippingTrackingState",
+                tx.getOutputs().size() == 1 && tx.getOutput(0) instanceof ShippingTrackingState);
+
+        ShippingTrackingState output = tx.outputsOfType(ShippingTrackingState.class).get(0);
+        require.using("The status is set to " + status.toString(), output.getStatus() == status);
+
+        require.using("The LCL company is a required signer", command.getSigners().contains(output.getLclCompany().getOwningKey()));
+        require.using("The shipping line is a required signer", command.getSigners().contains(output.getShippingLine().getOwningKey()));
+
+        ShippingTrackingState input = tx.inputsOfType(ShippingTrackingState.class).get(0);
+        require.using("Except for the status previously set fields remain unchanged", isShippingTrackingStateUnchanged(input, output));
     }
 
     private boolean isTrackingStateUnchanged(TrackingState input, TrackingState output) {
@@ -124,6 +132,9 @@ public class TrackingContract extends BaseContract {
         }
 
         class SetLoadedOnShip implements Commands {
+        }
+
+        class SetDeconsolidated implements Commands {
         }
 
     }
