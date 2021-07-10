@@ -1,0 +1,22 @@
+<div style="display: flex; flex-direction: row; justify-content: center;">
+  <div *ngFor="let step of steps; let i = index" style="display: flex; flex-direction: column; justify-content: left;">
+    <div style="width: fit-content; height: fit-content; font-size: 1.3rem">
+      <div *ngIf="i > completedIndex" style="border-radius: 2em; background-color: rgb(55,200,238); width: 2em; height: 2em; text-align: center;float: left;"><p style="padding-top: 0.5em">{{i+1}}</p></div>
+      <i *ngIf="i <= completedIndex" class="fas fa-check-circle" style="float: left; font-size: 2em; color: green"></i>
+      <div style="float:left; padding-top: 0.5em; padding-left: 0.5em">{{step}}</div>
+      <div *ngIf="i < steps.length-1" style="border-top: 2px solid darkgray; width: 3em; margin: 0.9em 0.5em 0 0.5em; float: left"></div>
+    </div>
+    <div style="margin-top: 2em; margin-right: 0.5em">
+      <table style="width: fit-content">
+        <tr *ngFor="let contentItem of getContent(i)">
+          <td>
+            {{contentItem?.label}}
+          </td>
+          <td style="width: fit-content">
+            {{contentItem?.value}}
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

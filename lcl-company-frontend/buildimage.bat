@@ -1,1 +1,1 @@
-docker build -t lcl-company-frontend-image .
+docker build -t lcl-company-frontend-image-next .

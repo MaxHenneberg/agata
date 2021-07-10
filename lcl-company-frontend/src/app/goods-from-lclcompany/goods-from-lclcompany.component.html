@@ -32,7 +32,7 @@
     <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
   </table>
   <div style="width: fit-content; margin: 5vh auto 0 auto">
-    <button mat-raised-button color="primary" [disabled]="!isAllGoodsReceived()" (click)="openDialog()" style="">Request Confirmation</button>
+    <button mat-raised-button color="primary" [disabled]="!isAllGoodsReceived()" (click)="requestConfirmation()" style="">Request Confirmation</button>
   </div>
 </div>
 

@@ -9,6 +9,7 @@ import {ModifyPickupComponent} from './modify-pickup/modify-pickup.component';
 import {BolCombinerComponent} from './bol-combiner/bol-combiner.component';
 import {AcceptContainerComponent} from './accept-container/accept-container.component';
 import {GoodsFromLclcompanyComponent} from './goods-from-lclcompany/goods-from-lclcompany.component';
+import {TrackingStateComponent} from './tracking-state/tracking-state.component';
 
 
 
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'bolCombiner', component: BolCombinerComponent },
   { path: 'acceptContainer', component: AcceptContainerComponent },
   { path: 'acceptGoods/:id', component: GoodsFromLclcompanyComponent },
+  { path: 'trackingState/:id', component: TrackingStateComponent },
   { path: '', redirectTo: '/requestSlot', pathMatch: 'full' }
 ];
 

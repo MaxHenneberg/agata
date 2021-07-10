@@ -1,0 +1,1 @@
+docker run --name partyA-frontend-container -d -p 8080:80 lcl-company-frontend-image-next

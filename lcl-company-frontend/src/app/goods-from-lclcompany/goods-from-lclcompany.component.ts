@@ -32,9 +32,12 @@ export class GoodsFromLclcompanyComponent implements OnInit {
 
   ngOnInit(): void {
     this.billOfLadingId = (this.route.snapshot.paramMap.get('id'));
-    this.billOfLading = this.acceptContainerService.resolveBol(this.billOfLadingId);
-    this.expectedGoods = this.billOfLading.goodsList;
+    this.expectedGoods = [];
     this.receivedGoods = [];
+    this.acceptContainerService.resolveBol(this.billOfLadingId).subscribe((bol) => {
+      this.billOfLading = bol;
+      this.expectedGoods = this.billOfLading.goodsList;
+    });
   }
 
   isReceived(identityNumber: string): boolean {
@@ -53,7 +56,6 @@ export class GoodsFromLclcompanyComponent implements OnInit {
       this.receivedGoods.push(result.identityNumber);
       this.table.renderRows();
     }
-
   }
 
   isExpected(identityNumber: string): boolean {
