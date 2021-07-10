@@ -38,7 +38,9 @@ public abstract class BaseController {
     }
 
     protected <T extends ContractState> T queryStateById(Class<T> clazz, UniqueIdentifier id, Vault.StateStatus stateStatus) {
-        List<StateAndRef<T>> result = proxy.vaultQueryByCriteria(new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(id), stateStatus, null), clazz).getStates();
+        List<StateAndRef<T>> result =
+                proxy.vaultQueryByCriteria(new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(id), stateStatus, null), clazz)
+                        .getStates();
         if (result.size() == 0) {
             return null;
         } else if (result.size() == 1) {
@@ -56,16 +58,26 @@ public abstract class BaseController {
         return result;
     }
 
-    protected <T extends ContractState> T startGenericAcceptFlow(String proposalId, Class<T> returnClass) {
+    protected <T extends ContractState> T startGenericAcceptFlow(String proposalId, Class<T> returnClass, Object... args) {
         UniqueIdentifier id = toUniqueIdentifier(proposalId);
 
         // Check if a resource with the given id exists before executing the actual flow logic
         if (this.queryStateById(Proposal.class, id) == null) {
             throw new ResourceNotFoundException(Proposal.class, proposalId);
         }
+        SignedTransaction tx = this.startFlow(AcceptFlow.Initiator.class, id, args);
 
-        SignedTransaction tx = this.startFlow(AcceptFlow.Initiator.class, id);
         return tx.getTx().outputsOfType(returnClass).get(0);
+    }
+
+    protected SignedTransaction startGenericAcceptFlow(String proposalId, Object... args) {
+        UniqueIdentifier id = toUniqueIdentifier(proposalId);
+
+        // Check if a resource with the given id exists before executing the actual flow logic
+        if (this.queryStateById(Proposal.class, id) == null) {
+            throw new ResourceNotFoundException(Proposal.class, proposalId);
+        }
+        return this.startFlow(AcceptFlow.Initiator.class, id, args);
     }
 
     protected UniqueIdentifier toUniqueIdentifier(String s) {

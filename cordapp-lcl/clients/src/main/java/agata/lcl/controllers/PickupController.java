@@ -67,6 +67,7 @@ public class PickupController extends BaseController {
                 PickupAcceptFlow.Initiator.class,
                 id,
                 this.toUniqueIdentifier(update.getContainerRequestId()),
+                this.toUniqueIdentifier(update.getTackingStateId()),
                 update.getModeOfInitialCarriage(),
                 update.getPlaceOfInitialReceipt(),
                 update.getPlaceOfDeliveryByCarrier(),

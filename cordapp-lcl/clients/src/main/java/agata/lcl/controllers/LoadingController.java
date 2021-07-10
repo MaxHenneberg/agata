@@ -8,9 +8,11 @@ import agata.lcl.states.shiploading.ShiploadingProposal;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.node.services.Vault;
+import net.corda.core.transactions.SignedTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +34,14 @@ public class LoadingController extends BaseController {
     @GetMapping("/proposals")
     public List<ShiploadingProposal> getLoadingProposals() {
         return this.getStates(ShiploadingProposal.class);
+    }
+
+    @GetMapping("/proposals/masterBol/{containerId}")
+    public BillOfLadingState getLoadingProposals(@PathVariable String containerId) {
+        //Happy Path
+        return this.getStates(ShiploadingProposal.class).stream()
+                .filter((proposal) -> proposal.getProposedState().getContainerInformationList().get(0).getContainerNo().equals(containerId)).findFirst().get()
+                .getProposedState();
     }
 
 
@@ -58,10 +68,9 @@ public class LoadingController extends BaseController {
     }
 
     @PostMapping("/proposals/{proposalId}/acceptance")
-    public BillOfLadingState acceptLoadingProposal(@PathVariable String proposalId) {
+    public SignedTransaction acceptLoadingProposal(@PathVariable String proposalId, List<String> trackingStateIds) {
         UniqueIdentifier id = this.toUniqueIdentifier(proposalId);
-        this.startFlow(ShiploadingAcceptFlow.Initiator.class, id);
-        return this.queryStateById(ShiploadingProposal.class, id, Vault.StateStatus.CONSUMED).getProposedState();
+        return this.startFlow(ShiploadingAcceptFlow.Initiator.class, id, trackingStateIds);
     }
 
 

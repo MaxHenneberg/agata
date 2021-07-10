@@ -9,6 +9,7 @@ import agata.lcl.states.container.ContainerRequestProposal;
 import agata.lcl.states.container.ContainerRequestState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.messaging.CordaRPCOps;
+import net.corda.core.transactions.SignedTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,8 +73,8 @@ public class ContainerController extends BaseController {
     }
 
     @PostMapping("/proposals/{proposalId}/acceptance")
-    public ContainerRequestState acceptAssignment(@PathVariable String proposalId) {
-        return this.startGenericAcceptFlow(proposalId, ContainerRequestState.class);
+    public SignedTransaction acceptAssignment(@PathVariable String proposalId, @RequestBody List<String> trackingStateIds) {
+        return this.startGenericAcceptFlow(proposalId, trackingStateIds);
     }
 
 }

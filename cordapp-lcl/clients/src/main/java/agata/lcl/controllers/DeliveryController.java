@@ -1,5 +1,6 @@
 package agata.lcl.controllers;
 
+import agata.bol.states.BillOfLadingState;
 import agata.lcl.bodies.DeliveryRequest;
 import agata.lcl.bodies.DeliveryUpdateRequest;
 import agata.lcl.errors.ResourceNotFoundException;
@@ -34,6 +35,12 @@ public class DeliveryController extends BaseController {
         return this.getStates(PackageDeliveryProposal.class);
     }
 
+    @GetMapping("/houseBol/{linearId}")
+    public BillOfLadingState getBillOfLadingById(@PathVariable String linearId){
+        // Happy Path
+        return this.getStates(BillOfLadingState.class).stream().filter((bol) -> bol.getLinearId().equals(linearId)).findFirst().get();
+    }
+
     @PostMapping("/proposals")
     public PackageDeliveryProposal addProposal(@RequestBody DeliveryRequest request) {
         UniqueIdentifier proposalId = this.startFlow(
@@ -61,7 +68,7 @@ public class DeliveryController extends BaseController {
     }
 
     @PostMapping("/proposals/{proposalId}/acceptance")
-    public PackageDeliveryState acceptAssignment(@PathVariable String proposalId) {
+    public PackageDeliveryState acceptProposal(@PathVariable String proposalId) {
         return this.startGenericAcceptFlow(proposalId, PackageDeliveryState.class);
     }
 }
