@@ -35,6 +35,7 @@ import {HttpClientModule} from '@angular/common/http';
 import { TrackingStateComponent } from './tracking-state/tracking-state.component';
 import {MatStepperModule} from '@angular/material/stepper';
 import { CustomStepperComponent } from './custom-stepper/custom-stepper.component';
+import {environment} from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -77,7 +78,9 @@ import { CustomStepperComponent } from './custom-stepper/custom-stepper.componen
     HttpClientModule,
     MatStepperModule
   ],
-  providers: [],
+  providers: [
+    {provide: 'BACKEND_API_URL', useValue: environment.apiUrl}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
