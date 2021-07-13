@@ -33,9 +33,14 @@ public class PickupContract extends GenericProposalContract {
         requireThat(require -> {
             PickupProposal pickupProposal = tx.outputsOfType(PickupProposal.class).get(0);
             AssignmentState assignmentState = resolveAssignmentState(pickupProposal, tx);
-            require.using("Picked-up Goods must be Equals to Expected Goods", pickupProposal.getProposedState().getPickedUpGoods().equals(assignmentState.getExpectedGoods()));
+            require.using("Picked-up Goods must be Equals to Expected Goods",
+                    pickupProposal.getProposedState().getPickedUpGoods().equals(assignmentState.getExpectedGoods()));
             return null;
         });
+    }
+
+    @Override
+    protected void extendedVerifyAccept(@NotNull LedgerTransaction tx, @NotNull Command command) {
     }
 
     private AssignmentState resolveAssignmentState(PickupProposal pickupProposal, LedgerTransaction tx) {

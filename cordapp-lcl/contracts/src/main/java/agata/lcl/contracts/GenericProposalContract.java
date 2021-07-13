@@ -56,9 +56,7 @@ public abstract class GenericProposalContract extends BaseContract {
         });
     }
 
-    protected void extendedVerifyPropose(@NotNull LedgerTransaction tx, @NotNull Command command) {
-
-    }
+    protected abstract void extendedVerifyPropose(@NotNull LedgerTransaction tx, @NotNull Command command);
 
     private void verifyModify(@NotNull LedgerTransaction tx, @NotNull Command command) {
         requireThat(require -> {
@@ -81,9 +79,7 @@ public abstract class GenericProposalContract extends BaseContract {
         });
     }
 
-    protected void extendedVerifyModify(@NotNull LedgerTransaction tx, @NotNull Command command) {
-
-    }
+    protected abstract void extendedVerifyModify(@NotNull LedgerTransaction tx, @NotNull Command command);
 
     private void verifyAccept(@NotNull LedgerTransaction tx, @NotNull Command command) {
         requireThat(require -> {
@@ -106,9 +102,7 @@ public abstract class GenericProposalContract extends BaseContract {
         });
     }
 
-    protected void extendedVerifyAccept(@NotNull LedgerTransaction tx, @NotNull Command command) {
-
-    }
+    protected abstract void extendedVerifyAccept(@NotNull LedgerTransaction tx, @NotNull Command command);
 
 
     public interface Commands extends CommandData {

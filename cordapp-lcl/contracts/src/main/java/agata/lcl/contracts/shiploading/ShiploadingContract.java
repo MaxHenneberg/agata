@@ -24,6 +24,14 @@ public class ShiploadingContract extends GenericProposalContract {
         });
     }
 
+    @Override
+    protected void extendedVerifyModify(@NotNull LedgerTransaction tx, @NotNull Command command) {
+    }
+
+    @Override
+    protected void extendedVerifyAccept(@NotNull LedgerTransaction tx, @NotNull Command command) {
+    }
+
     public interface Commands extends CommandData {
         class ProposeWithInput implements GenericProposalContract.Commands {
         }

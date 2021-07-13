@@ -42,6 +42,14 @@ public class DeconsolidationContract extends GenericProposalContract {
     }
 
     @Override
+    protected void extendedVerifyModify(@NotNull LedgerTransaction tx, @NotNull Command command) {
+    }
+
+    @Override
+    protected void extendedVerifyAccept(@NotNull LedgerTransaction tx, @NotNull Command command) {
+    }
+
+    @Override
     protected boolean verifyAdditionalCommands(@NotNull LedgerTransaction tx) throws IllegalArgumentException {
 
         final Command command = tx.getCommand(0);

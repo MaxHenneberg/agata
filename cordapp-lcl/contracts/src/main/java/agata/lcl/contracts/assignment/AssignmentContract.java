@@ -23,4 +23,12 @@ public class AssignmentContract extends GenericProposalContract {
             return null;
         });
     }
+
+    @Override
+    protected void extendedVerifyModify(@NotNull LedgerTransaction tx, @NotNull Command command) {
+    }
+
+    @Override
+    protected void extendedVerifyAccept(@NotNull LedgerTransaction tx, @NotNull Command command) {
+    }
 }
