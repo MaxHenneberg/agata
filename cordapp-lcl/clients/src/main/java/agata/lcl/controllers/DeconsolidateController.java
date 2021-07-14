@@ -2,13 +2,16 @@ package agata.lcl.controllers;
 
 import agata.lcl.bodies.DeconsolidationRequest;
 import agata.lcl.bodies.DeconsolidationUpdateRequest;
+import agata.lcl.bodies.TrackingStateReferenceList;
 import agata.lcl.errors.ResourceNotFoundException;
+import agata.lcl.flows.deconsolidation.AcceptDeconsolidationFlow;
 import agata.lcl.flows.deconsolidation.ProposeDeconsolidationFlow;
 import agata.lcl.flows.deconsolidation.ReleaseContainerFlow;
 import agata.lcl.states.deconsolidation.DeconsolidationProposal;
 import agata.lcl.states.deconsolidation.DeconsolidationState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.messaging.CordaRPCOps;
+import net.corda.core.node.services.Vault;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,7 +65,9 @@ public class DeconsolidateController extends BaseController {
     }
 
     @PostMapping("/proposals/{proposalId}/acceptance")
-    public DeconsolidationState acceptAssignment(@PathVariable String proposalId) {
-        return this.startGenericAcceptFlow(proposalId, DeconsolidationState.class);
+    public DeconsolidationState acceptAssignment(@PathVariable String proposalId, @RequestBody TrackingStateReferenceList body) {
+        UniqueIdentifier id = this.toUniqueIdentifier(proposalId);
+        this.startFlow(AcceptDeconsolidationFlow.Initiator.class, id, body.getTrackingStateIds());
+        return this.queryStateById(DeconsolidationProposal.class, id, Vault.StateStatus.CONSUMED).getProposedState();
     }
 }

@@ -2,17 +2,16 @@ package agata.lcl.controllers;
 
 import agata.bol.states.BillOfLadingState;
 import agata.lcl.bodies.ShipmentDetails;
+import agata.lcl.bodies.TrackingStateReferenceList;
 import agata.lcl.flows.shiploading.ShiploadingAcceptFlow;
 import agata.lcl.flows.shiploading.ShiploadingProposalFlow;
 import agata.lcl.states.shiploading.ShiploadingProposal;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.messaging.CordaRPCOps;
-import net.corda.core.node.services.Vault;
 import net.corda.core.transactions.SignedTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,9 +67,9 @@ public class LoadingController extends BaseController {
     }
 
     @PostMapping("/proposals/{proposalId}/acceptance")
-    public SignedTransaction acceptLoadingProposal(@PathVariable String proposalId, List<String> trackingStateIds) {
+    public SignedTransaction acceptLoadingProposal(@PathVariable String proposalId, @RequestBody TrackingStateReferenceList body) {
         UniqueIdentifier id = this.toUniqueIdentifier(proposalId);
-        return this.startFlow(ShiploadingAcceptFlow.Initiator.class, id, trackingStateIds);
+        return this.startFlow(ShiploadingAcceptFlow.Initiator.class, id, body.getTrackingStateIds());
     }
 
 

@@ -2,11 +2,13 @@ package agata.lcl.controllers;
 
 import agata.bol.states.BillOfLadingState;
 import agata.lcl.bodies.LclAssignment;
+import agata.lcl.flows.assignment.AssignmentAcceptFlow;
 import agata.lcl.flows.assignment.AssignmentProposalFlow;
 import agata.lcl.states.assignment.AssignmentProposal;
 import agata.lcl.states.assignment.AssignmentState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.messaging.CordaRPCOps;
+import net.corda.core.node.services.Vault;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,7 +49,6 @@ public class LclAssignmentController extends BaseController {
 
     @PostMapping("/proposals")
     public AssignmentProposal addLclCompanyAssignment(@RequestBody LclAssignment newAssignment) {
-        System.out.println("Received: " + newAssignment.toString());
         UniqueIdentifier proposalId =
                 this.startFlow(AssignmentProposalFlow.Initiator.class, newAssignment.getBuyer(), newAssignment.getSupplier(), newAssignment.getArrivalParty(),
                         newAssignment.getDepartureAddress(), newAssignment.getArrivalAddress(), newAssignment.getExpectedGoods());
@@ -56,7 +57,9 @@ public class LclAssignmentController extends BaseController {
 
     @PostMapping("/proposals/{proposalId}/acceptance")
     public AssignmentState acceptAssignment(@PathVariable String proposalId) {
-        return this.startGenericAcceptFlow(proposalId, AssignmentState.class);
+        UniqueIdentifier id = this.toUniqueIdentifier(proposalId);
+        this.startFlow(AssignmentAcceptFlow.Initiator.class, id);
+        return this.queryStateById(AssignmentProposal.class, id, Vault.StateStatus.CONSUMED).getProposedState();
     }
 
 }

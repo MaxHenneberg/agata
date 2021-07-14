@@ -2,7 +2,9 @@ package agata.lcl.controllers;
 
 import agata.lcl.bodies.ContainerAssignment;
 import agata.lcl.bodies.ContainerRequest;
+import agata.lcl.bodies.TrackingStateReferenceList;
 import agata.lcl.errors.ResourceNotFoundException;
+import agata.lcl.flows.container.AcceptContainerFlow;
 import agata.lcl.flows.container.AssignContainerFlow;
 import agata.lcl.flows.container.ContainerRequestProposalFlow;
 import agata.lcl.states.container.ContainerRequestProposal;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -73,8 +76,10 @@ public class ContainerController extends BaseController {
     }
 
     @PostMapping("/proposals/{proposalId}/acceptance")
-    public SignedTransaction acceptAssignment(@PathVariable String proposalId, @RequestBody List<String> trackingStateIds) {
-        return this.startGenericAcceptFlow(proposalId, trackingStateIds);
+    public SignedTransaction acceptAssignment(@PathVariable String proposalId, @RequestBody TrackingStateReferenceList body) {
+        UniqueIdentifier id = this.toUniqueIdentifier(proposalId);
+        List<UniqueIdentifier> trackingIds = body.getTrackingStateIds().stream().map(this::toUniqueIdentifier).collect(Collectors.toList());
+        return this.startFlow(AcceptContainerFlow.Initiator.class, id, trackingIds);
     }
 
 }

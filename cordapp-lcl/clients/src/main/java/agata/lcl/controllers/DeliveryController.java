@@ -3,13 +3,16 @@ package agata.lcl.controllers;
 import agata.bol.states.BillOfLadingState;
 import agata.lcl.bodies.DeliveryRequest;
 import agata.lcl.bodies.DeliveryUpdateRequest;
+import agata.lcl.bodies.TrackingStateReference;
 import agata.lcl.errors.ResourceNotFoundException;
+import agata.lcl.flows.delivery.AcceptDeliveryFlow;
 import agata.lcl.flows.delivery.ProposeDeliveryFlow;
 import agata.lcl.flows.delivery.SetGoodsFlow;
 import agata.lcl.states.delivery.PackageDeliveryProposal;
 import agata.lcl.states.delivery.PackageDeliveryState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.messaging.CordaRPCOps;
+import net.corda.core.node.services.Vault;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +39,7 @@ public class DeliveryController extends BaseController {
     }
 
     @GetMapping("/houseBol/{linearId}")
-    public BillOfLadingState getBillOfLadingById(@PathVariable String linearId){
+    public BillOfLadingState getBillOfLadingById(@PathVariable String linearId) {
         // Happy Path
         return this.getStates(BillOfLadingState.class).stream().filter((bol) -> bol.getLinearId().equals(linearId)).findFirst().get();
     }
@@ -68,7 +71,9 @@ public class DeliveryController extends BaseController {
     }
 
     @PostMapping("/proposals/{proposalId}/acceptance")
-    public PackageDeliveryState acceptProposal(@PathVariable String proposalId) {
-        return this.startGenericAcceptFlow(proposalId, PackageDeliveryState.class);
+    public PackageDeliveryState acceptProposal(@PathVariable String proposalId, @RequestBody TrackingStateReference body) {
+        UniqueIdentifier id = this.toUniqueIdentifier(proposalId);
+        this.startFlow(AcceptDeliveryFlow.Initiator.class, id, body.getTrackingStateId());
+        return this.queryStateById(PackageDeliveryProposal.class, id, Vault.StateStatus.CONSUMED).getProposedState();
     }
 }

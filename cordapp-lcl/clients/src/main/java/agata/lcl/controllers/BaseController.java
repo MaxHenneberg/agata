@@ -1,8 +1,6 @@
 package agata.lcl.controllers;
 
 import agata.lcl.errors.ResourceNotFoundException;
-import agata.lcl.flows.AcceptFlow;
-import agata.lcl.states.Proposal;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.contracts.StateAndRef;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -10,7 +8,6 @@ import net.corda.core.flows.FlowLogic;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.node.services.Vault;
 import net.corda.core.node.services.vault.QueryCriteria;
-import net.corda.core.transactions.SignedTransaction;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -58,28 +55,6 @@ public abstract class BaseController {
         return result;
     }
 
-    protected <T extends ContractState> T startGenericAcceptFlow(String proposalId, Class<T> returnClass, Object... args) {
-        UniqueIdentifier id = toUniqueIdentifier(proposalId);
-
-        // Check if a resource with the given id exists before executing the actual flow logic
-        if (this.queryStateById(Proposal.class, id) == null) {
-            throw new ResourceNotFoundException(Proposal.class, proposalId);
-        }
-        SignedTransaction tx = this.startFlow(AcceptFlow.Initiator.class, id, args);
-
-        return tx.getTx().outputsOfType(returnClass).get(0);
-    }
-
-    protected SignedTransaction startGenericAcceptFlow(String proposalId, Object... args) {
-        UniqueIdentifier id = toUniqueIdentifier(proposalId);
-
-        // Check if a resource with the given id exists before executing the actual flow logic
-        if (this.queryStateById(Proposal.class, id) == null) {
-            throw new ResourceNotFoundException(Proposal.class, proposalId);
-        }
-        return this.startFlow(AcceptFlow.Initiator.class, id, args);
-    }
-
     protected UniqueIdentifier toUniqueIdentifier(String s) {
         return new UniqueIdentifier(null, UUID.fromString(s));
     }
@@ -91,7 +66,7 @@ public abstract class BaseController {
             return this.proxy.startFlowDynamic(clazz, args).getReturnValue().get();
         } catch (InterruptedException | ExecutionException e) {
             if (Pattern.matches(".*Do not provide flow sessions for the local node.*", e.getCause().getMessage())) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attempted to start a flow where one of the participants is the current node itself");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Attempted to start a flow where one of the recipients is the current node itself");
             } else if (e instanceof ExecutionException) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getCause().getMessage());
             } else {
