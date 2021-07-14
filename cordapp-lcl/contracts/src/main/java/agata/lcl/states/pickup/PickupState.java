@@ -6,6 +6,7 @@ import agata.lcl.contracts.annotations.MandatoryForContract;
 import agata.lcl.contracts.annotations.NotEmptyForContract;
 import agata.lcl.contracts.pickup.PickupContract;
 import agata.lcl.states.assignment.AssignmentState;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.LinearPointer;
@@ -20,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Getter
+@EqualsAndHashCode
 @BelongsToContract(PickupContract.class)
 public class PickupState implements LinearState {
 
@@ -61,20 +63,6 @@ public class PickupState implements LinearState {
         this.pickedUpGoods = pickedUpGoods;
         this.referenceToAssignmentState = new LinearPointer<>(new UniqueIdentifier(null, referenceToAssignmentState.getId()), AssignmentState.class);
         this.invoiceId = invoiceId;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof PickupState) {
-            return this.buyer.equals(((PickupState) obj).buyer)
-                    && this.supplier.equals(((PickupState) obj).supplier)
-                    && this.lclCompany.equals(((PickupState) obj).lclCompany)
-                    && this.pickedUpGoods.equals(((PickupState) obj).pickedUpGoods)
-                    && this.referenceToAssignmentState.equals(((PickupState) obj).referenceToAssignmentState)
-                    && this.invoiceId.equals(((PickupState) obj).invoiceId);
-        }
-
-        return false;
     }
 
     @NotNull

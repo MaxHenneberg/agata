@@ -1,7 +1,7 @@
 package agata.lcl.states;
 
 import agata.lcl.contracts.annotations.MandatoryForContract;
-import net.corda.core.contracts.ContractState;
+import lombok.Getter;
 import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.identity.AbstractParty;
@@ -11,14 +11,18 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
+@Getter
 public abstract class Proposal<T extends LinearState> implements LinearState {
 
     @MandatoryForContract
     protected final Party proposee;
+
     @MandatoryForContract
     protected final Party proposer;
+
     @MandatoryForContract
     protected final T proposedState;
+
     protected UniqueIdentifier linearId;
 
     public Proposal(Party proposer, Party proposee, T proposedState) {
@@ -45,18 +49,6 @@ public abstract class Proposal<T extends LinearState> implements LinearState {
     @Override
     public List<AbstractParty> getParticipants() {
         return Arrays.asList(proposee, proposer);
-    }
-
-    public Party getProposee() {
-        return proposee;
-    }
-
-    public Party getProposer() {
-        return proposer;
-    }
-
-    public T getProposedState() {
-        return proposedState;
     }
 
 }

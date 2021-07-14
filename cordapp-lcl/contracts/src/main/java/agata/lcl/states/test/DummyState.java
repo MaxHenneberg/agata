@@ -4,6 +4,9 @@ import agata.lcl.contracts.GenericProposalContract;
 import agata.lcl.contracts.annotations.MandatoryForContract;
 import agata.lcl.contracts.annotations.NotEmptyForContract;
 import agata.lcl.contracts.test.DummyProposalContract;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.LinearState;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -15,6 +18,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 
+@Getter
+@Setter
+@EqualsAndHashCode
 @BelongsToContract(DummyProposalContract.class)
 public class DummyState implements LinearState {
 
@@ -33,6 +39,7 @@ public class DummyState implements LinearState {
 
     @NotEmptyForContract(value = GenericProposalContract.Commands.Modify.class)
     protected final String mandatoryStringForModify;
+
     @MandatoryForContract(value = DummyProposalContract.Commands.Modify.class)
     protected final Integer mandatoryForModify;
 
@@ -71,50 +78,6 @@ public class DummyState implements LinearState {
     @Override
     public List<AbstractParty> getParticipants() {
         return Arrays.asList(a, b);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof DummyState) {
-            return mandatoryStringField.equals(((DummyState) obj).mandatoryStringField);
-        }
-        return false;
-    }
-
-    public void setMandatoryStringField(String mandatoryStringField) {
-        this.mandatoryStringField = mandatoryStringField;
-    }
-
-    public String getMandatoryStringField() {
-        return mandatoryStringField;
-    }
-
-    public Object getMandatoryObjectField() {
-        return mandatoryObjectField;
-    }
-
-    public String getNotMandatoryStringField() {
-        return notMandatoryStringField;
-    }
-
-    public Object getNotMandatoryField() {
-        return notMandatoryField;
-    }
-
-    public String getMandatoryStringForModify() {
-        return mandatoryStringForModify;
-    }
-
-    public Object getMandatoryForModify() {
-        return mandatoryForModify;
-    }
-
-    public Party getA() {
-        return a;
-    }
-
-    public Party getB() {
-        return b;
     }
 
     @NotNull
