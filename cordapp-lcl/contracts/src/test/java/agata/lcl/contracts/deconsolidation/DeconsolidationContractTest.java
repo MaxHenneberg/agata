@@ -1,13 +1,11 @@
 package agata.lcl.contracts.deconsolidation;
 
 import agata.bol.dataholder.Price;
+import agata.lcl.contracts.BaseTest;
 import agata.lcl.states.deconsolidation.DeconsolidationProposal;
 import agata.lcl.states.deconsolidation.DeconsolidationState;
 import net.corda.core.contracts.UniqueIdentifier;
-import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
-import net.corda.testing.core.TestIdentity;
-import net.corda.testing.node.MockServices;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -16,12 +14,7 @@ import java.util.Currency;
 
 import static net.corda.testing.node.NodeTestUtils.ledger;
 
-public class DeconsolidationContractTest {
-
-    private final MockServices ledgerServices = new MockServices(Arrays.asList("agata.lcl", "agata.bol"));
-
-    private final TestIdentity alice = new TestIdentity(new CordaX500Name("alice", "New York", "US"));
-    private final TestIdentity bob = new TestIdentity(new CordaX500Name("bob", "London", "GB"));
+public class DeconsolidationContractTest extends BaseTest {
 
     private final Party lclCompany = alice.getParty();
     private final Party shippingLine = bob.getParty();

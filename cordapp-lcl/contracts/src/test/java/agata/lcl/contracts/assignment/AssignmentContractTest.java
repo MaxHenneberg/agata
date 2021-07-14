@@ -3,6 +3,7 @@ package agata.lcl.contracts.assignment;
 import agata.bol.dataholder.Address;
 import agata.bol.dataholder.DescriptionOfGoods;
 import agata.bol.dataholder.ItemRow;
+import agata.lcl.contracts.BaseTest;
 import agata.lcl.states.assignment.AssignmentProposal;
 import agata.lcl.states.assignment.AssignmentState;
 import net.corda.core.contracts.UniqueIdentifier;
@@ -18,14 +19,10 @@ import java.util.List;
 
 import static net.corda.testing.node.NodeTestUtils.ledger;
 
-public class AssignmentContractTest {
-    private final MockServices ledgerServices = new MockServices(Arrays.asList("agata.lcl"));
-    TestIdentity alice = new TestIdentity(new CordaX500Name("alice", "New York", "US"));
-    TestIdentity bob = new TestIdentity(new CordaX500Name("bob", "London", "GB"));
-    TestIdentity charlie = new TestIdentity(new CordaX500Name("charlie", "London", "GB"));
-    Address address1 = new Address("Sample street 1", "New York", "", "", "US");
-    Address address2 = new Address("Hafenstrasse", "Hamburg", "", "", "DE");
+public class AssignmentContractTest extends BaseTest {
 
+    private Address address1 = new Address("Sample street 1", "New York", "", "", "US");
+    private Address address2 = new Address("Hafenstrasse", "Hamburg", "", "", "DE");
 
     @Test
     public void shouldVerifyValidProposal() {
