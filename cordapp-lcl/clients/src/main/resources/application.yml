@@ -1,8 +1,0 @@
-config:
-  rpc:
-    host: localhost
-    port: 10006 # Party A
-#    port: 10009 # Party B
-    username: user1
-    password: test
-

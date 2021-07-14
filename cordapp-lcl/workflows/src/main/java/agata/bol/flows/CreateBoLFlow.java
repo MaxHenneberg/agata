@@ -51,14 +51,14 @@ public class CreateBoLFlow {
             Command command = new Command(this.commandData, requiredSigners);
             txBuilder.addCommand(command);
 
-            //Signing the transaction ourselves
+            // Sign transaction for this node
             SignedTransaction partStx = getServiceHub().signInitialTransaction(txBuilder);
 
-            //Gather counterparty sigs
+            // Gather counterparty signatures
             List<FlowSession> sessions = otherParties.stream().map(this::initiateFlow).collect(Collectors.toList());
             SignedTransaction fullyStx = subFlow(new CollectSignaturesFlow(partStx, sessions));
 
-            //Finalise the transaction
+            // Finalise the transaction
             SignedTransaction finalisedTx = subFlow(new FinalityFlow(fullyStx, sessions));
             return finalisedTx.getTx().outputsOfType(BillOfLadingState.class).get(0).getLinearId();
         }

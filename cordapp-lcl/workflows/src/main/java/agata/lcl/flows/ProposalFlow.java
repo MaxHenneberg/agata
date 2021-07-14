@@ -56,14 +56,11 @@ public class ProposalFlow {
                 this.additionalReferenceStates.forEach(txBuilder::addReferenceState);
             }
 
-            //Signing the transaction ourselves
             SignedTransaction partStx = getServiceHub().signInitialTransaction(txBuilder);
 
-            //Gather counterparty sigs
             FlowSession counterpartySession = initiateFlow(this.proposalState.getProposee());
             SignedTransaction fullyStx = subFlow(new CollectSignaturesFlow(partStx, Collections.singletonList(counterpartySession)));
 
-            //Finalise the transaction
             SignedTransaction finalisedTx = subFlow(new FinalityFlow(fullyStx, Collections.singletonList(counterpartySession)));
             return finalisedTx.getTx().outputsOfType(Proposal.class).get(0).getLinearId();
         }

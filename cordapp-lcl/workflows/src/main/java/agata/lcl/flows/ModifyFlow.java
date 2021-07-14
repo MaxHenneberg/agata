@@ -61,14 +61,11 @@ public class ModifyFlow {
             Proposal input = (Proposal) inputStateAndRef.getState().getData();
 
 
-            //Get Counterparty
             Party counterparty = (getOurIdentity().equals(input.getProposer())) ? input.getProposee() : input.getProposer();
 
-            //Creating the command
             List<PublicKey> requiredSigners = Arrays.asList(input.getProposee().getOwningKey(), input.getProposer().getOwningKey());
             Command command = new Command(this.commandType, requiredSigners);
 
-            //Building the transaction
             Party notary = inputStateAndRef.getState().getNotary();
 
             TransactionBuilder txBuilder = new TransactionBuilder(notary)
@@ -79,15 +76,11 @@ public class ModifyFlow {
                 this.additionalReferenceStates.forEach(txBuilder::addReferenceState);
             }
 
-
-            //Signing the transaction ourselves
             SignedTransaction partStx = getServiceHub().signInitialTransaction(txBuilder);
 
-            //Gathering the counterparty's signatures
             FlowSession counterpartySession = initiateFlow(counterparty);
             SignedTransaction fullyStx = subFlow(new CollectSignaturesFlow(partStx, Collections.singletonList(counterpartySession)));
 
-            //Finalising the transaction
             return subFlow(new FinalityFlow(fullyStx, Collections.singletonList(counterpartySession)));
         }
     }

@@ -54,26 +54,23 @@ public class AcceptFlow {
             Proposal input = (Proposal) inputStateAndRef.getState().getData();
             LinearState output = input.getProposedState();
 
-            //Creating the command
             List<PublicKey> requiredSigners = output.getParticipants().stream().map(x -> x.getOwningKey()).collect(Collectors.toList());
             Command command = new Command(this.commandType, requiredSigners);
 
-            //Building the transaction
+            // Build the transaction
             Party notary = inputStateAndRef.getState().getNotary();
-
             TransactionBuilder txBuilder = new TransactionBuilder(notary)
                     .addInputState(inputStateAndRef)
                     .addOutputState(output)
                     .addCommand(command);
-
             for (StateAndRef additionalInput : additionalInputs) {
                 txBuilder.addInputState(additionalInput);
             }
 
-            //Signing the transaction ourselves
+            // Sign transaction ourselves
             SignedTransaction partStx = getServiceHub().signInitialTransaction(txBuilder);
 
-            //Gathering the counterparty's signature
+            // Gather counterparty's signatures
             List<Party> otherParties = output.getParticipants().stream().filter(x -> !x.equals(getOurIdentity())).map(x -> (Party) x).collect(Collectors.toList());
             List<FlowSession> sessions = otherParties.stream().map(this::initiateFlow).collect(Collectors.toList());
             SignedTransaction fullyStx = subFlow(new CollectSignaturesFlow(partStx, sessions));

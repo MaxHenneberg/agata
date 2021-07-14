@@ -1,4 +1,4 @@
-buildscript {//properties that you need to build the project
+buildscript {
     Properties constants = new Properties()
     file("$projectDir/./constants.properties").withInputStream { constants.load(it) }
 
@@ -34,7 +34,7 @@ buildscript {//properties that you need to build the project
     }
 }
 
-allprojects {//Properties that you need to compile your project (The application)
+allprojects {
     apply from: "${rootProject.projectDir}/repositories.gradle"
     apply plugin: 'java'
 
@@ -47,11 +47,10 @@ allprojects {//Properties that you need to compile your project (The application
     }
 
     tasks.withType(JavaCompile) {
-        options.compilerArgs << "-parameters" // Required by Corda's serialisation framework.
+        options.compilerArgs << "-parameters" // Required by Corda's serialisation framework
     }
 
     jar {
-        // This makes the JAR's SHA-256 hash repeatable.
         preserveFileTimestamps = false
         reproducibleFileOrder = true
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -69,14 +68,14 @@ sourceSets {
         }
     }
 }
-//Module dependencis
+
 dependencies {
-    // Corda dependencies.
+    // Corda dependencies
     cordaCompile "$corda_core_release_group:corda-core:$corda_core_release_version"
     cordaCompile "$corda_release_group:corda-node-api:$corda_release_version"
     cordaRuntime "$corda_release_group:corda:$corda_release_version"
 
-    // CorDapp dependencies.
+    // CorDapp dependencies
     cordapp project(":workflows")
     cordapp project(":contracts")
 
@@ -86,7 +85,7 @@ dependencies {
 }
 
 
-//Task to deploy the nodes in order to bootstrap a network
+// Task to deploy the nodes in order to bootstrap a network
 task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
 
     /* This property will load the CorDapps to each of the node by default, including the Notary. You can find them
