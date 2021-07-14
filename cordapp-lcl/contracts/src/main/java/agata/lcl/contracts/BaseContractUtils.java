@@ -15,11 +15,12 @@ import java.util.stream.Stream;
 import static net.corda.core.contracts.ContractsDSL.requireThat;
 
 public class BaseContractUtils {
+
     public static void checkMandatoryFields(ContractState toBeChecked, CommandData command, boolean isInput) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         List<String> missingMandatoryFields = new LinkedList<>();
         List<Field> fieldsForSecondCheck = new LinkedList<>();
         List<String> missingNotBlankFields = new LinkedList<>();
-        //Maybe consider checking for SuperClass != null
+
         Field[] fieldList = Stream.concat(Arrays.stream(toBeChecked.getClass().getDeclaredFields()), Arrays.stream(toBeChecked.getClass().getSuperclass().getDeclaredFields())).toArray(Field[]::new);
         for (Field field : fieldList) {
             if (field.isAnnotationPresent(MandatoryForContract.class)) {
@@ -49,13 +50,13 @@ public class BaseContractUtils {
                                 missingNotBlankFields.add(field.getName());
                             }
                         } else {
-                            //TODO: Good Exception
-                            throw new RuntimeException("Annotation was used for wrong Type. Expected String or Collection, but got: " + objectToBeChecked.getClass());
+                            throw new RuntimeException("Annotation was used for wrong type. Expected String or Collection, but got: " + objectToBeChecked.getClass());
                         }
                     }
                 }
             }
         }
+
         requireThat(require -> {
             require.using(buildErrorMessage(missingMandatoryFields, missingNotBlankFields, toBeChecked.getClass().getName(), isInput),
                     missingMandatoryFields.isEmpty() && missingNotBlankFields.isEmpty());

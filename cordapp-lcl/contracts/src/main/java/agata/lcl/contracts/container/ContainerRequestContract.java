@@ -48,7 +48,6 @@ public class ContainerRequestContract extends GenericProposalContract {
 
                 // Check that fields to be modified (such as vessel name and container) are set is already done with annotations in the state
                 // Verify that all other fields remain unchanged
-                // TODO: Use a generic approach for this
                 ContainerRequestState inputState = tx.inputsOfType(ContainerRequestProposal.class).get(0).getProposedState();
                 boolean otherFieldsUnchanged = Objects.equals(inputState.getLinearId(), proposedState.getLinearId()) &&
                         Objects.equals(inputState.getShippingLine(), proposedState.getShippingLine()) &&

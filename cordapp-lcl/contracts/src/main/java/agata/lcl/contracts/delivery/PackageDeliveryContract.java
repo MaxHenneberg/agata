@@ -25,7 +25,6 @@ public class PackageDeliveryContract extends GenericProposalContract {
             PackageDeliveryState proposedState = proposal.getProposedState();
             require.using("Proposer must be the arrival party", proposal.getProposer().equals(proposedState.getArrivalParty()));
             require.using("Proposee must be the LCL company", proposal.getProposee().equals(proposedState.getLclCompany()));
-            // Non-null checks are handled by the annotations in the state
             return null;
         });
     }
@@ -69,7 +68,6 @@ public class PackageDeliveryContract extends GenericProposalContract {
 
                 return null;
             });
-
             isValidCommand = true;
         }
         return isValidCommand;

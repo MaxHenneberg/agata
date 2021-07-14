@@ -26,7 +26,6 @@ public class DeconsolidationContract extends GenericProposalContract {
 
             require.using("Proposer must be the LCL company", proposal.getProposer().equals(proposedState.getLclCompany()));
             require.using("Proposee must be the shipping line", proposal.getProposee().equals(proposedState.getShippingLine()));
-            // Non-null checks are handled by the annotations in the state
 
             BillOfLadingState bol = ContractUtils.resolveBillOfLadingReference(tx, proposedState.getMasterBillOfLadingId());
             require.using("The passed bill of lading needs to be a master bill of lading", bol.getType() == BillOfLadingType.Master);

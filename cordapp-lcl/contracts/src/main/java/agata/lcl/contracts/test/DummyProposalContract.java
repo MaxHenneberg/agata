@@ -6,6 +6,7 @@ import net.corda.core.transactions.LedgerTransaction;
 import org.jetbrains.annotations.NotNull;
 
 public class DummyProposalContract extends GenericProposalContract {
+
     public static String ID = "agata.lcl.contracts.test.DummyProposalContract";
 
     @Override
