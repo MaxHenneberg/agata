@@ -22,6 +22,7 @@
             <column name="output_index" type="INT"/>
             <column name="transaction_id" type="NVARCHAR(5000)"/>
 
+            <column name="type" type="NVARCHAR(5000)"/>
             <column name="shipper" type="NVARCHAR(5000)"/>
             <column name="consignee" type="NVARCHAR(5000)"/>
             <column name="notifyParty" type="NVARCHAR(5000)"/>
