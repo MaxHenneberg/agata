@@ -10,6 +10,7 @@ import net.corda.core.serialization.CordaSerializable;
 @Setter
 @EqualsAndHashCode
 public class DescriptionOfGoods {
+
     private String product;
     private String typeOfPackage;
     private int quantity;

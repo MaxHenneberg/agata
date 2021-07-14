@@ -51,14 +51,14 @@ public class BillOfLadingState implements QueryableState, LinearState {
 
     private final List<String> exportReference;
 
-    //13
+    // Field 13
     private final Party forwardingAgent;
     private final String fmcNo;
 
-    //14
+    // Field 14
     private final Address pointAndCountry;
 
-    //15
+    //Field 15
     private final Party cargoReleaser;
 
     private final String domesticRoutingInstructions;
@@ -68,7 +68,7 @@ public class BillOfLadingState implements QueryableState, LinearState {
 
     private final List<ItemRow> goodsList;
 
-    //25
+    //Field 25
     private final List<FreightCharges> freightChargesList;
 
     private final Price prepaid;
@@ -154,27 +154,10 @@ public class BillOfLadingState implements QueryableState, LinearState {
         this.containerInformationList = containerInformationList;
     }
 
-    /**
-     * Will be Overridden by LcL subclasses to define participants correctly.
-     *
-     * @return List of Participants
-     */
     @NotNull
     @Override
     public List<AbstractParty> getParticipants() {
         return Arrays.asList(shipper, consignee);
-    }
-
-    public int getConsignmentTotalNetWeight() {
-        return goodsList.stream().reduce(0, (subtotal, element) -> subtotal + element.getNetWeight(), Integer::sum);
-    }
-
-    public int getConsignmentTotalGrossWeight() {
-        return goodsList.stream().reduce(0, (subtotal, element) -> subtotal + element.getGrossWeight(), Integer::sum);
-    }
-
-    public int getConsignmentTotalMeasurements() {
-        return goodsList.stream().reduce(0, (subtotal, element) -> subtotal + element.getMeasurement(), Integer::sum);
     }
 
     @NotNull
@@ -227,13 +210,5 @@ public class BillOfLadingState implements QueryableState, LinearState {
     @Override
     public Iterable<MappedSchema> supportedSchemas() {
         return Collections.singletonList(new BillOfLadingSchemaV1());
-    }
-
-    private String cutToMaxLength(String input, int maxLength) {
-        if (input.length() > maxLength) {
-            return input.substring(0, maxLength);
-        } else {
-            return input;
-        }
     }
 }

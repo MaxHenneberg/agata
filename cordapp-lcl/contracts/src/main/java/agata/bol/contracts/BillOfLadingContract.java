@@ -19,21 +19,18 @@ public class BillOfLadingContract implements Contract {
     public void verify(@NotNull LedgerTransaction tx) throws IllegalArgumentException {
         final Command command = tx.getCommand(0);
         if (command.getValue() instanceof BoLCommands) {
-            commonChecks(tx, command);
+            executeCommonChecks(tx, command);
             if (command.getValue() instanceof BoLCommands.CreateHouseBoL) {
                 verifyCreateHouseBoL(tx, command);
             } else if (command.getValue() instanceof BoLCommands.CreateMasterBoL) {
                 verifyCreateMasterBoL(tx, command);
             }
         }
-
-
     }
 
-    private void commonChecks(@NotNull LedgerTransaction tx, @NotNull Command command) {
+    private void executeCommonChecks(@NotNull LedgerTransaction tx, @NotNull Command command) {
         requireThat(require -> {
-            // TODO: Fix this temporary solution
-//            require.using("There is at least one input", tx.getInputStates().size() >= 1);
+            require.using("There is at least one input", tx.getInputStates().size() >= 1);
             return null;
         });
     }
@@ -45,9 +42,6 @@ public class BillOfLadingContract implements Contract {
             require.using("A bill of loading is given as output", tx.outputsOfType(BillOfLadingState.class).size() == 1);
             BillOfLadingState bol = tx.outputsOfType(BillOfLadingState.class).get(0);
             require.using("Issued bill of lading needs to be a house bill of lading", bol.getType() == BillOfLadingType.House);
-
-            PickupState input = tx.inputsOfType(PickupState.class).get(0);
-            //TODO: More checks
             return null;
         });
     }

@@ -11,6 +11,7 @@ import net.corda.core.serialization.CordaSerializable;
 @Setter
 @EqualsAndHashCode
 public class FreightCharges {
+
     private String chargeReason;
     private Price charge;
 }

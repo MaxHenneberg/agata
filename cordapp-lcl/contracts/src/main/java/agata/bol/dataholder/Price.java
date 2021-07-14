@@ -13,9 +13,10 @@ import java.util.Currency;
 @Setter
 @EqualsAndHashCode
 public class Price {
+
     private BigDecimal amount;
     private Currency currency;
-    
+
     @Override
     public String toString() {
         return amount + " " + currency.getSymbol();
