@@ -1,6 +1,6 @@
-<mat-sidenav-container style="min-height: 100vh">
+<mat-sidenav-container style="min-height: 100vh; background-color: #ECEEFD">
   <mat-toolbar color="primary">
-      <span>LCL-Demo</span>
+      <img src="../assets/Xarda_negativ.png" style="height: 2.5em"/>
       <span style="flex: 1 1 auto;"></span>
       <button mat-icon-button aria-label="Example icon-button with menu icon" (click)="toggleSideNav()">
         <mat-icon>menu</mat-icon>
@@ -20,7 +20,7 @@
       </ul>
     </nav>
   </mat-sidenav>
-  <div style="display: flex; justify-content: center">
+  <div style="display: flex; justify-content: center;">
     <router-outlet></router-outlet>
   </div>
 </mat-sidenav-container>

@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {BolCombinerService} from '../bol-combiner.service';
 import {BolTO} from '../../dataholder/BolTO';
-import {ContainerTO} from '../../dataholder/ContainerTO';
 import {ShipLoadingDetailsTO} from '../../dataholder/ShipLoadingDetailsTO';
 import {HttpBaseService} from '../http-base.service';
 
