@@ -20,10 +20,10 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/container-requests")
-public class ContainerController extends BaseController {
+public class ContainerRequestController extends BaseController {
 
     @Autowired
-    public ContainerController(CordaRPCOps proxy) {
+    public ContainerRequestController(CordaRPCOps proxy) {
         super(proxy);
     }
 

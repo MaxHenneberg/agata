@@ -37,11 +37,6 @@ public class PickupController extends BaseController {
         return this.getStates(PickupProposal.class);
     }
 
-    @GetMapping("/bols")
-    public List<BillOfLadingState> getBols() {
-        return this.getStates(BillOfLadingState.class);
-    }
-
     @GetMapping("/proposals/{proposalId}")
     public PickupProposal getProposal(@PathVariable String proposalId) {
         return this.queryStateById(PickupProposal.class, this.toUniqueIdentifier(proposalId), Vault.StateStatus.ALL);

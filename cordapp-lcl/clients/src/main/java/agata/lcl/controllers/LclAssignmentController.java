@@ -1,6 +1,5 @@
 package agata.lcl.controllers;
 
-import agata.bol.states.BillOfLadingState;
 import agata.lcl.dto.LclAssignment;
 import agata.lcl.flows.assignment.AssignmentAcceptFlow;
 import agata.lcl.flows.assignment.AssignmentProposalFlow;
@@ -34,14 +33,6 @@ public class LclAssignmentController extends BaseController {
         return this.getResourceById(AssignmentState.class, id, Vault.StateStatus.CONSUMED);
     }
 
-    // TODO: These are not only house BoLs as we cannot distinguish for now
-    @GetMapping("/{id}/house-bols")
-    public List<BillOfLadingState> getFinalizedHouseBillOfLadings() {
-        return this.getStates(BillOfLadingState.class);
-    }
-
-    // TODO: One common endpoint for all proposals and then via query param of which type? Then the finalized are in sth like lcl-assigments
-    //  But then for acceptance, it is not clear what to do explicitly for this case, isn't it?
     @GetMapping("/proposals")
     public List<AssignmentProposal> getLclAssignmentProposals() {
         return this.getStates(AssignmentProposal.class);

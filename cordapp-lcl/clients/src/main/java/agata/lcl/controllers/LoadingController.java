@@ -1,5 +1,6 @@
 package agata.lcl.controllers;
 
+import agata.bol.enums.BillOfLadingType;
 import agata.bol.states.BillOfLadingState;
 import agata.lcl.dto.ShipmentDetails;
 import agata.lcl.dto.TrackingStateReferenceList;
@@ -26,7 +27,7 @@ public class LoadingController extends BaseController {
 
     @GetMapping()
     public List<BillOfLadingState> getFinalizedStates() {
-        return this.getStates(BillOfLadingState.class);
+        return this.getStates(BillOfLadingState.class).stream().filter(x -> x.getType() == BillOfLadingType.Master).collect(Collectors.toList());
     }
 
     @GetMapping("/proposals")
@@ -36,7 +37,7 @@ public class LoadingController extends BaseController {
 
     @GetMapping("/proposals/masterBol/{containerId}")
     public BillOfLadingState getLoadingProposals(@PathVariable String containerId) {
-        //Happy Path
+        // Happy Path
         return this.getStates(ShiploadingProposal.class).stream()
                 .filter((proposal) -> proposal.getProposedState().getContainerInformationList().get(0).getContainerNo().equals(containerId)).findFirst().get()
                 .getProposedState();

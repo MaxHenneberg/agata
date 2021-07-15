@@ -1,6 +1,5 @@
 package agata.lcl.controllers;
 
-import agata.bol.states.BillOfLadingState;
 import agata.lcl.dto.DeliveryRequest;
 import agata.lcl.dto.DeliveryUpdateRequest;
 import agata.lcl.dto.TrackingStateReference;
@@ -35,13 +34,6 @@ public class DeliveryController extends BaseController {
     @GetMapping("/proposals")
     public List<PackageDeliveryProposal> getProposals() {
         return this.getStates(PackageDeliveryProposal.class);
-    }
-
-    // TODO: Why here?
-    @GetMapping("/houseBol/{linearId}")
-    public BillOfLadingState getBillOfLadingById(@PathVariable String linearId) {
-        // Happy Path
-        return this.getStates(BillOfLadingState.class).stream().filter((bol) -> bol.getLinearId().equals(linearId)).findFirst().get();
     }
 
     @PostMapping("/proposals")
