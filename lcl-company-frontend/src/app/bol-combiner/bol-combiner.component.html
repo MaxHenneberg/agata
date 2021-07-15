@@ -1,29 +1,32 @@
-<div style="min-width: 80vw; margin-top: 2vh;">
-  <h1 style="width: fit-content; margin: 5px auto">Containers in Consolidation</h1>
+ <div style="min-width: 80vw; margin-top: 2vh;">
+    <h1 style="width: fit-content; margin: 5px auto">Containers in Consolidation</h1>
 
 
-  <table #containerTable mat-table [dataSource]="getContainerIds()" style="width: 100%">
-    <ng-container matColumnDef="containerId">
-      <th mat-header-cell *matHeaderCellDef>Cotnainer Id</th>
-      <td mat-cell *matCellDef="let key"> {{key}} </td>
-    </ng-container>
-    <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef>Type</th>
-      <td mat-cell *matCellDef="let key"> {{containerMap.get(key)[0].containerInformationList[0].type}} </td>
-    </ng-container>
-    <ng-container matColumnDef="sealNo">
-      <th mat-header-cell *matHeaderCellDef>Seal No.</th>
-      <td mat-cell *matCellDef="let key"> {{containerMap.get(key)[0].containerInformationList[0].sealNo}} </td>
-    </ng-container>
-    <ng-container matColumnDef="#bol">
-      <th mat-header-cell *matHeaderCellDef># BoL</th>
-      <td mat-cell *matCellDef="let key"> {{containerMap.get(key).length}} </td>
-    </ng-container>
-    <ng-container matColumnDef="buttonCol">
-      <th mat-header-cell *matHeaderCellDef>Finish Consolidation</th>
-      <td mat-cell  *matCellDef="let key"><button mat-raised-button style="background-color: rgb(55,200,238)" (click)="initShiploading(key)" >Finish</button></td>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-    <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
-  </table>
-</div>
+    <table #containerTable mat-table [dataSource]="getContainerIds()" style="width: 100%">
+      <ng-container matColumnDef="containerId">
+        <th mat-header-cell *matHeaderCellDef>Cotnainer Id</th>
+        <td mat-cell *matCellDef="let key"> {{key}} </td>
+      </ng-container>
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let key"> {{containerMap.get(key)[0].containerInformationList[0].type}} </td>
+      </ng-container>
+      <ng-container matColumnDef="sealNo">
+        <th mat-header-cell *matHeaderCellDef>Seal No.</th>
+        <td mat-cell *matCellDef="let key"> {{containerMap.get(key)[0].containerInformationList[0].sealNo}} </td>
+      </ng-container>
+      <ng-container matColumnDef="#bol">
+        <th mat-header-cell *matHeaderCellDef># BoL</th>
+        <td mat-cell *matCellDef="let key"> {{containerMap.get(key).length}} </td>
+      </ng-container>
+      <ng-container matColumnDef="buttonCol">
+        <th mat-header-cell *matHeaderCellDef>Finish Consolidation</th>
+        <td mat-cell *matCellDef="let key">
+          <button mat-raised-button style="background-color: rgb(55,200,238)" (click)="initShiploading(key)">Finish
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+    </table>
+  </div>

@@ -17,25 +17,25 @@ export class AddGoodsService {
         return {
           mark: '1234',
           identityNumber: '1234',
-          noOfPackages: 23,
+          noOfPackages: 3,
           descriptionOfGoods: {
-            product: 'sdgfsdgdsg',
-            typeOfPackage: '23',
-            quantity: 3
+            product: 'XXL Underware',
+            typeOfPackage: 'Roll',
+            quantity: 20
           },
-          netWeight: 23,
-          grossWeight: 23,
-          measurement: 23
+          netWeight: 2,
+          grossWeight: 2,
+          measurement: 0.5
         };
       case '5678':
         return {
           mark: '5678',
           identityNumber: '5678',
-          noOfPackages: 23,
+          noOfPackages: 1,
           descriptionOfGoods: {
-            product: 'My Awesome Product',
-            typeOfPackage: '23',
-            quantity: 3
+            product: 'I Phone X',
+            typeOfPackage: 'Package',
+            quantity: 100
           },
           netWeight: 23,
           grossWeight: 23,

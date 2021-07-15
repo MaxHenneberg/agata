@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpBaseService} from "./http-base.service";
-import {Observable} from "rxjs";
-import {TrackingStateDto} from "../dataholder/TrackingStateDto";
+import {HttpBaseService} from './http-base.service';
+import {Observable} from 'rxjs';
+import {TrackingStateDto} from '../dataholder/TrackingStateDto';
 
 @Injectable({
   providedIn: 'root'

@@ -1,21 +1,25 @@
 <div class="form-container">
-  <form [formGroup]="requestForm" (submit)="submit()">
-    <div>
+  <mat-card>
+    <div style="display: flex; justify-content: center; margin-bottom: 4em">
+      <img src="../../assets/Xarda.png" style="width: 25em; height: 20em"/>
+    </div>
+    <form [formGroup]="requestForm" (submit)="submit()">
       <div>
-        <mat-form-field class="form-field" appearance="outline">
-          <mat-label>Buyer</mat-label>
-          <input matInput formControlName="buyer" required>
-        </mat-form-field>
-        <mat-form-field class="form-field" appearance="outline">
-          <mat-label>Supplier</mat-label>
-          <input matInput formControlName="supplier" required>
-        </mat-form-field>
-        <mat-form-field class="form-field" appearance="outline">
-          <mat-label>ArrivalParty</mat-label>
-          <input matInput formControlName="arrivalParty" required>
-        </mat-form-field>
-      </div>
-      <div style="display: block">
+        <div>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Buyer</mat-label>
+            <input matInput formControlName="buyer" required>
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Supplier</mat-label>
+            <input matInput formControlName="supplier" required>
+          </mat-form-field>
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>ArrivalParty</mat-label>
+            <input matInput formControlName="arrivalParty" required>
+          </mat-form-field>
+        </div>
+        <div style="display: flex; flex-direction: row; justify-content: space-between;">
         <span class="address" style="margin-right: 50px">
           <p>
             Departure Address
@@ -41,7 +45,7 @@
             <input matInput formControlName="depCountry" required>
           </mat-form-field>
         </span>
-        <span class="address">
+          <span class="address">
           <p>
             Arrival Address
           </p>
@@ -66,81 +70,82 @@
             <input matInput formControlName="depCountry" required>
           </mat-form-field>
         </span>
-      </div>
-      <mat-card>
-        <mat-accordion *ngIf="requestForm.controls.expectedGoods.value.length > 0">
-          <p>
-            Expected Goods:
-          </p>
-          <mat-expansion-panel *ngFor="let good of requestForm.controls.expectedGoods.value" style="display: inline-block; width: 650px">
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                {{good.identityNumber}}
-              </mat-panel-title>
-              <mat-panel-description>
-                {{good.descriptionOfGoods.quantity}}x {{good.descriptionOfGoods.product}}
-              </mat-panel-description>
-            </mat-expansion-panel-header>
-            <div>
-              <div style="display: block">
+        </div>
+        <mat-card>
+          <mat-accordion *ngIf="requestForm.controls.expectedGoods.value.length > 0">
+            <p>
+              Expected Goods:
+            </p>
+            <mat-expansion-panel *ngFor="let good of requestForm.controls.expectedGoods.value"
+                                 style="display: inline-block; width: 650px">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{good.identityNumber}}
+                </mat-panel-title>
+                <mat-panel-description>
+                  {{good.descriptionOfGoods.quantity}}x {{good.descriptionOfGoods.product}}
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <div>
+                <div style="display: block">
               <span style="width: 150px; margin-right: 20px">
                 Mark:
               </span>
-                <span>
+                  <span>
                 {{good.mark}}
               </span>
-              </div>
-              <div style="display: block">
+                </div>
+                <div style="display: block">
               <span style="width: 150px; margin-right: 20px">
                 Identity Number:
               </span>
-                <span>
+                  <span>
                 {{good.identityNumber}}
               </span>
-              </div>
-              <div style="display: block">
+                </div>
+                <div style="display: block">
               <span style="width: 150px; margin-right: 20px">
                 No of Packages:
               </span>
-                <span>
+                  <span>
                 {{good.noOfPackages}}
               </span>
-              </div>
-              <div style="display: block">
+                </div>
+                <div style="display: block">
               <span style="width: 150px; margin-right: 20px">
                 Description of Goods:
               </span>
-                <span>
+                  <span>
                 {{good.descriptionOfGoods.quantity}}x {{good.descriptionOfGoods.product}}
               </span>
-              </div>
-              <div style="display: block">
+                </div>
+                <div style="display: block">
               <span style="width: 150px; margin-right: 20px">
                 Net Weight:
               </span>
-                <span>
+                  <span>
                  {{good.netWeight}}kg
               </span>
-              </div>
-              <div style="display: block">
+                </div>
+                <div style="display: block">
               <span style="width: 150px; margin-right: 20px">
                 Gross Weight:
               </span>
-                <span>
+                  <span>
                  {{good.grossWeight}}kg
               </span>
-              </div>
-              <div style="display: block">
+                </div>
+                <div style="display: block">
               <span style="width: 150px; margin-right: 20px">
                 Measurement:
               </span>
-                <span>
+                  <span>
                  {{good.measurement}}
               </span>
+                </div>
               </div>
-            </div>
-          </mat-expansion-panel>
-        </mat-accordion>
+            </mat-expansion-panel>
+          </mat-accordion>
           <mat-expansion-panel>
             <mat-expansion-panel-header>
               <mat-panel-title>
@@ -190,8 +195,9 @@
               <button mat-raised-button color="primary" (click)="addItem()">Add</button>
             </form>
           </mat-expansion-panel>
-      </mat-card>
-      <button mat-raised-button color="primary" type="submit">Submit</button>
-    </div>
-  </form>
+        </mat-card>
+        <button mat-raised-button color="primary" type="submit" style="margin-top: 2em;">Submit</button>
+      </div>
+    </form>
+  </mat-card>
 </div>
