@@ -28,7 +28,7 @@ public class SetGoodsFlow {
         private final UniqueIdentifier proposalId;
         private final List<ItemRow> deliveredGoods;
 
-        public Initiator(UniqueIdentifier proposalId, List<ItemRow> deliveredGoods, String invoiceId) {
+        public Initiator(UniqueIdentifier proposalId, List<ItemRow> deliveredGoods) {
             this.proposalId = proposalId;
             this.deliveredGoods = deliveredGoods;
         }

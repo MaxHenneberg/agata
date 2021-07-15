@@ -71,9 +71,8 @@ public class PackageDeliveryTest extends FlowTestBase {
         assert (bolResults.size() == 1);
         BillOfLadingState bol = bolResults.get(0).getState().getData();
         // Use the goods mentioned in the house bill of lading as delivered goods (only this is a valid delivery request)
-        String invoiceId = "123456ab";
         List<ItemRow> deliveredGoods = bol.getGoodsList();
-        SetGoodsFlow.Initiator setGoodsFlow = new SetGoodsFlow.Initiator(deliveryProposalId, deliveredGoods, invoiceId);
+        SetGoodsFlow.Initiator setGoodsFlow = new SetGoodsFlow.Initiator(deliveryProposalId, deliveredGoods);
         CordaFuture<SignedTransaction> future2 = this.lclCompany.startFlow(setGoodsFlow);
         network.runNetwork();
         future2.get();
