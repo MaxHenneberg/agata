@@ -16,14 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("/api/deconsolidate")
-public class DeconsolidateController extends BaseController {
+@RequestMapping("/api/deconsolidations")
+public class DeconsolidationController extends BaseController {
 
     @Autowired
-    public DeconsolidateController(CordaRPCOps proxy) {
+    public DeconsolidationController(CordaRPCOps proxy) {
         super(proxy);
     }
 
@@ -42,7 +43,7 @@ public class DeconsolidateController extends BaseController {
         UniqueIdentifier proposalId = this.startFlow(
                 ProposeDeconsolidationFlow.Initiator.class,
                 request.getShippingLine(),
-                request.getMasterBolId(),
+                this.toUniqueIdentifier(request.getMasterBolId()),
                 request.getContainerNo());
         return this.queryStateById(DeconsolidationProposal.class, proposalId);
     }
@@ -65,9 +66,10 @@ public class DeconsolidateController extends BaseController {
     }
 
     @PostMapping("/proposals/{proposalId}/acceptance")
-    public DeconsolidationState acceptAssignment(@PathVariable String proposalId, @RequestBody TrackingStateReferenceList body) {
+    public DeconsolidationState acceptDeconsolidation(@PathVariable String proposalId, @RequestBody TrackingStateReferenceList body) {
         UniqueIdentifier id = this.toUniqueIdentifier(proposalId);
-        this.startFlow(AcceptDeconsolidationFlow.Initiator.class, id, body.getTrackingStateIds());
-        return this.queryStateById(DeconsolidationProposal.class, id, Vault.StateStatus.CONSUMED).getProposedState();
+        List<UniqueIdentifier> trackingStateIds = body.getTrackingStateIds().stream().map(this::toUniqueIdentifier).collect(Collectors.toList());
+        this.startFlow(AcceptDeconsolidationFlow.Initiator.class, id, trackingStateIds);
+        return this.getMostRecentState(DeconsolidationProposal.class, id).getProposedState();
     }
 }

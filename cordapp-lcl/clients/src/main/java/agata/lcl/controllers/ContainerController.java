@@ -11,7 +11,6 @@ import agata.lcl.states.container.ContainerRequestProposal;
 import agata.lcl.states.container.ContainerRequestState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.messaging.CordaRPCOps;
-import net.corda.core.transactions.SignedTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,10 +75,11 @@ public class ContainerController extends BaseController {
     }
 
     @PostMapping("/proposals/{proposalId}/acceptance")
-    public SignedTransaction acceptAssignment(@PathVariable String proposalId, @RequestBody TrackingStateReferenceList body) {
+    public ContainerRequestState acceptAssignment(@PathVariable String proposalId, @RequestBody TrackingStateReferenceList body) {
         UniqueIdentifier id = this.toUniqueIdentifier(proposalId);
         List<UniqueIdentifier> trackingIds = body.getTrackingStateIds().stream().map(this::toUniqueIdentifier).collect(Collectors.toList());
-        return this.startFlow(AcceptContainerFlow.Initiator.class, id, trackingIds);
+        this.startFlow(AcceptContainerFlow.Initiator.class, id, trackingIds);
+        return this.getMostRecentState(ContainerRequestProposal.class, id).getProposedState();
     }
 
 }

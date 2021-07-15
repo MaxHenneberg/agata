@@ -30,6 +30,17 @@ public abstract class BaseController {
         return proxy.vaultQuery(clazz).getStates().stream().map(x -> x.getState().getData()).collect(Collectors.toList());
     }
 
+    protected <T extends ContractState> T getMostRecentState(Class<T> clazz, UniqueIdentifier id) {
+        List<StateAndRef<T>> result =
+                proxy.vaultQueryByCriteria(new QueryCriteria.LinearStateQueryCriteria(null, Collections.singletonList(id), Vault.StateStatus.ALL, null), clazz)
+                        .getStates();
+        if (result.size() < 1) {
+            return null;
+        } else {
+            return result.get(result.size() - 1).getState().getData();
+        }
+    }
+
     protected <T extends ContractState> T queryStateById(Class<T> clazz, UniqueIdentifier id) {
         return queryStateById(clazz, id, Vault.StateStatus.UNCONSUMED);
     }
@@ -47,8 +58,8 @@ public abstract class BaseController {
         }
     }
 
-    protected <T extends ContractState> T getResourceById(Class<T> clazz, String id) {
-        T result = this.queryStateById(clazz, this.toUniqueIdentifier(id));
+    protected <T extends ContractState> T getResourceById(Class<T> clazz, String id, Vault.StateStatus stateStatus) {
+        T result = this.queryStateById(clazz, this.toUniqueIdentifier(id), stateStatus);
         if (result == null) {
             throw new ResourceNotFoundException(clazz, id);
         }

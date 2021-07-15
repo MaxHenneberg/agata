@@ -31,7 +31,7 @@ public class LclAssignmentController extends BaseController {
 
     @GetMapping("/{id}")
     public AssignmentState getFinalizedAssignment(@PathVariable String id) {
-        return this.getResourceById(AssignmentState.class, id);
+        return this.getResourceById(AssignmentState.class, id, Vault.StateStatus.CONSUMED);
     }
 
     // TODO: These are not only house BoLs as we cannot distinguish for now
@@ -59,7 +59,7 @@ public class LclAssignmentController extends BaseController {
     public AssignmentState acceptAssignment(@PathVariable String proposalId) {
         UniqueIdentifier id = this.toUniqueIdentifier(proposalId);
         this.startFlow(AssignmentAcceptFlow.Initiator.class, id);
-        return this.queryStateById(AssignmentProposal.class, id, Vault.StateStatus.CONSUMED).getProposedState();
+        return this.getMostRecentState(AssignmentProposal.class, id).getProposedState();
     }
 
 }

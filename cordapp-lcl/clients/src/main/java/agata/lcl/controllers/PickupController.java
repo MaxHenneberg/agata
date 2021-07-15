@@ -44,30 +44,30 @@ public class PickupController extends BaseController {
 
     @GetMapping("/proposals/{proposalId}")
     public PickupProposal getProposal(@PathVariable String proposalId) {
-        return this.queryStateById(PickupProposal.class, this.toUniqueIdentifier(proposalId));
+        return this.queryStateById(PickupProposal.class, this.toUniqueIdentifier(proposalId), Vault.StateStatus.ALL);
     }
 
     @PostMapping("/proposals")
     public PickupProposal addPickupProposal(@RequestBody PickupInitialization pickup) {
         UniqueIdentifier assignmentId = this.toUniqueIdentifier(pickup.getAssignmentId());
         UniqueIdentifier proposalId = this.startFlow(PickupProposalFlow.Initiator.class, assignmentId);
-        return this.queryStateById(PickupProposal.class, proposalId);
+        return this.queryStateById(PickupProposal.class, proposalId, Vault.StateStatus.UNCONSUMED);
     }
 
     @PatchMapping("/proposals/{proposalId}")
     public PickupProposal updateProposal(@PathVariable String proposalId, @RequestBody UpdatePickupGoods update) {
         this.startFlow(PickupAddGoodsFlow.Initiator.class, toUniqueIdentifier(proposalId), update.getGoods(), update.getInvoiceId());
-        return this.queryStateById(PickupProposal.class, this.toUniqueIdentifier(proposalId));
+        return this.queryStateById(PickupProposal.class, this.toUniqueIdentifier(proposalId), Vault.StateStatus.UNCONSUMED);
     }
 
     @PostMapping("/proposals/{proposalId}/acceptance")
-    public PickupState acceptAssignment(@PathVariable String proposalId, @RequestBody PickupFinalization update) {
+    public BillOfLadingState acceptAssignment(@PathVariable String proposalId, @RequestBody PickupFinalization update) {
         UniqueIdentifier id = this.toUniqueIdentifier(proposalId);
-        this.startFlow(
+        UniqueIdentifier billOfLadingId = this.startFlow(
                 PickupAcceptFlow.Initiator.class,
                 id,
                 this.toUniqueIdentifier(update.getContainerRequestId()),
-                this.toUniqueIdentifier(update.getTackingStateId()),
+                this.toUniqueIdentifier(update.getTrackingStateId()),
                 update.getModeOfInitialCarriage(),
                 update.getPlaceOfInitialReceipt(),
                 update.getPlaceOfDeliveryByCarrier(),
@@ -80,7 +80,7 @@ public class PickupController extends BaseController {
                 update.getPrepaid(),
                 update.getCollect()
         );
-        return this.queryStateById(PickupProposal.class, id, Vault.StateStatus.CONSUMED).getProposedState();
+        return this.queryStateById(BillOfLadingState.class, billOfLadingId);
     }
 
 }

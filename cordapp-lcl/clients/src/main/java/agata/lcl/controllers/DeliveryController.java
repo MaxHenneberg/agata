@@ -12,7 +12,6 @@ import agata.lcl.states.delivery.PackageDeliveryProposal;
 import agata.lcl.states.delivery.PackageDeliveryState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.messaging.CordaRPCOps;
-import net.corda.core.node.services.Vault;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +19,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("/api/delivery")
+@RequestMapping("/api/deliveries")
 public class DeliveryController extends BaseController {
 
     @Autowired
@@ -38,6 +37,7 @@ public class DeliveryController extends BaseController {
         return this.getStates(PackageDeliveryProposal.class);
     }
 
+    // TODO: Why here?
     @GetMapping("/houseBol/{linearId}")
     public BillOfLadingState getBillOfLadingById(@PathVariable String linearId) {
         // Happy Path
@@ -49,7 +49,7 @@ public class DeliveryController extends BaseController {
         UniqueIdentifier proposalId = this.startFlow(
                 ProposeDeliveryFlow.Initiator.class,
                 request.getLclCompany(),
-                request.getHouseBolId());
+                this.toUniqueIdentifier(request.getHouseBolId()));
         return this.queryStateById(PackageDeliveryProposal.class, proposalId);
     }
 
@@ -73,7 +73,7 @@ public class DeliveryController extends BaseController {
     @PostMapping("/proposals/{proposalId}/acceptance")
     public PackageDeliveryState acceptProposal(@PathVariable String proposalId, @RequestBody TrackingStateReference body) {
         UniqueIdentifier id = this.toUniqueIdentifier(proposalId);
-        this.startFlow(AcceptDeliveryFlow.Initiator.class, id, body.getTrackingStateId());
-        return this.queryStateById(PackageDeliveryProposal.class, id, Vault.StateStatus.CONSUMED).getProposedState();
+        this.startFlow(AcceptDeliveryFlow.Initiator.class, id, this.toUniqueIdentifier(body.getTrackingStateId()));
+        return this.getMostRecentState(PackageDeliveryProposal.class, id).getProposedState();
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @EqualsAndHashCode
 public class PickupFinalization {
     private String containerRequestId;
-    private String tackingStateId;
+    private String trackingStateId;
     private String modeOfInitialCarriage;
     private String placeOfInitialReceipt;
     private String placeOfDeliveryByCarrier;
