@@ -1,9 +1,9 @@
 package agata.lcl.controllers;
 
 import agata.bol.states.BillOfLadingState;
-import agata.lcl.bodies.DeliveryRequest;
-import agata.lcl.bodies.DeliveryUpdateRequest;
-import agata.lcl.bodies.TrackingStateReference;
+import agata.lcl.dto.DeliveryRequest;
+import agata.lcl.dto.DeliveryUpdateRequest;
+import agata.lcl.dto.TrackingStateReference;
 import agata.lcl.errors.ResourceNotFoundException;
 import agata.lcl.flows.delivery.AcceptDeliveryFlow;
 import agata.lcl.flows.delivery.ProposeDeliveryFlow;

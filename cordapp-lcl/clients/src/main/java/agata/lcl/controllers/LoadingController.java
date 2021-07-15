@@ -1,8 +1,8 @@
 package agata.lcl.controllers;
 
 import agata.bol.states.BillOfLadingState;
-import agata.lcl.bodies.ShipmentDetails;
-import agata.lcl.bodies.TrackingStateReferenceList;
+import agata.lcl.dto.ShipmentDetails;
+import agata.lcl.dto.TrackingStateReferenceList;
 import agata.lcl.flows.shiploading.ShiploadingAcceptFlow;
 import agata.lcl.flows.shiploading.ShiploadingProposalFlow;
 import agata.lcl.states.shiploading.ShiploadingProposal;

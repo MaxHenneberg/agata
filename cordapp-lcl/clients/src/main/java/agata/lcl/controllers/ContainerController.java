@@ -1,8 +1,8 @@
 package agata.lcl.controllers;
 
-import agata.lcl.bodies.ContainerAssignment;
-import agata.lcl.bodies.ContainerRequest;
-import agata.lcl.bodies.TrackingStateReferenceList;
+import agata.lcl.dto.ContainerAssignment;
+import agata.lcl.dto.ContainerRequest;
+import agata.lcl.dto.TrackingStateReferenceList;
 import agata.lcl.errors.ResourceNotFoundException;
 import agata.lcl.flows.container.AcceptContainerFlow;
 import agata.lcl.flows.container.AssignContainerFlow;

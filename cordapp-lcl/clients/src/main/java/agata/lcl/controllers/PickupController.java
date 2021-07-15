@@ -1,9 +1,9 @@
 package agata.lcl.controllers;
 
 import agata.bol.states.BillOfLadingState;
-import agata.lcl.bodies.PickupFinalization;
-import agata.lcl.bodies.PickupInitialization;
-import agata.lcl.bodies.UpdatePickupGoods;
+import agata.lcl.dto.PickupFinalization;
+import agata.lcl.dto.PickupInitialization;
+import agata.lcl.dto.UpdatePickupGoods;
 import agata.lcl.flows.pickup.PickupAcceptFlow;
 import agata.lcl.flows.pickup.PickupAddGoodsFlow;
 import agata.lcl.flows.pickup.PickupProposalFlow;

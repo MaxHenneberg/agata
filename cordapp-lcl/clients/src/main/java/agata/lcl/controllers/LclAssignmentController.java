@@ -1,7 +1,7 @@
 package agata.lcl.controllers;
 
 import agata.bol.states.BillOfLadingState;
-import agata.lcl.bodies.LclAssignment;
+import agata.lcl.dto.LclAssignment;
 import agata.lcl.flows.assignment.AssignmentAcceptFlow;
 import agata.lcl.flows.assignment.AssignmentProposalFlow;
 import agata.lcl.states.assignment.AssignmentProposal;

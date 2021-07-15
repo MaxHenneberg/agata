@@ -1,4 +1,4 @@
-package agata.lcl.bodies;
+package agata.lcl.dto;
 
 import agata.bol.enums.ContainerType;
 import lombok.*;

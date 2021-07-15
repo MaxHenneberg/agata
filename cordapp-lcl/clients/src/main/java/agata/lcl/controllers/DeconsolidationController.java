@@ -1,8 +1,8 @@
 package agata.lcl.controllers;
 
-import agata.lcl.bodies.DeconsolidationRequest;
-import agata.lcl.bodies.DeconsolidationUpdateRequest;
-import agata.lcl.bodies.TrackingStateReferenceList;
+import agata.lcl.dto.DeconsolidationRequest;
+import agata.lcl.dto.DeconsolidationUpdateRequest;
+import agata.lcl.dto.TrackingStateReferenceList;
 import agata.lcl.errors.ResourceNotFoundException;
 import agata.lcl.flows.deconsolidation.AcceptDeconsolidationFlow;
 import agata.lcl.flows.deconsolidation.ProposeDeconsolidationFlow;
@@ -11,7 +11,6 @@ import agata.lcl.states.deconsolidation.DeconsolidationProposal;
 import agata.lcl.states.deconsolidation.DeconsolidationState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.messaging.CordaRPCOps;
-import net.corda.core.node.services.Vault;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

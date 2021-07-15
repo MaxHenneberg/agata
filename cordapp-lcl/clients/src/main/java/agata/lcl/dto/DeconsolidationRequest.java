@@ -1,4 +1,4 @@
-package agata.lcl.bodies;
+package agata.lcl.dto;
 
 import lombok.Data;
 import net.corda.core.identity.Party;
