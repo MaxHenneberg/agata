@@ -1,0 +1,5 @@
+.cache
+nodes/*/logs/
+nodes/*/djvm/
+**/*.log
+**/*.jar

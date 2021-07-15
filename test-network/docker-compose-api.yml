@@ -1,0 +1,51 @@
+version: '3.0'
+networks:
+  default:
+    external:
+      name: xarda-testnet
+services:
+  buyer-api:
+    image: xarda-api
+    container_name: buyer-api
+    ports:
+      - "8080:8080"
+    environment:
+      - config.rpc.host=buyer-node # caution: this is the name within the other docker-compose file
+      - config.rpc.port=10201 # caution: this is the exposed port of the container of the other docker-compose (NOT the published one)
+      - config.rpc.username=user1
+      - config.rpc.password=test
+
+  supplier-api:
+    image: xarda-api
+    container_name: supplier-api
+    ports:
+      - "8081:8080"
+    environment:
+      - config.rpc.host=supplier-node # caution: this is the name within the other docker-compose file
+      - config.rpc.port=10201 # caution: this is the exposed port of the container of the other docker-compose (NOT the published one)
+      - config.rpc.username=user1
+      - config.rpc.password=test
+
+  lcl-company-api:
+    image: xarda-api
+    container_name: lcl-company-api
+    ports:
+      - "8082:8080"
+    environment:
+      - config.rpc.host=lcl-company-node # caution: this is the name within the other docker-compose file
+      - config.rpc.port=10201 # caution: this is the exposed port of the container of the other docker-compose (NOT the published one)
+      - config.rpc.username=user1
+      - config.rpc.password=test
+
+  shipping-line-api:
+    image: xarda-api
+    container_name: shipping-line-api
+    ports:
+      - "8083:8080"
+    environment:
+      - config.rpc.host=shipping-line-node # caution: this is the name within the other docker-compose file
+      - config.rpc.port=10201 # caution: this is the exposed port of the container of the other docker-compose (NOT the published one)
+      - config.rpc.username=user1
+      - config.rpc.password=test
+
+
