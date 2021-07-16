@@ -47,7 +47,7 @@ This requires knowledge of the associated report.
 We assume a simplified example for one buyer and a single container, because otherwise the process and the description becomes even more complex. 
 However, the steps can be adapted and for the same buyer node e.g. several packages can be created, which are then consolidated. Furthermore we implemented a demo frontend to showcase possible usecases. A guide containing further information can be found [here](https://github.com/MaxHenneberg/agata/blob/master/documentation/frontend_guide.pdf).
 
-Here are a few more points to consider after importing the `xarda.postman_collection` file into Postman:
+Here are a few more points to consider after importing the [xarda.postman_collection](https://github.com/MaxHenneberg/agata/blob/master/xarda.postman_collection.json) file into Postman:
 - In "" is the name of the Postman request and in parentheses is the API to use. Unless otherwise specified, no further changes are required to the prebuilt requests in terms of their bodies.
 - The URLs used in the requests are matched to the provided configuration, but the IDs must be changed as needed.
 - The first time a request to a node is started, it might take longer than usual.
