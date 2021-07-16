@@ -37,7 +37,7 @@ Additionally, we will launch a demonstration frontend for buyer, supplier and LC
 To do this, follow the steps below:
 
 - Switch to the project root level
-- Execute `docker-compose up` to 
+- Execute `docker-compose up`
 - If something like `started application in X seconds` appears for all APIs, they are ready to use. The frontend containers usually do not output anything.
 
 ## Exemplary walk-through
@@ -52,14 +52,14 @@ Here are a few more points to consider after importing the `xarda.postman_collec
 - The URLs used in the requests are matched to the provided configuration, but the IDs must be changed as needed.
 - The first time a request to a node is started, it might take longer than usual.
 - With the GET-Requests in the folders further information can be requested at any time
-- Everything that is done here via the copied IDs could be read by machine and passed via the respective endpoints if a software integrates our APImight be helpful
+- Everything that is done here via the copied IDs could be read by machine and passed via the respective endpoints if a software integrates our API
 
 After each final step of the groups below, it might be helpful to look at the change in tracking. 
 Use "Get tracking state" with the corresponding ID as URL path variable.
 
 **Buyer assigns the LCL company (folder "Assign LCL company")**
-- Propose LCL assignment" (LCL company): Initiates a proposal to the buyer with the data received off-chain from the customer. Then copy the Id of the created proposal from linearId.id in the response.
-- Accept LCL assignment (Buyer): Use the copied ID from the previous step as URL path variable for the proposal id. This way the customer accepts the created agreement. Copy linearId.id (the ID of this assignment) and trackingStateId.id (the ID of the related tracking) from the response to a text document for further use.
+- "Propose LCL assignment" (LCL company): Initiates a proposal to the buyer with the data received off-chain from the customer. Then copy the Id of the created proposal from linearId.id in the response.
+- "Accept LCL assignment" (Buyer): Use the copied ID from the previous step as URL path variable for the proposal id. This way the customer accepts the created agreement. Copy linearId.id (the ID of this assignment) and trackingStateId.id (the ID of the related tracking) from the response to a text document for further use.
 
 **LCL company requests a container from the shipping line (folder "Request container")**
 - "Initiate container request" (LCL company): Execute the request without any further changes to start a negotiation between LCL company and Shipping Line. Copy linearId.id from the response to the clipboard.
@@ -74,17 +74,17 @@ Use "Get tracking state" with the corresponding ID as URL path variable.
 **LCL company transfers the packed container to the Shipping Line (folder "Load ship")**
 - "Propose loading" (LCL company): Set in the request body the stored ID of the container request and the House Bill Of Lading ID. After creating the loading proposal, save the generated proposal ID (linearId.id in the response) to the clipboard.
 - "Accept proposal (shipping line): use the copied proposal ID as URL parameter and paste the saved tracking ID into the array in the request body to update the status for each package of the container. After executing the request, store the ID of the Master Bill of Lading issued by the Shipping Line (linearId.id in the response) in the text document.
-- "Get tracking state: Use the saved tracking ID to check at this point for example for the buyer which information has been tracked over time.
+- "Get tracking state" (Any API): Use the saved tracking ID to check at this point for example for the buyer which information has been tracked over time.
 
 **LCL company releases the arrived container from the Shipping Line (folder "Deconsolidation")**
 - "Propose deconsolidation" (LCL company): Set the ID of the stored Master Bill of Lading in the Request Body, which the LCL company will hand over to the Shipping Line to receive the goods. After executing the request, save the received proposal ID (linearId.id of the response) to the clipboard.
 - "Release container" (Shipping Line): Use the copied ID as URL parameter and execute the request so that the Shipping Line proposes the container release.
-- Accept deconsolidation" (LCL company): Use the proposal ID as URL parameter and add the tracking id to the array in the request body to update the status for each package of the container. Execute the request.
+- "Accept deconsolidation" (LCL company): Use the proposal ID as URL parameter and add the tracking id to the array in the request body to update the status for each package of the container. Execute the request.
 
 **Shipped goods are delivered to the customer (folder "Delivery")** 
 - "Propose delivery" (Buyer): Insert the known ID of the House Bill of Lading into the request body (for which the customer wants to receive his goods). After executing the request, save the received proposal ID from the response.
 - "Set delivered goods" (LCL company): Use the copied proposal ID as URL parameter and start the request to propose the delivered goods.
-- "Accept delivery (buyer): Use the copied proposal ID as URL parameter and copy the known tracking ID into the request body.
+- "Accept delivery" (Buyer): Use the copied proposal ID as URL parameter and copy the known tracking ID into the request body.
 
 Finally, a call to "Get tracking state" shows the history of all the steps executed above.
 
