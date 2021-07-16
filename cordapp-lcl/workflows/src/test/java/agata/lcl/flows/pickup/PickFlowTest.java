@@ -48,29 +48,6 @@ public class PickFlowTest extends FlowTestBase {
     }
 
     @Test
-    public void testAddGoodsWithException() throws ExecutionException, InterruptedException {
-        final UniqueIdentifier assignmentStateId = createAssignmentState(lclCompany, supplier, buyer, address1, address2, "123");
-        PickupProposalFlow.Initiator pickupProposalFlow = new PickupProposalFlow.Initiator(assignmentStateId);
-        Future<UniqueIdentifier> future1 = this.lclCompany.startFlow(pickupProposalFlow);
-        network.runNetwork();
-
-        UniqueIdentifier pickupProposalId = future1.get();
-
-        PickupAddGoodsFlow.Initiator modifyFlow = new PickupAddGoodsFlow.Initiator(pickupProposalId,
-                Collections
-                        .singletonList(new ItemRow("abc", "123", 3, new DescriptionOfGoods("Not an Iphone", "pallet", 100), 12, 12, 456)),
-                "test");
-        Future future2 = this.supplier.startFlow(modifyFlow);
-        network.runNetwork();
-        ExecutionException exception = assertThrows(ExecutionException.class, future2::get);
-        Assert.assertNotNull(exception);
-        Assert.assertTrue(exception.getMessage().startsWith(
-                "net.corda.core.contracts.TransactionVerificationException$ContractRejection: Contract verification failed: Failed " +
-                        "requirement: Picked-up Goods must be Equals to Expected Goods, " +
-                        "contract: agata.lcl.contracts.pickup.PickupContract"));
-    }
-
-    @Test
     public void testAccept() throws ExecutionException, InterruptedException {
         final UniqueIdentifier assignmentStateId = createAssignmentState(lclCompany, supplier, buyer, address1, address2, "123");
         UniqueIdentifier trackingStateId = this.resolveStateId(AssignmentState.class, assignmentStateId, this.lclCompany, Vault.StateStatus.UNCONSUMED).getTrackingStateId();
