@@ -14,7 +14,7 @@ services:
       - ./buyer/certificates:/opt/corda/certificates
       - ./buyer/persistence:/opt/corda/persistence
       - ./buyer/logs:/opt/corda/logs
-      - ./buyer/cordapps:/opt/corda/cordapps
+      - ./shared/cordapps:/opt/corda/cordapps
       - ./buyer/node-infos:/opt/corda/additional-node-infos
       - ./buyer/network-parameters:/opt/corda/network-parameters
 
@@ -28,7 +28,7 @@ services:
       - ./supplier/certificates:/opt/corda/certificates
       - ./supplier/persistence:/opt/corda/persistence
       - ./supplier/logs:/opt/corda/logs
-      - ./supplier/cordapps:/opt/corda/cordapps
+      - ./shared/cordapps:/opt/corda/cordapps
       - ./supplier/node-infos:/opt/corda/additional-node-infos
       - ./supplier/network-parameters:/opt/corda/network-parameters
 
@@ -42,7 +42,7 @@ services:
       - ./lclcompany/certificates:/opt/corda/certificates
       - ./lclcompany/persistence:/opt/corda/persistence
       - ./lclcompany/logs:/opt/corda/logs
-      - ./lclcompany/cordapps:/opt/corda/cordapps
+      - ./shared/cordapps:/opt/corda/cordapps
       - ./lclcompany/node-infos:/opt/corda/additional-node-infos
       - ./lclcompany/network-parameters:/opt/corda/network-parameters
 
@@ -56,7 +56,7 @@ services:
       - ./shippingline/certificates:/opt/corda/certificates
       - ./shippingline/persistence:/opt/corda/persistence
       - ./shippingline/logs:/opt/corda/logs
-      - ./shippingline/cordapps:/opt/corda/cordapps
+      - ./shared/cordapps:/opt/corda/cordapps
       - ./shippingline/node-infos:/opt/corda/additional-node-infos
       - ./shippingline/network-parameters:/opt/corda/network-parameters
 
@@ -70,6 +70,6 @@ services:
       - ./notary/certificates:/opt/corda/certificates
       - ./notary/persistence:/opt/corda/persistence
       - ./notary/logs:/opt/corda/logs
-      - ./notary/cordapps:/opt/corda/cordapps
+      - ./shared/cordapps:/opt/corda/cordapps
       - ./notary/node-infos:/opt/corda/additional-node-infos
       - ./notary/network-parameters:/opt/corda/network-parameters
