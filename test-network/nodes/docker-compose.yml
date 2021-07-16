@@ -8,7 +8,7 @@ services:
     image: corda/corda-zulu-java1.8-4.8
     container_name: buyer-node
     ports:
-      - "10001:10201"
+      - "10006:10201"
     volumes:
       - ./buyer/node.conf:/etc/corda/node.conf
       - ./buyer/certificates:/opt/corda/certificates
@@ -22,7 +22,7 @@ services:
     image: corda/corda-zulu-java1.8-4.8
     container_name: supplier-node
     ports:
-      - "10002:10201"
+      - "10009:10201"
     volumes:
       - ./supplier/node.conf:/etc/corda/node.conf
       - ./supplier/certificates:/opt/corda/certificates
@@ -36,7 +36,7 @@ services:
     image: corda/corda-zulu-java1.8-4.8
     container_name: lcl-company-node
     ports:
-      - "10003:10201"
+      - "10012:10201"
     volumes:
       - ./lclcompany/node.conf:/etc/corda/node.conf
       - ./lclcompany/certificates:/opt/corda/certificates
@@ -50,7 +50,7 @@ services:
     image: corda/corda-zulu-java1.8-4.8
     container_name: shipping-line-node
     ports:
-      - "10004:10201"
+      - "10015:10201"
     volumes:
       - ./shippingline/node.conf:/etc/corda/node.conf
       - ./shippingline/certificates:/opt/corda/certificates
@@ -64,7 +64,7 @@ services:
     image: corda/corda-zulu-java1.8-4.8
     container_name: notary-node
     ports:
-      - "10005:10201"
+      - "10018:10201"
     volumes:
       - ./notary/node.conf:/etc/corda/node.conf
       - ./notary/certificates:/opt/corda/certificates
