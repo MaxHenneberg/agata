@@ -45,7 +45,7 @@ To do this, follow the steps below:
 Below is a guide on how to run our business process from start to finish using the Postman collection (`xarda.postman_collection`) provided.
 This requires knowledge of the associated report. 
 We assume a simplified example for one buyer and a single container, because otherwise the process and the description becomes even more complex. 
-However, the steps can be adapted and for the same buyer node e.g. several packages can be created, which are then consolidated.  
+However, the steps can be adapted and for the same buyer node e.g. several packages can be created, which are then consolidated. Furthermore we implemented a demo frontend to showcase possible usecases. A guide containing further information can be found [here](https://github.com/MaxHenneberg/agata/blob/master/documentation/frontend_guide.pdf).
 
 Here are a few more points to consider after importing the `xarda.postman_collection` file into Postman:
 - In "" is the name of the Postman request and in parentheses is the API to use. Unless otherwise specified, no further changes are required to the prebuilt requests in terms of their bodies.
