@@ -72,7 +72,7 @@ export class GoodsFromLclcompanyComponent implements OnInit {
   }
 
   requestConfirmation() {
-    this.acceptContainerService.requestGoodsConfirmation(this.proposalId, this.receivedGoods);
+    this.acceptContainerService.requestGoodsConfirmation(this.proposalId, this.expectedGoods);
   }
 
 }

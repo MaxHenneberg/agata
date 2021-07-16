@@ -3,6 +3,7 @@ import {BolTO} from '../dataholder/BolTO';
 import {HttpBaseService} from './http-base.service';
 import {Observable} from 'rxjs';
 import {DeliveryProposalTO} from '../dataholder/DeliveryProposalTO';
+import {ItemRow} from "../dataholder/ItemRow";
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class AcceptContainerService {
     console.log(containerId);
   }
 
-  requestGoodsConfirmation(proposalId: string, receivedGoods: string[]) {
+  requestGoodsConfirmation(proposalId: string, receivedGoods: ItemRow[]) {
     this.httpClient.patch('/deliveries/proposals/' + proposalId, {deliveredGoods: receivedGoods}).subscribe(res => console.log(res));
     console.log('Confirm Goods please');
   }
