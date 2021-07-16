@@ -36,8 +36,8 @@ import { TrackingStateComponent } from './tracking-state/tracking-state.componen
 import {MatStepperModule} from '@angular/material/stepper';
 import { CustomStepperComponent } from './custom-stepper/custom-stepper.component';
 import {environment} from '../environments/environment';
-import { SuccessDialogComponent } from './success-dialog/success-dialog.component';
-import { LogoPlaygroundComponent } from './logo-playground/logo-playground.component';
+// import { SuccessDialogComponent } from './success-dialog/success-dialog.component';
+// import { LogoPlaygroundComponent } from './logo-playground/logo-playground.component';
 
 @NgModule({
   declarations: [
@@ -57,8 +57,8 @@ import { LogoPlaygroundComponent } from './logo-playground/logo-playground.compo
     BolViewComponent,
     TrackingStateComponent,
     CustomStepperComponent,
-    SuccessDialogComponent,
-    LogoPlaygroundComponent,
+    // SuccessDialogComponent,
+    // LogoPlaygroundComponent,
   ],
   imports: [
     BrowserModule,

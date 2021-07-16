@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
-// @ts-ignore
-import openContainer from '../mockResponses/openContainer.json';
+import {Observable} from 'rxjs';
 import {HttpBaseService} from './http-base.service';
 import {BolTO} from '../dataholder/BolTO';
 
@@ -14,7 +12,6 @@ export class BolCombinerService {
   }
 
   pollOpenBol(): Observable<BolTO> {
-    // @ts-ignore
-    return this.httpClient.get('/pickups/bols');
+    return this.httpClient.get('/bill-of-ladings?type=House');
   }
 }
