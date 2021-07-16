@@ -10,7 +10,7 @@ export class AppComponent {
   constructor(@Inject('PROFILE') public profile: string) {
   }
 
-  title = 'lcl-company-frontend';
+  title = 'Demo frontend';
 
   showSideNav = false;
 

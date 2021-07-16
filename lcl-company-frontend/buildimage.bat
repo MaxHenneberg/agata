@@ -1,1 +1,0 @@
-docker build -t lcl-company-frontend-image-config .
