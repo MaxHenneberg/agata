@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {BolTO} from '../dataholder/BolTO';
 import {HttpBaseService} from './http-base.service';
 import {Observable} from 'rxjs';
+import {DeliveryProposalTO} from '../dataholder/DeliveryProposalTO';
 
 @Injectable({
   providedIn: 'root'
@@ -15,24 +16,12 @@ export class AcceptContainerService {
     return this.httpClient.get('/loadings/proposals/masterBol/' + containerId);
   }
 
-  resolveBol(bolId: string): Observable<BolTO> {
+  resolveBolId(bolId: string): Observable<BolTO> {
     return this.httpClient.get('/bill-of-ladings/' + bolId);
   }
 
-  goodFromIdentityNumber(identityNumber: string) {
-    return {
-      mark: '12',
-      identityNumber,
-      noOfPackages: 2,
-      descriptionOfGoods: {
-        product: 'Foo',
-        typeOfPackage: 'test',
-        quantity: 123
-      },
-      netWeight: 1234,
-      grossWeight: 1235,
-      measurement: 456
-    };
+  resolveDeliveryProposalId(proposalId: string): Observable<DeliveryProposalTO> {
+    return this.httpClient.get('/bill-of-ladings/' + proposalId);
   }
 
   acceptContainer(containerId: string) {
@@ -46,13 +35,8 @@ export class AcceptContainerService {
     console.log(containerId);
   }
 
-  acceptGooodsFromLcl(invoiceId: string) {
-    console.log('Accepted Goods From Lcl Company');
-    console.log(invoiceId);
-  }
-
-  requestGoodsConfirmation(bolId: string, receivedGoods: string[]) {
-    this.httpClient.patch('/deliveries/proposals/' + bolId, {deliveredGoods: receivedGoods});
+  requestGoodsConfirmation(proposalId: string, receivedGoods: string[]) {
+    this.httpClient.patch('/deliveries/proposals/' + proposalId, {deliveredGoods: receivedGoods}).subscribe(res => console.log(res));
     console.log('Confirm Goods please');
   }
 }

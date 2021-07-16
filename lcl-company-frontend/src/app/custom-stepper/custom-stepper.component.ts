@@ -7,7 +7,7 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class CustomStepperComponent implements OnInit {
 
-  steps = ['Slot Booked', 'Pickup Completed', 'Loaded On Ship', 'Deconsolidated', 'Goods Delivered'];
+  steps = ['Slot Booked', 'Container Assigned', 'Pickup Completed', 'Loaded On Ship', 'Deconsolidated', 'Goods Delivered'];
 
   @Input()
   completedIndex: number;

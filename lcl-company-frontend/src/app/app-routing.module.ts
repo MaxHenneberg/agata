@@ -12,7 +12,6 @@ const routes: Routes = [
   {path: 'requestSlot', component: RequestSlotComponent},
   {path: 'modifyPickup/:id', component: ModifyPickupComponent},
   {path: 'bolCombiner', component: BolCombinerComponent},
-  {path: 'acceptContainer', component: AcceptContainerComponent},
   {path: 'acceptGoods/:id', component: GoodsFromLclcompanyComponent},
   {path: 'trackingState/:id', component: TrackingStateComponent},
   {path: '', redirectTo: '/requestSlot', pathMatch: 'full'}

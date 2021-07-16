@@ -8,6 +8,7 @@ import {BolTO} from '../../dataholder/BolTO';
 import {ItemRow} from '../../dataholder/ItemRow';
 import {MatTable} from '@angular/material/table';
 import {ActivatedRoute} from '@angular/router';
+import {AddGoodsService} from "../add-goods.service";
 
 @Component({
   selector: 'app-goods-from-lclcompany',
@@ -22,21 +23,25 @@ export class GoodsFromLclcompanyComponent implements OnInit {
   acceptContainerDialogRef: MatDialogRef<AcceptContainerDialogComponent>;
 
   billOfLadingId: string;
+  proposalId: string;
   billOfLading: BolTO;
   expectedGoods: ItemRow[];
   receivedGoods: string[];
 
   // tslint:disable-next-line:max-line-length
-  constructor(private dialog: MatDialog, private acceptContainerService: AcceptContainerService, private snackBar: MatSnackBar, private route: ActivatedRoute) {
+  constructor(private dialog: MatDialog, private acceptContainerService: AcceptContainerService, private addGoodsService: AddGoodsService, private snackBar: MatSnackBar, private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
-    this.billOfLadingId = (this.route.snapshot.paramMap.get('id'));
+    this.proposalId = (this.route.snapshot.paramMap.get('id'));
     this.expectedGoods = [];
     this.receivedGoods = [];
-    this.acceptContainerService.resolveBol(this.billOfLadingId).subscribe((bol) => {
-      this.billOfLading = bol;
-      this.expectedGoods = this.billOfLading.goodsList;
+    this.acceptContainerService.resolveDeliveryProposalId(this.proposalId).subscribe((proposal) => {
+      this.acceptContainerService.resolveBolId(proposal.proposedState.houseBolId).subscribe((bol) => {
+        this.billOfLading = bol;
+        this.expectedGoods = this.billOfLading.goodsList;
+        this.table.renderRows();
+      });
     });
   }
 
@@ -52,7 +57,7 @@ export class GoodsFromLclcompanyComponent implements OnInit {
   onSuccessfulScan(idNumber: string) {
     this.scanDialogRef.close();
     if (this.isExpected(idNumber)) {
-      const result = this.acceptContainerService.goodFromIdentityNumber(idNumber);
+      const result = this.addGoodsService.resolveGoodsId(idNumber);
       this.receivedGoods.push(result.identityNumber);
       this.table.renderRows();
     }
@@ -67,7 +72,7 @@ export class GoodsFromLclcompanyComponent implements OnInit {
   }
 
   requestConfirmation() {
-    this.acceptContainerService.requestGoodsConfirmation(this.billOfLadingId, this.receivedGoods);
+    this.acceptContainerService.requestGoodsConfirmation(this.proposalId, this.receivedGoods);
   }
 
 }

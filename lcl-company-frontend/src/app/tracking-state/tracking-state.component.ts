@@ -42,7 +42,7 @@ export class TrackingStateComponent implements OnInit {
           if (value && key !== 'status') {
             if (key === 'updatedOn') {
               value = new Date(value);
-              value = value.toLocaleDateString("de-DE") + " " + value.toLocaleTimeString("de-DE");
+              value = value.toLocaleDateString('de-DE') + ' ' + value.toLocaleTimeString('de-DE');
             }
             curContent.push({label: this.mapper[key], value});
           }
