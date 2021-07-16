@@ -43,4 +43,36 @@ services:
       - config.rpc.username=user1
       - config.rpc.password=test
 
+  lcl-company-frontend:
+    image: amitter1/xarda-demo-frontend
+    container_name: lcl-company-frontend
+    ports:
+      - "4200:80"
+    environment:
+      - "API_URL=http://localhost:8082"
+      - "PROFILE=LCL company"
+    depends_on:
+      - lcl-company-api
+
+  buyer-frontend:
+    image: amitter1/xarda-demo-frontend
+    container_name: buyer-frontend
+    ports:
+      - "4201:80"
+    environment:
+      - "API_URL=http://localhost:8080"
+      - "PROFILE=Buyer"
+    depends_on:
+      - buyer-api
+
+  supplier-frontend:
+    image: amitter1/xarda-demo-frontend
+    container_name: supplier-frontend
+    ports:
+      - "4202:80"
+    environment:
+      - "API_URL=http://localhost:8081"
+      - "PROFILE=Supplier"
+    depends_on:
+      - supplier-api
 
