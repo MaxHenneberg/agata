@@ -14,7 +14,7 @@ The following steps will help you run a local instance of the project.
 The following points must be observed in order to start the individual services correctly:
 - Java 8 is required to start the Corda nodes
 - Docker is necessary to start the containers for the API and the frontend
-- Postman is helpful to test a sample flow using the attached collection and the steps listed below
+- Postman is helpful to test a sample flow using the uploaded collection and the steps listed below
 
 
 ### Installing
@@ -22,15 +22,15 @@ The following points must be observed in order to start the individual services 
 #### Start Corda nodes
 
 - Download the configurations packed as a ZIP for the test network: https://1drv.ms/u/s!Am0z09x-pM7Cgv4S7nCxF7T6xc6V9A?e=C05wRA
-- Execute `./runnodes` or use `runnodes.bat` based on your operating system
-- Check that all 5 nodes are booted up by the respective terminal window. If something like "Node for "..." started up and registered in 76.45 sec" appears and then an interactive shell can be seen, everything is fine.
+- Execute `./runnodes` or use `runnodes.bat` (within the decompressed folder) based on your operating system
+- Check that all 5 nodes are booted up by the respective terminal window. If something like "Node for ... started up and registered in ... sec" appears and then an interactive shell can be seen, everything is fine.
 - If one or more nodes did not start as expected, re-run the command from step 2
 
 If the configuration in the ZIP leads to errors, this can also be created manually. 
 To do this, switch to `/cordapp-lcl` and run `./gradlew build -x test` and then `./gradlew deployNodes`.
 
 
-### Start API and frontend per node
+#### Start API and frontend per node
 
 In this step, APIs are started that connect to the Corda node of buyer, supplier, LCL company and shipping line, respectively.
 Additionally, we will launch a demonstration frontend for buyer, supplier and LCL company (which differ by ports). 
@@ -38,7 +38,7 @@ To do this, follow the steps below:
 
 - Switch to the project root level
 - Execute `docker-compose up`
-- If something like `started application in X seconds` appears for all APIs, they are ready to use. The frontend containers usually do not output anything.
+- If something like "started application in X seconds" appears for all APIs, they are ready to use. The frontend containers usually do not output anything.
 
 ## Testing
 
@@ -55,14 +55,14 @@ Here are a few more points to consider after importing the [xarda.postman_collec
 - In "" is the name of the Postman request and in parentheses is the API to use. Unless otherwise specified, no further changes are required to the prebuilt requests in terms of their bodies.
 - The URLs used in the requests are matched to the provided configuration, but the IDs must be changed as needed.
 - The first time a request to a node is started, it might take longer than usual.
-- With the GET-Requests in the folders further information can be requested at any time
-- Everything that is done here via the copied IDs could be read by machine and passed via the respective endpoints if a software integrates our API
+- With the GET requests in the folders further information can be requested at any time
+- Everything that is done via the copied IDs could be done automatically and passed via the respective endpoints if a software integrates our API
 
 After each final step of the groups below, it might be helpful to look at the change in tracking. 
 Use "Get tracking state" with the corresponding ID as URL path variable.
 
 **Buyer assigns the LCL company (folder "Assign LCL company")**
-- "Propose LCL assignment" (LCL company): Initiates a proposal to the buyer with the data received off-chain from the customer. Then copy the Id of the created proposal from linearId.id in the response.
+- "Propose LCL assignment" (LCL company): Initiates a proposal to the buyer with the data received off-chain from the customer. Then copy the ID of the created proposal from linearId.id in the response.
 - "Accept LCL assignment" (Buyer): Use the copied ID from the previous step as URL path variable for the proposal id. This way the customer accepts the created agreement. Copy linearId.id (the ID of this assignment) and trackingStateId.id (the ID of the related tracking) from the response to a text document for further use.
 
 **LCL company requests a container from the shipping line (folder "Request container")**
