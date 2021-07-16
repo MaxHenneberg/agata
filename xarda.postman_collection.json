@@ -1,0 +1,973 @@
+{
+	"info": {
+		"_postman_id": "2d7b7e44-d182-48c7-acb9-c36fdf1cbc22",
+		"name": "Xarda",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Assign LCL company",
+			"item": [
+				{
+					"name": "Propose LCL assignment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"buyer\": \"O=Buyer,L=Hamburg,C=DE\",\n    \"supplier\": \"O=Supplier,L=Tongzhou,C=CN\",\n    \"arrivalParty\": \"O=Buyer,L=Hamburg,C=DE\",\n    \"departureAddress\": {\n        \"street\": \"Tonghu Street 60\",\n        \"city\": \"Tongzhou\",\n        \"state\": \"\",\n        \"postalCode\": \"101101\",\n        \"country\": \"CN\"\n    },\n    \"arrivalAddress\": {\n        \"street\": \"Hafenstrasse 1\",\n        \"city\": \"Hamburg\",\n        \"state\": \"Hamburg\",\n        \"postalCode\": \"20359\",\n        \"country\": \"DE\"\n    },\n    \"expectedGoods\": [{\n        \"mark\": \"1234\",\n        \"identityNumber\": \"1234\",\n        \"noOfPackages\": 3,\n        \"descriptionOfGoods\": {\n            \"product\": \"XXL Underwear\",\n            \"quantity\": 20,\n            \"typeOfPackage\": \"Roll\"\n        },\n        \"netWeight\": 2,\n        \"grossWeight\": 2,\n        \"measurement\": 1\n    }]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/lcl-assignments/proposals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"lcl-assignments",
+								"proposals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept LCL assignment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/lcl-assignments/proposals/:id/acceptance",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"lcl-assignments",
+								"proposals",
+								":id",
+								"acceptance"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "61eb4244-a96d-492e-b71d-8ec8bd6ccd9b"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get proposals",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/lcl-assignments/proposals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"lcl-assignments",
+								"proposals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get accepted LCL assignments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/lcl-assignments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"lcl-assignments"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Request container",
+			"item": [
+				{
+					"name": "Initiate container request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"lclDestination\": \"O=LCL company, L=Beijing, C=CN\",\n    \"shippingLine\": \"O=Shipping line,L=Beijing,C=CN\",\n    \"portOfLoading\": \"Beijing, CN\",\n    \"portOfDischarge\": \"Hamburg, DE\",\n    \"forwardingAgentNo\": \"DBSchenker123\",\n    \"requestedType\": \"Large\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/container-requests/proposals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"container-requests",
+								"proposals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign container",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"vesselName\": \"Evergiven\",\n    \"container\": {\n        \"containerNo\": \"1234\",\n        \"type\": \"Large\",\n        \"sealNo\": \"45342343\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/container-requests/proposals/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"container-requests",
+								"proposals",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "f43e9c28-1c3c-49e1-9957-2d941bf2974f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept proposal",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"trackingStateIds\": [\"5d4ccd86-fbdd-4ea3-8ec0-e57fe8b6e96c\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/container-requests/proposals/:id/acceptance",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"container-requests",
+								"proposals",
+								":id",
+								"acceptance"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "19239f68-b43f-4cfc-b451-4329a3cbcdfb"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get proposals",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/container-requests/proposals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"container-requests",
+								"proposals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get finalized container requests",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/container-requests",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"container-requests"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Pickup goods",
+			"item": [
+				{
+					"name": "Propose pickup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"assignmentId\": \"c863ec2e-1603-4a26-9418-d2be24cb2a96\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/pickups/proposals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"pickups",
+								"proposals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set picked up goods",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"goods\": [{\n        \"identityNumber\": \"1234\",\n        \"mark\": \"1234\",\n        \"noOfPackages\": 3,\n        \"descriptionOfGoods\": {\n            \"product\": \"XXL Underwear\",\n            \"quantity\": 20,\n            \"typeOfPackage\": \"Roll\"\n        },\n        \"netWeight\": 2,\n        \"grossWeight\": 2,\n        \"measurement\": 1\n    }],\n    \"invoiceId\": \"1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/pickups/proposals/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"pickups",
+								"proposals",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "e314a6a3-eaac-4da7-be72-ee4175beac03"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept proposal",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"containerRequestId\": \"c6d2ac4a-aa8c-4e42-8aa4-cbdd12ec926e\",\n    \"trackingStateId\": \"7b571f6f-5852-49d8-8e3f-67a4ea9a516e\",\n    \"modeOfInitialCarriage\": \"truck\",\n    \"placeOfInitialReceipt\": \"Tonghu Street 120, Tianjin, CN\",\n    \"placeOfDeliveryByCarrier\": \"Ohmstrasse 34, Hamburg, DE\",\n    \"bookingNo\": \"565464\",\n    \"billOfLadingNo\": \"ABC5678\",\n    \"exportReference\": [\n        \"ShippingLine BOL ABC5678\"\n    ],\n    \"freightPayableAt\": \"Origin\",\n    \"typeOfMovement\": \"doorToDoor\",\n    \"freightChargesList\": [\n        {\n            \"charge\": {\n                \"amount\": \"423.96\",\n                \"currency\": \"EUR\"\n            },\n            \"chargeReason\": \"Shipping\"\n        }\n    ],\n    \"prepaid\": {\n        \"amount\": \"20.00\",\n        \"currency\": \"EUR\"\n    },\n    \"collect\": {\n        \"amount\": \"403.96\",\n        \"currency\": \"EUR\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/pickups/proposals/:id/acceptance",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"pickups",
+								"proposals",
+								":id",
+								"acceptance"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "737848dc-054e-4a45-a651-13a4330f3048"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get proposals",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/api/pickups/proposals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"pickups",
+								"proposals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get finalized pickups",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/pickups",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"pickups"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Load ship",
+			"item": [
+				{
+					"name": "Propose loading",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"containerStateId\": \"c6d2ac4a-aa8c-4e42-8aa4-cbdd12ec926e\",\n    \"houseBolIds\": [\"a20e7d76-9185-4b77-a64b-461e6878382d\"],\n    \"shippingLine\": \"O=Shipping line,L=Beijing,C=CN\",    \n    \"modeOfInitialCarriage\": \"truck\",\n    \"placeOfInitialReceipt\": \"Tonghu Street 126, Tianjin, CN\",\n    \"bookingNo\": \"96401\",\n    \"billOfLadingNo\": \"MBL12356\",\n    \"exportReference\": [\n        \"ER45678\"\n    ],\n    \"freightPayableAt\": \"Destination\",\n    \"typeOfMovement\": \"portToPort\",\n    \"freightChargesList\": [\n        {\n            \"charge\": {\n                \"amount\": \"123.45\",\n                \"currency\": \"EUR\"\n            },\n            \"chargeReason\": \"abc\"\n        }\n    ],\n    \"prepaid\": {\n        \"amount\": \"500.00\",\n        \"currency\": \"EUR\"\n    },\n    \"collect\": {\n        \"amount\": \"2150.00\",\n        \"currency\": \"EUR\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/loadings/proposals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"loadings",
+								"proposals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept proposal",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"trackingStateIds\": [\"7b571f6f-5852-49d8-8e3f-67a4ea9a516e\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/loadings/proposals/:id/acceptance",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"loadings",
+								"proposals",
+								":id",
+								"acceptance"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "b0920ae5-12e9-4364-8640-48f5662030d2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get proposals",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/loadings/proposals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"loadings",
+								"proposals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get finalized loadings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/loadings",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"loadings"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Deconsolidation",
+			"item": [
+				{
+					"name": "Propose deconsolidation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"masterBolId\": \"2f35affd-ef53-4a6d-996b-cb668efae539\",\n    \"shippingLine\": \"O=Shipping line, L=Beijing, C=CN\",\n    \"containerNo\":  \"1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/deconsolidations/proposals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"deconsolidations",
+								"proposals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Release container",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"collect\": {\n        \"amount\": 105.45,\n        \"currency\": \"EUR\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/deconsolidations/proposals/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"deconsolidations",
+								"proposals",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "46ca2d4e-dc94-4897-99c2-90a941297728"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept deconsolidation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"trackingStateIds\": [\"7b571f6f-5852-49d8-8e3f-67a4ea9a516e\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/deconsolidations/proposals/:id/acceptance",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"deconsolidations",
+								"proposals",
+								":id",
+								"acceptance"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "46ca2d4e-dc94-4897-99c2-90a941297728"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get proposals",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/deconsolidations/proposals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"deconsolidations",
+								"proposals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get finalized deconsolidations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/deconsolidations",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"deconsolidations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Delivery",
+			"item": [
+				{
+					"name": "Propose delivery",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"lclCompany\": \"O=LCL company, L=Beijing, C=CN\",\n    \"houseBolId\": \"a20e7d76-9185-4b77-a64b-461e6878382d\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/deliveries/proposals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"deliveries",
+								"proposals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set delivered goods",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"deliveredGoods\": [\n        {\n            \"identityNumber\": \"1234\",\n            \"mark\": \"1234\",\n            \"noOfPackages\": 3,\n            \"descriptionOfGoods\": {\n                \"product\": \"XXL Underwear\",\n                \"quantity\": 20,\n                \"typeOfPackage\": \"Roll\"\n            },\n            \"netWeight\": 2,\n            \"grossWeight\": 2,\n            \"measurement\": 1\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/deliveries/proposals/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"deliveries",
+								"proposals",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "40fa6405-3906-4663-a41d-e77be1859911"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept delivery",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"trackingStateId\": \"7b571f6f-5852-49d8-8e3f-67a4ea9a516e\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/deliveries/proposals/:id/acceptance",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"deliveries",
+								"proposals",
+								":id",
+								"acceptance"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "40fa6405-3906-4663-a41d-e77be1859911"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get proposals",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/deliveries/proposals",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"deliveries",
+								"proposals"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get finalized deliveries",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/deliveries",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"deliveries"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get tracking state",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/tracking/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"tracking",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "7b571f6f-5852-49d8-8e3f-67a4ea9a516e"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Bill of Ladings by type",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/api/bill-of-ladings?type=Master",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"bill-of-ladings"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "Master",
+							"description": "You can also use \"House\""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Bill of Lading by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8083/api/bill-of-ladings/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"api",
+						"bill-of-ladings",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get node info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/info",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"info"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
