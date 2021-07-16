@@ -40,6 +40,10 @@ To do this, follow the steps below:
 - Execute `docker-compose up`
 - If something like `started application in X seconds` appears for all APIs, they are ready to use. The frontend containers usually do not output anything.
 
+## Testing
+
+The automatic tests for flows can be started by switching to `/cordapp-lcl` and executing `./gradlew test`.
+
 ## Exemplary walk-through
 
 Below is a guide on how to run our business process from start to finish using the Postman collection (`xarda.postman_collection`) provided.
