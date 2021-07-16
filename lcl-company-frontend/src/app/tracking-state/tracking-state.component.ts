@@ -33,21 +33,22 @@ export class TrackingStateComponent implements OnInit {
 
   ngOnInit(): void {
     this.trackingService.getHistory(this.trackingStateId).subscribe(res => {
-    this.completedIdx = this.stateHistory.length;
-    for (let i = 0; i < this.stateHistory.length; i++) {
-      const curContent = [];
-      for (let [key, value] of Object.entries(this.stateHistory[i])) {
-        if (value && key !== 'status') {
-          if (key === 'updatedOn') {
-            const f = new Intl.DateTimeFormat('en');
-            value = f.format(value);
+      this.stateHistory = res;
+      console.log(res);
+      this.completedIdx = this.stateHistory.length;
+      for (let i = 0; i < this.stateHistory.length; i++) {
+        const curContent = [];
+        for (let [key, value] of Object.entries(this.stateHistory[i])) {
+          if (value && key !== 'status') {
+            if (key === 'updatedOn') {
+              value = new Date(value);
+              value = value.toLocaleDateString("de-DE") + " " + value.toLocaleTimeString("de-DE");
+            }
+            curContent.push({label: this.mapper[key], value});
           }
-          console.log(this.mapper);
-          curContent.push({label: this.mapper[key], value});
         }
+        this.content[i] = curContent;
       }
-      this.content[i] = curContent;
-    }
     });
   }
 

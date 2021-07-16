@@ -19,13 +19,13 @@ export class AddGoodsService {
           identityNumber: '1234',
           noOfPackages: 3,
           descriptionOfGoods: {
-            product: 'XXL Underware',
+            product: 'XXL Underwear',
             typeOfPackage: 'Roll',
             quantity: 20
           },
           netWeight: 2,
           grossWeight: 2,
-          measurement: 0.5
+          measurement: 1
         };
       case '5678':
         return {

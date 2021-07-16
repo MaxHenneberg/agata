@@ -7,7 +7,7 @@ services:
     ports:
       - "4200:80"
     environment:
-      - "API_URL=localhost:8082"
+      - "API_URL=http://localhost:8082"
       - "PROFILE=LCL company"
 
   buyer-frontend:
@@ -16,7 +16,7 @@ services:
     ports:
       - "4201:80"
     environment:
-      - "API_URL=localhost:8080"
+      - "API_URL=http://localhost:8080"
       - "PROFILE=Buyer"
 
   supplier-frontend:
@@ -25,5 +25,5 @@ services:
     ports:
       - "4202:80"
     environment:
-      - "API_URL=localhost:8081"
+      - "API_URL=http://localhost:8081"
       - "PROFILE=Supplier"
