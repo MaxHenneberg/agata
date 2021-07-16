@@ -21,7 +21,7 @@ export class AcceptContainerService {
   }
 
   resolveDeliveryProposalId(proposalId: string): Observable<DeliveryProposalTO> {
-    return this.httpClient.get('/proposals/' + proposalId);
+    return this.httpClient.get('/deliveries/proposals/' + proposalId);
   }
 
   acceptContainer(containerId: string) {
