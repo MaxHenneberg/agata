@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   apiUrl: window['env']['apiUrl'] || 'default',
+  profile: window['env']['profile'] || 'default',
 };
 
 /*

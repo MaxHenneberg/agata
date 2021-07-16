@@ -1,1 +1,0 @@
-docker run --name partyA-frontend-container -d -p 4200:80 --env API_URL=localhost:8080 lcl-company-frontend-image-config

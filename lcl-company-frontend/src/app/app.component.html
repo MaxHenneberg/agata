@@ -1,10 +1,12 @@
 <mat-sidenav-container style="min-height: 100vh; background-color: #ECEEFD">
   <mat-toolbar color="primary">
+    <div style="display: flex; justify-content: space-between; width: 100%;">
       <img src="../assets/Xarda_negativ.png" style="height: 2.5em"/>
-      <span style="flex: 1 1 auto;"></span>
+      <h1 style="color: red; font-size: 1.5em">Environment: {{profile}}</h1>
       <button mat-icon-button aria-label="Example icon-button with menu icon" (click)="toggleSideNav()">
         <mat-icon>menu</mat-icon>
       </button>
+    </div>
   </mat-toolbar>
   <mat-sidenav #sidenav mode="push" position="end" [(opened)]="showSideNav">
     <nav style="margin-right: 10px">

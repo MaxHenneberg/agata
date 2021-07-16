@@ -1,8 +1,29 @@
-version: '3.0'  
+version: '3.0'
 
 services:
-  lcl-company-frontend: 
-    image: docker.io/library/lcl-company-frontend-image
-    container_name: lcl-company-frontend-container
+  lcl-company-frontend:
+    image: amitter1/xarda-frontend
+    container_name: lcl-company-frontend
     ports:
-      - "8080:80"
+      - "4200:80"
+    environment:
+      - "API_URL=localhost:8082"
+      - "PROFILE=LCL company"
+
+  buyer-frontend:
+    image: amitter1/xarda-frontend
+    container_name: buyer-frontend
+    ports:
+      - "4201:80"
+    environment:
+      - "API_URL=localhost:8080"
+      - "PROFILE=Buyer"
+
+  supplier-frontend:
+    image: amitter1/xarda-frontend
+    container_name: supplier-frontend
+    ports:
+      - "4202:80"
+    environment:
+      - "API_URL=localhost:8081"
+      - "PROFILE=Supplier"

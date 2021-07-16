@@ -3,4 +3,5 @@
 
   // Environment variables
   window["env"]["apiUrl"] = "${API_URL}";
+  window["env"]["profile"] = "${PROFILE}";
 })(this);

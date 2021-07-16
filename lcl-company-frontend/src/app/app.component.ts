@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -6,6 +6,10 @@ import {Component} from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+
+  constructor(@Inject('PROFILE') public profile: string) {
+  }
+
   title = 'lcl-company-frontend';
 
   showSideNav = false;

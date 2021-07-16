@@ -83,7 +83,8 @@ import {environment} from '../environments/environment';
     MatStepperModule
   ],
   providers: [
-    {provide: 'BACKEND_API_URL', useValue: environment.apiUrl}
+    {provide: 'BACKEND_API_URL', useValue: environment.apiUrl},
+    {provide: 'PROFILE', useValue: environment.profile}
   ],
   bootstrap: [AppComponent]
 })
