@@ -11,6 +11,7 @@ import agata.lcl.states.delivery.PackageDeliveryProposal;
 import agata.lcl.states.delivery.PackageDeliveryState;
 import net.corda.core.contracts.UniqueIdentifier;
 import net.corda.core.messaging.CordaRPCOps;
+import net.corda.core.node.services.Vault;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,11 @@ public class DeliveryController extends BaseController {
     @GetMapping("/proposals")
     public List<PackageDeliveryProposal> getProposals() {
         return this.getStates(PackageDeliveryProposal.class);
+    }
+
+    @GetMapping("/proposals/{id}")
+    public PackageDeliveryProposal getProposalById(@PathVariable String id) {
+        return this.getResourceById(PackageDeliveryProposal.class, id, Vault.StateStatus.UNCONSUMED);
     }
 
     @PostMapping("/proposals")
