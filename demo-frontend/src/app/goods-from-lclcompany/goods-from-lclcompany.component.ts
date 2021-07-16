@@ -37,7 +37,7 @@ export class GoodsFromLclcompanyComponent implements OnInit {
     this.expectedGoods = [];
     this.receivedGoods = [];
     this.acceptContainerService.resolveDeliveryProposalId(this.proposalId).subscribe((proposal) => {
-      this.acceptContainerService.resolveBolId(proposal.proposedState.houseBolId).subscribe((bol) => {
+      this.acceptContainerService.resolveBolId(proposal.proposedState.houseBolId.id).subscribe((bol) => {
         this.billOfLading = bol;
         this.expectedGoods = this.billOfLading.goodsList;
         this.table.renderRows();

@@ -4,6 +4,9 @@ export class PackageDeliveryStateTO {
   linearId: string;
   arrivalParty: string;
   lclCompany: string;
-  houseBolId: string;
+  houseBolId: {
+    id: string;
+    externalId: string;
+  };
   deliveryGoods: ItemRow[];
 }
